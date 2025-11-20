@@ -1,0 +1,15 @@
+.env
+/vendor
+/.vscode
+/docker/mysql/data
+
+/storage/*.key
+/storage/app/*
+!/storage/app/public
+/storage/framework/*
+!/storage/framework/cache
+!/storage/framework/sessions
+!/storage/framework/views
+!/storage/framework/testing
+/storage/logs/*
+!/storage/logs/.gitignore
