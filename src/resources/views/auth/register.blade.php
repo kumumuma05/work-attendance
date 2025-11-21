@@ -12,7 +12,7 @@
 @section('content')
 
 @include('header.guest')
-    <form class="register-form" action="">
+    <form class="register-form" action="/register" method="post" novalidate>
         @csrf
         <!-- 見出し -->
         <h1 class="page__title">会員登録</h1>
@@ -47,6 +47,11 @@
         <!-- 確認用パスワード -->
         <label class="form__label" for="password_confirm">パスワード確認</label>
         <input class="form__input" type="password" id="password_confirm" name="password_confirm">
+        <div class="form__error">
+            @error('password_confirm')
+                {{ $message }}
+            @enderror
+        </div>
 
         <!-- 送信ボタン -->
         <button class="form__button" type="submit">登録する</button>
