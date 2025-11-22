@@ -1,5 +1,5 @@
 <header class="header">
-    <div class="header_logo">
+    <div class="header__logo">
         <a href="/">
             <img src="{{ asset('images/COACHTECHヘッダーロゴ.png') }}" alt="ロゴ">
         </a>

@@ -5,13 +5,12 @@
 
 <!-- CSS -->
 @section('css')
-    <link rel="stylesheet" href=" asset('css/register.css">
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
 @endsection
 
 <!-- 本体 -->
 @section('content')
-
-@include('header.guest')
+    @include('header.guest')
     <form class="register-form" action="/register" method="post" novalidate>
         @csrf
         <!-- 見出し -->
@@ -19,7 +18,7 @@
 
         <!-- 名前 -->
         <label class="form__label" for="name">名前</label>
-        <input class="form__input" type="text" id="name" name="name" value="{{ old('name') }}">
+        <input class="form__input register__input" type="text" id="name" name="name" value="{{ old('name') }}">
         <div class="form__error">
             @error('name')
                 {{ $message }}
@@ -28,7 +27,7 @@
 
         <!-- メールアドレス -->
         <label class="form__label" for="email">メールアドレス</label>
-        <input class="form__input" type="email" id="email" name="email" value="{{ old('email') }}">
+        <input class="form__input register__input" type="email" id="email" name="email" value="{{ old('email') }}">
         <div class="form__error">
             @error('email')
                 {{ $message }}
@@ -37,7 +36,7 @@
 
         <!-- パスワード -->
         <label class="form__label" for="password">パスワード</label>
-        <input class="form__input" type="password" id="password" name="password">
+        <input class="form__input register__input" type="password" id="password" name="password">
         <div class="form__error">
             @error('password')
                 {{ $message }}
@@ -46,7 +45,7 @@
 
         <!-- 確認用パスワード -->
         <label class="form__label" for="password_confirm">パスワード確認</label>
-        <input class="form__input" type="password" id="password_confirm" name="password_confirm">
+        <input class="form__input register__input" type="password" id="password_confirm" name="password_confirm">
         <div class="form__error">
             @error('password_confirm')
                 {{ $message }}
@@ -54,10 +53,10 @@
         </div>
 
         <!-- 送信ボタン -->
-        <button class="form__button" type="submit">登録する</button>
+        <button class="form__button register__button" type="submit">登録する</button>
 
         <!-- リンク -->
-        <a class="login-link" href="/login">ログインはこちら</a>
+        <a class="link login-link" href="/login">ログインはこちら</a>
     </form>
 
 @endsection

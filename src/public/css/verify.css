@@ -1,0 +1,77 @@
+/* セッションメッセージ */
+.session__alert {
+    background: #def7e7;
+    color: #0b6b39;
+    padding: 12px 30px;
+    border-radius: 6px;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.verify-email {
+    max-width: 720px;
+    margin: 250px auto;
+}
+
+.verify-email__text {
+    margin: 0;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.verify-email__link {
+    display: flex;
+    justify-content: center;
+}
+
+.verify-email__link a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    width: 260px;
+    height: 70px;
+    background: #D9D9D9;
+    border: 1px solid #000;
+    border-radius: 10px;
+}
+
+.verify-email__link-button {
+    text-decoration: none;
+    color: #000;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.verify-email__form {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.verify-email__form-button {
+    appearance: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #0073CC;
+    font-size: 20px;
+}
+
+/* レスポンシブデザイン */
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .verify-email {
+        width: 600px;
+        margin: 250px auto;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .verify-email {
+        width: 100%;
+        max-width: 600px;
+        margin: 200px auto;
+        padding: 0 16px;
+    }
+}

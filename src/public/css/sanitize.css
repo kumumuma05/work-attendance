@@ -9,6 +9,8 @@
 ::before,
 ::after {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 /**
@@ -72,7 +74,6 @@ body {
 */
 
 h1 {
-    margin: 0.67em 0;
     font-size: 2em;
 }
 
@@ -153,6 +154,7 @@ pre {
 
 a {
     background-color: transparent;
+    text-decoration: none;
 }
 
 /**
@@ -243,6 +245,8 @@ iframe {
 
 img {
     border-style: none;
+    display: block;
+    max-width: 100%;
 }
 
 /**
@@ -602,4 +606,9 @@ textarea,
 [aria-hidden="false"][hidden]:not(:focus) {
     position: absolute;
     clip: rect(0, 0, 0, 0);
+}
+
+:where(h1, h2, h3, h4, h5, h6, p) {
+    margin: 0;
+    padding: 0;
 }

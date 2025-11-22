@@ -13,7 +13,11 @@
 </head>
 
 <body>
-    @yield('content')
+    @yield('header')
+
+    <div class="content">
+        @yield('content')
+    </div>
 </body>
 
 </html>
