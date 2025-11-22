@@ -17,7 +17,7 @@
         <h1 class="page__title">ログイン</h1>
 
         <!-- メールアドレス -->
-        <label class="form__label" for="email">メールアドレス</label>
+        <label class="form__label login__label" for="email">メールアドレス</label>
         <input class="form__input login__input" type="email" id="email" name="email" value="{{ old('email') }}">
         <div class="form__error">
             @error('email')
@@ -26,7 +26,7 @@
         </div>
 
         <!-- パスワード -->
-        <label class="form__label" for="password">パスワード</label>
+        <label class="form__label login__label" for="password">パスワード</label>
         <input class="form__input login__input" type="password" id="password" name="password">
         <div class="form__error">
             @error('password')

@@ -1,7 +1,11 @@
-.login__input {
-    height: 60px;
+.login-form {
+    padding-top: 110px;
 }
 
-.login__button {
+.login__label {
     margin-top: 60px;
+}
+
+.login__input {
+    height: 62px;
 }
