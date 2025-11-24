@@ -3,10 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AttendanceController;
 
-Route::get('/', function() {
-    return view('attendance');
-})->middleware(['auth', 'verified']);
+Route::get('/attendance', [AttendanceController::class, 'index'])->middleware(['auth', 'verified']);
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
