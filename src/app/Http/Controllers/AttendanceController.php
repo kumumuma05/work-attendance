@@ -4,39 +4,113 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Attendance;
+use App\Models\BreakTime;
 
 class AttendanceController extends Controller
 {
+
+    /**
+     * 勤怠登録画面表示
+     */
     public function index()
     {
         $user = auth()->user();
 
         // 今日の勤怠を取得
-    $attendance = Attendance::where('user_id', $user->id)
-        ->where('date', today())
-        ->first();
+        $attendance = Attendance::where('user_id', $user->id)
+            ->where('date', today())
+            ->first();
 
-    // 状態判定
-    if (!$attendance) {
-        $state = 'before_work';
-    } elseif ($attendance->clock_in && !$attendance->clock_out) {
+        // 勤怠状態判定
+        if (!$attendance) {
+            $state = 'before_work';
+        } elseif ($attendance->clock_in && !$attendance->clock_out) {
 
-        // 休憩中かどうか
-        $lastBreak = $attendance->breaks()->latest()->first();
+            // 休憩中判定
+            $lastBreak = $attendance->breaks()->latest()->first();
 
-        if ($lastBreak && $lastBreak->break_in && !$lastBreak->break_out) {
-            $state = 'on_break';   // 休憩中
-        } else {
-            $state = 'working';    // 勤務中
+            if ($lastBreak && $lastBreak->break_in && !$lastBreak->break_out) {
+                $state = 'on_break';
+            } else {
+                $state = 'working';
+            }
+
+        } elseif ($attendance->clock_out) {
+            $state = 'after_work';
         }
 
-    } elseif ($attendance->clock_out) {
-        $state = 'after_work';
+        return view('attendance', [
+            'attendance' => $attendance,
+            'state'      => $state,
+        ]);
     }
 
-    return view('attendance', [
-        'attendance' => $attendance,
-        'state'      => $state,
-    ]);
-}
+    /**
+     * 出勤時間登録
+     */
+    public function clockIn()
+    {
+        Attendance::create([
+            'user_id' => auth()->id(),
+            'date' => today(),
+            'clock_in' => now(),
+        ]);
+
+        return back();
+    }
+
+    /**
+     * 休憩時間登録
+     */
+    public function breakIn()
+    {
+        $attendance = Attendance::where('user_id', auth()->id())
+            ->where('date', today())
+            ->firstOrFail();
+
+        BreakTime::create([
+            'attendance_id' => $attendance->id,
+            'break_in' => now(),
+        ]);
+
+        return back();
+    }
+
+    /**
+     * 休憩終了時間登録（レコードのアップデート）
+     */
+    public function breakOut()
+    {
+        $attendance = Attendance::where('user_id', auth()->id())
+            ->where('date', today())
+            ->firstOrFail();
+
+        // 今日の勤怠で休憩中の最新のレコードを取得
+        $break = BreakTime::where('attendance_id', $attendance->id)
+            ->whereNull('break_out')
+            ->orderBy('created_at', 'desc')
+            ->firstOrFail();
+
+        $break->update([
+            'break_out' => now(),
+        ]);
+
+        return back();
+    }
+
+    /**
+     * 勤務終了時間登録（レコードのアップデート）
+     */
+    public function clockOut()
+    {
+        $attendance = Attendance::where('user_id', auth()->id())
+            ->where('date', today())
+            ->firstOrFail();
+
+        $attendance->update([
+            'clock_out' => now(),
+        ]);
+
+        return back();
+    }
 }

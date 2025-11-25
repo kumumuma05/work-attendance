@@ -22,7 +22,7 @@
             @elseif($state === 'on_break')
                 休憩中
             @elseif($state === 'after_work')
-                退勤済み
+                退勤済
             @endif
         </p>
         <!-- 日時表示 -->

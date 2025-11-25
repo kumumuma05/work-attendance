@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Attendance extends Model
 {
     use HasFactory;
+
     /**
      * 一括代入可能カラム
      */
@@ -19,12 +20,19 @@ class Attendance extends Model
     ];
 
     /**
-     * この勤怠記録をつかうユーザー情報を取得
-     * attendance.user_id -> users.id
+     * この勤怠記録に紐づくユーザー情報を取得
+     * - attendance.user_id -> users.id
      */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * この勤怠記録に紐づく休憩記録一覧を取得     * - attendances.id -> breaks.attendance_id
+     */
+    public function breaks()
+    {
+        return $this->hasMany(BreakTime::class);
+    }
 }
