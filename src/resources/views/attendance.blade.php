@@ -11,7 +11,13 @@
 <!-- 本体 -->
 @section('content')
 
-@include('header.user_working')
+    <!-- ヘッダー -->
+    @if($state === 'after_work')
+        @include('header.user_off')
+    @else
+        @include('header.user_working')
+    @endif
+
     <div class="attendance">
         <!-- 勤務の状態 -->
         <p class="attendance__state">
@@ -27,13 +33,14 @@
         </p>
         <!-- 日時表示 -->
         <div class="attendance__date">
-            {{ now()->format('Y年n月j日（D）') }}
+            {{ now()->format('Y年n月j日') }}
+            {{ '(' . now()->isoFormat('dd') . ')' }}
         </div>
         <div class="attendance__time">
-            {{ now()->format('h:m') }}
+            {{ now()->format('H:i') }}
         </div>
         <!-- 打刻ボタン -->
-        <div class="attendance__button">
+        <div class="attendance__action">
             <!-- 勤務外 -->
             @if($state === 'before_work')
                 <form action="/attendance/clock_in" method="post">
@@ -44,18 +51,18 @@
             @elseif($state === 'working')
                 <form action="/attendance/clock_out" method="post">
                     @csrf
-                    <button class="attendance__button attendance__button--sub">退勤</button>
+                    <button class="attendance__button attendance__button--main">退勤</button>
                 </form>
 
                 <form action="/attendance/break_in" method="post">
                     @csrf
-                    <button class="attendance__button attendance__button--main">休憩入</button>
+                    <button class="attendance__button attendance__button--sub">休憩入</button>
                 </form>
             <!-- 休憩中 -->
             @elseif($state === 'on_break')
                 <form action="/attendance/break_out" method="post">
                     @csrf
-                    <button class="attendance__button attendance__button--main">休憩戻</button>
+                    <button class="attendance__button attendance__button--sub">休憩戻</button>
                 </form>
             <!-- 退勤済 -->
             @elseif($state === 'after_work')

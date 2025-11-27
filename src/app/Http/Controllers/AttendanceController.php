@@ -17,9 +17,22 @@ class AttendanceController extends Controller
         $user = auth()->user();
 
         // 今日の勤怠を取得
-        $attendance = Attendance::where('user_id', $user->id)
-            ->where('date', today())
+        $todayAttendance = Attendance::where('user_id', $user->id)
+            ->whereDate('clock_in', today())
             ->first();
+        // 昨日からの勤務が残っているか確認
+        $yesterdayAttendance = Attendance::where('user_id', $user->id)
+            ->whereNull('clock_out')
+            ->whereDate('clock_in', today()->subDay())
+            ->first();
+        // 最終的な勤務レコードを決定
+        if ($todayAttendance) {
+            $attendance = $todayAttendance;
+        } elseif ($yesterdayAttendance) {
+            $attendance = $yesterdayAttendance;
+        } else {
+            $attendance = null;
+        }
 
         // 勤怠状態判定
         if (!$attendance) {
@@ -65,7 +78,7 @@ class AttendanceController extends Controller
     public function breakIn()
     {
         $attendance = Attendance::where('user_id', auth()->id())
-            ->where('date', today())
+            ->whereNull('clock_out')
             ->firstOrFail();
 
         BreakTime::create([
@@ -82,7 +95,7 @@ class AttendanceController extends Controller
     public function breakOut()
     {
         $attendance = Attendance::where('user_id', auth()->id())
-            ->where('date', today())
+            ->whereNull('clock_out')
             ->firstOrFail();
 
         // 今日の勤怠で休憩中の最新のレコードを取得
@@ -104,7 +117,7 @@ class AttendanceController extends Controller
     public function clockOut()
     {
         $attendance = Attendance::where('user_id', auth()->id())
-            ->where('date', today())
+            ->whereNull('clock_out')
             ->firstOrFail();
 
         $attendance->update([

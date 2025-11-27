@@ -20,6 +20,19 @@ class Attendance extends Model
     ];
 
     /**
+     * 日本語曜日を返すアクセサ
+     */
+    public function getWeekdayAttribute()
+    {
+        $weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+        return $weekdays[$this->date->dayOfWeek];
+    }
+
+    protected $casts = [
+        'date' => 'date',
+    ];
+
+    /**
      * この勤怠記録に紐づくユーザー情報を取得
      * - attendance.user_id -> users.id
      */
