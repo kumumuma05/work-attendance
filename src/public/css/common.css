@@ -116,4 +116,26 @@ body {
         max-width: 550px;
     }
 
+    .header {
+        padding: 20px;
+    }
+
+    .header__logo {
+        width: 300px;
+        height: fit-content;
+    }
+
+    .header__nav {
+        gap: 20px;
+        padding-right: 0;
+    }
+
+    .header__link {
+        font-size: 20px;
+    }
+
+    .logout__button {
+        font-size: 20px;
+        line-height: 2;
+    }
 }
