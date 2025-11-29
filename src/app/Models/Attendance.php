@@ -30,7 +30,47 @@ class Attendance extends Model
 
     protected $casts = [
         'date' => 'date',
+        'clock_in' => 'datetime',
+        'clock_out' => 'datetime',
     ];
+
+    // 合計休憩時間を表示するアクセサ
+    public function getBreakDurationAttribute()
+    {
+        // 休憩レコードがない場合は空欄を返す
+        if ($this->breaks->isEmpty()) {
+            return null;
+        }
+        // すべての有効な休憩レコードの合計時間を返す
+        return $this->breaks->sum(function ($break) {
+            if (!$break->break_in || !$break->break_out) {
+                return null;
+            }
+
+            return $break->break_out->diffInMinutes($break->break_in);
+        });
+    }
+
+    public function getTotalHoursAttribute() {
+        if (!$this->clock_in || !$this->clock_out) {
+            return null;
+        }
+
+        $workMinutes = $this->clock_out->diffInMinutes($this->clock_in);
+
+        $breakMinutes = $this->break_duration ?? 0;
+
+        $total = $workMinutes - $breakMinutes;
+
+        // if ($total <= 0) {
+        //     return null;
+        // }
+
+        $hours = floor($total / 60);
+        $minutes = $total % 60;
+
+        return sprintf('%d:%02d', $hours, $minutes);
+    }
 
     /**
      * この勤怠記録に紐づくユーザー情報を取得

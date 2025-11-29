@@ -52,7 +52,7 @@ class AttendanceController extends Controller
             $state = 'after_work';
         }
 
-        return view('attendance', [
+        return view('attendance.index', [
             'attendance' => $attendance,
             'state'      => $state,
         ]);

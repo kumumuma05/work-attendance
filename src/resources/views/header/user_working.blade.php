@@ -6,8 +6,8 @@
     </div>
 
     <div class="header__nav">
-        <a class="header__link" href="">勤怠</a>
-        <a class="header__link" href="">勤怠一覧</a>
+        <a class="header__link" href="/attendance">勤怠</a>
+        <a class="header__link" href="attendance/list">勤怠一覧</a>
         <a class="header__link" href="">申請</a>
         <form class="logout" action="/logout" method="post">
             @csrf

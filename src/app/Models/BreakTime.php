@@ -20,6 +20,11 @@ class BreakTime extends Model
         'break_out',
     ];
 
+    protected $casts = [
+    'break_in' => 'datetime',
+    'break_out' => 'datetime',
+    ];
+
     /**
      * この休憩が属する勤怠記録を取得
      * - breaks.attendance_id -> attendance.id
