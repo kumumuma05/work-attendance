@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceListController;
+use App\Http\Controllers\AttendanceDetailController;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -36,4 +37,4 @@ Route::middleware('auth', 'verified')->group(function () {
 // 勤怠一覧画面表示
     Route::get('/attendance/list', [AttendanceListController::class, 'index']);
 
-    Route::get('/attendance/detail/{id}', [AttendanceListController::class, 'index']);
+    Route::get('/attendance/detail/{id}', [AttendanceDetailController::class, 'show']);
