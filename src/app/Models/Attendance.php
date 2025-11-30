@@ -34,23 +34,44 @@ class Attendance extends Model
         'clock_out' => 'datetime',
     ];
 
-    // 合計休憩時間を表示するアクセサ
-    public function getBreakDurationAttribute()
+    // 合計休憩時間を計算するアクセサ
+    public function getBreakMinutesAttribute()
     {
         // 休憩レコードがない場合は空欄を返す
         if ($this->breaks->isEmpty()) {
-            return null;
+            return 0;
         }
         // すべての有効な休憩レコードの合計時間を返す
         return $this->breaks->sum(function ($break) {
             if (!$break->break_in || !$break->break_out) {
-                return null;
+                return 0;
             }
 
             return $break->break_out->diffInMinutes($break->break_in);
         });
+
     }
 
+    /**
+     * 合計休憩時間を時間表示にするアクセサ
+     */
+    public function getBreakDurationAttribute()
+    {
+        $totalMinutes = $this->break_minutes;
+
+        if ($totalMinutes === 0) {
+            return "";
+        }
+
+        $hours = intdiv($totalMinutes, 60);
+        $minutes = $totalMinutes % 60;
+
+        return sprintf('%02d:%02d', $hours, $minutes);
+    }
+
+    /**
+     * 合計勤務時間を計算するアクセサ
+     */
     public function getTotalHoursAttribute() {
         if (!$this->clock_in || !$this->clock_out) {
             return null;
@@ -58,13 +79,9 @@ class Attendance extends Model
 
         $workMinutes = $this->clock_out->diffInMinutes($this->clock_in);
 
-        $breakMinutes = $this->break_duration ?? 0;
+        $breakMinutes = $this->break_minutes;
 
         $total = $workMinutes - $breakMinutes;
-
-        // if ($total <= 0) {
-        //     return null;
-        // }
 
         $hours = floor($total / 60);
         $minutes = $total % 60;

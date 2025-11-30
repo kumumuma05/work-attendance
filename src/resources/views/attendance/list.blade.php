@@ -20,7 +20,7 @@
 
         <!-- 月の切り替え -->
         <div class="attendance-list__month-nav">
-            <a class="attendance-list__month-button" href="">
+            <a class="attendance-list__month-button" href="{{ url('/attendance/list?month=' . $previousMonth) }}">
                 <img class="attendance-list__month-arrow" src="{{ asset('images/矢印.png') }}">
                 前月
             </a>
@@ -28,7 +28,7 @@
                 <img class="attendance-list__calendar-img" src="{{ asset('images/カレンダ.png') }}"alt="">
                 <span>{{ $currentMonth }}</span>
             </div>
-            <a class="attendance-list__month-button" href="">
+            <a class="attendance-list__month-button" href="{{ url('/attendance/list?month=' . $nextMonth) }}">
                 翌月
                 <img class="attendance-list__month-arrow" src="{{ asset('images/矢印.png') }}">
             </a>
@@ -57,7 +57,7 @@
                             <td>{{ $attendance->break_duration ? $attendance->break_duration : ''}}</td>
                             <td>{{ $attendance->total_hours }}</td>
                             <td>
-                                <a class="attendance-list__detail-link" href="">詳細</a>
+                                <a class="attendance-list__detail-link" href="/attendance/detail/{id}">詳細</a>
                             </td>
                         </tr>
                     @endforeach

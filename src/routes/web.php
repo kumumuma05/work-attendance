@@ -35,3 +35,5 @@ Route::middleware('auth', 'verified')->group(function () {
 
 // 勤怠一覧画面表示
     Route::get('/attendance/list', [AttendanceListController::class, 'index']);
+
+    Route::get('/attendance/detail/{id}', [AttendanceListController::class, 'index']);
