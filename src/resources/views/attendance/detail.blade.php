@@ -45,7 +45,7 @@
         </div>
 
         <div class="attendance-detail__row">
-            @foreach($breaks as $index => $break)
+            @foreach($displayBreaks as $index => $break)
                 <dt class="attendance-detail__term">{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</dt>
                 <dd class="attendance-detail__data">
                     <input class="attendance-detail__time" type="text" value="{{ optional($break->break_in)->format('H:i') }}">
@@ -62,6 +62,10 @@
                 <input class="attendance-detail__remark" type="text">
             </dd>
         </div>
+
+        <form class="attendance-detail__form" action="" method="">
+            <button class="attendance-detail__form-button">修正</button>
+        </form>
 
 
     </div>

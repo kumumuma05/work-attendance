@@ -12,10 +12,15 @@ class AttendanceDetailController extends Controller
         $attendance = Attendance::where('user_id', auth()->id())
             ->where('id', $id)
             ->firstOrFail();
+
         $user = auth()->user();
-        $breaks = $attendance->breaks->count()
-            ? $attendance->breaks
-            : collect([(object)['break_in' => null, 'break_out' => null]]);
-        return view('attendance.detail', compact('attendance', 'user', 'breaks'));
+
+        $breaks = $attendance->breaks;
+        $displayBreaks = $breaks->toBase();
+        $displayBreaks->push((object)[
+            'break_in' => null,
+            'break_out' => null,
+        ]);
+        return view('attendance.detail', compact('attendance', 'user', 'displayBreaks'));
     }
 }
