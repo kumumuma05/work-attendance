@@ -1,0 +1,3 @@
+.attendance-detail__time[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+}

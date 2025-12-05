@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceListController;
 use App\Http\Controllers\AttendanceDetailController;
+use App\Http\Requests\AttendanceDetailRequest;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -31,10 +32,14 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/attendance/break_out', [AttendanceController::class, 'breakOut']);
     Route::post('/attendance/clock_out', [AttendanceController::class, 'clockOut']);
 
-    
 });
 
 // 勤怠一覧画面表示
     Route::get('/attendance/list', [AttendanceListController::class, 'index']);
 
     Route::get('/attendance/detail/{id}', [AttendanceDetailController::class, 'show']);
+
+    // バリデテスト
+    Route::post('/attendance/detail/test', function(AttendanceDetailRequest $request) {
+    return back()->withErrors($request->validator)->withInput();
+    });

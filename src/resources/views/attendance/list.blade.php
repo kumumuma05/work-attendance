@@ -51,7 +51,7 @@
                 <tbody>
                     @foreach ($attendances as $attendance)
                         <tr>
-                            <td>{{ $attendance->date->isoFormat('MM/DD(dd)') }}</td>
+                            <td>{{ $attendance->clock_in->isoFormat('MM/DD(dd)') }}</td>
                             <td>{{ $attendance->clock_in ? $attendance->clock_in->format('H:i') : ''}}</td>
                             <td>{{ $attendance->clock_out ? $attendance->clock_out->format('H:i') : ''}}</td>
                             <td>{{ $attendance->break_duration ? $attendance->break_duration : ''}}</td>

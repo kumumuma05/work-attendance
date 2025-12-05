@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\Attendance;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +16,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        // 管理者
+        $this->call(          AdminUserSeeder::class);
+
+        // 固定テストユーザー
+        $testUser = User::create([
+            'name' => 'user1',
+            'email' => 'user1@test.com',
+            'password' => Hash::make('password'),
+            'is_admin' => false,
+        ]);
+        Attendance::factory(30)->create([
+            'user_id' => $testUser->id,
+        ]);
+
+        // ランダム一般ユーザー
+        $users = User::factory(15)->create();
+
+        foreach ($users as $user) {
+            Attendance::factory(30)->create([
+                'user_id' => $user->id,
+            ]);
+        }
     }
 }

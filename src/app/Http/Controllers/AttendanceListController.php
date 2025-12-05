@@ -22,7 +22,7 @@ class AttendanceListController extends Controller
         $next = $current->copy()->addMonth()->format('Y-m');
 
         // ログインしているユーザーの１か月分のデータを取得
-        $attendances = Attendance::where('user_id', auth()->id())->whereBetween('date', [
+        $attendances = Attendance::where('user_id', auth()->id())->whereBetween('clock_in', [
             $current->copy()->startOfMonth(),
             $current->copy()->endOfMonth()
         ])
