@@ -40,8 +40,12 @@ class AttendanceDetailRequest extends FormRequest
     {
         return [
             'requested_clock_in.required' => '出勤時間が入力されていません',
-            'requested_clock_out.required' => '出勤時間が入力されていません',
-            'remarks.required' => '備考を記入してください'
+            'requested_clock_in.date_format' => '00:00の形式で入力してください',
+            'requested_clock_out.required' => '退勤時間が入力されていません',
+            'requested_clock_out.date_format' => '00:00の形式で入力してください',
+            'remarks.required' => '備考を記入してください',
+            'requested_breaks.*.break_in.date_format' => '00:00の形式で入力してください',
+            'requested_breaks.*.break_out.date_format' => '00:00の形式で入力してください',
         ];
     }
 
@@ -66,17 +70,17 @@ class AttendanceDetailRequest extends FormRequest
 
                     // 休憩開始 < 出勤
                     if ($breakIn && $clockIn && $breakIn < $clockIn) {
-                        $validator->errors()->add("breaks.$index.break_in", '休憩時間が不適切な値です');
+                        $validator->errors()->add("requested_breaks.$index.break_in", '休憩時間が不適切な値です');
                     }
 
                     // 休憩開始 > 退勤
                     if ($breakIn && $clockOut && $breakIn > $clockOut) {
-                        $validator->errors()->add("breaks.$index.break_in", '休憩時間が不適切な値です');
+                        $validator->errors()->add("requested_breaks.$index.break_in", '休憩時間が不適切な値です');
                     }
 
                     // 休憩終了 > 退勤
                     if ($breakOut && $clockOut && $breakOut > $clockOut) {
-                        $validator->errors()->add("breaks.$index.break_out", '休憩時間もしくは退勤時間が不適切な値です');
+                        $validator->errors()->add("requested_breaks.$index.break_out", '休憩時間もしくは退勤時間が不適切な値です');
                     }
                 }
             }

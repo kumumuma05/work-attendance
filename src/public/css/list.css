@@ -99,9 +99,10 @@
 
 .attendance-list__table th:first-child,
 .attendance-list__table td:first-child {
-    width: 22%;
+    width: 140px;
     padding-left: 60px;
     text-align: left;
+    font-variant-numeric: tabular-nums;
 }
 
 .attendance-list__table th:not(:first-child),

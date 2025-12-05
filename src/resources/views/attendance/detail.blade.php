@@ -14,7 +14,7 @@
     <div class="attendance-detail">
         <!-- タイトル -->
         <h1 class="attendance-detail__title">
-            勤怠一覧
+            勤怠詳細
         </h1>
 
         <form class="attendance-detail__form" action="/attendance/detail/test" method="post" novalidate>
@@ -29,10 +29,10 @@
                 <dt class="attendance-detail__term">日付</dt>
                 <dd class="attendance-detail__data">
                     <span class="attendance-detail__data-year">
-                        {{ $attendance->date->isoFormat('Y年') }}
+                        {{ $attendance->clock_in->isoFormat('Y年') }}
                     </span>
                     <span class="attendance-detail__data-monthday">
-                        {{ $attendance->date->isoFormat('M月D日') }}
+                        {{ $attendance->clock_in->isoFormat('M月D日') }}
                     </span>
                 </dd>
             </div>
@@ -40,13 +40,13 @@
             <div class="attendance-detail__row">
                 <dt class="attendance-detail__term">出勤・退勤</dt>
                 <dd class="attendance-detail__data">
-                    <input class="attendance-detail__time" type="time" name="requested_clock_in" value="{{ old('requested_clock_in', $attendance->clock_in->format('H:i')) }}">
+                    <input class="attendance-detail__time" type="text" name="requested_clock_in" value="{{ old('requested_clock_in', $attendance->clock_in->format('H:i')) }}" inputmode="numeric">
                     <span>～</span>
-                    <input class="attendance-detail__time" type="time" name="requested_clock_out" value="{{ old('requested_clock_out',$attendance->clock_out->format('H:i')) }}">
+                    <input class="attendance-detail__time" type="text" name="requested_clock_out" value="{{ old('requested_clock_out',$attendance->clock_out->format('H:i')) }}" inputmode="numeric">
                     <div class="form__error">
                         @error('requested_clock_in')
-                            {{ $message }}
-                        @enderror<br>
+                            {{ $message }}<br>
+                        @enderror
                         @error('requested_clock_out')
                             {{ $message }}
                         @enderror
@@ -58,14 +58,14 @@
                 @foreach($displayBreaks as $index => $break)
                     <dt class="attendance-detail__term">{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</dt>
                     <dd class="attendance-detail__data">
-                        <input class="attendance-detail__time" type="time" name="requested_breaks[][break_in]" value="{{ optional($break->break_in)->format('H:i') }}">
+                        <input class="attendance-detail__time" type="text" name="requested_breaks[{{ $index }}][break_in]" value="{{ old('requested_breaks.' . $index . '.break_in',optional($break->break_in)->format('H:i')) }}" inputmode="numeric">
                         <span>～</span>
-                        <input class="attendance-detail__time" type="time" name="requested_breaks[][break_out]" value=" {{ old("requested_breaks.$index.break_out", optional($break->break_out)->format('H:i')) }}">
+                        <input class="attendance-detail__time" type="text" name="requested_breaks[{{ $index }}][break_out]" value="{{ old('requested_breaks.' . $index . '.break_out', optional($break->break_out)->format('H:i')) }}" inputmode="numeric">
                         <div class="form__error">
-                            @error("breaks.$index.break_in")
-                                {{ $message }}
+                            @error("requested_breaks.$index.break_in")
+                                {{ $message }}<br>
                             @enderror
-                            @error("breaks.$index.break_in")
+                            @error("requested_breaks.$index.break_out")
                                 {{ $message }}
                             @enderror
                         </div>

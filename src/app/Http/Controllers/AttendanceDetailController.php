@@ -23,4 +23,10 @@ class AttendanceDetailController extends Controller
         ]);
         return view('attendance.detail', compact('attendance', 'user', 'displayBreaks'));
     }
+
+    public function update(AttendanceUpdateRequest $request, $id)
+{
+    dd($request->all());
 }
+}
+

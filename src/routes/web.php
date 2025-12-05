@@ -41,5 +41,5 @@ Route::middleware('auth', 'verified')->group(function () {
 
     // バリデテスト
     Route::post('/attendance/detail/test', function(AttendanceDetailRequest $request) {
-    return back()->withErrors($request->validator)->withInput();
+    return back()->withInput();
     });

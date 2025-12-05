@@ -26,6 +26,7 @@ class AttendanceListController extends Controller
             $current->copy()->startOfMonth(),
             $current->copy()->endOfMonth()
         ])
+        ->orderBy('clock_in', 'asc')
         ->get();
 
         return view('attendance.list', [
