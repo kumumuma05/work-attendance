@@ -121,21 +121,21 @@ body {
     }
 
     .header__logo {
-        width: 300px;
+        width: 280px;
         height: fit-content;
     }
 
     .header__nav {
-        gap: 20px;
+        gap: 15px;
         padding-right: 0;
     }
 
     .header__link {
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .logout__button {
-        font-size: 20px;
+        font-size: 18px;
         line-height: 2;
     }
 }
