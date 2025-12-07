@@ -7,6 +7,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceListController;
 use App\Http\Controllers\AttendanceDetailController;
 use App\Http\Requests\AttendanceDetailRequest;
+use App\Http\Controllers\AdminAttendanceController;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -14,12 +15,23 @@ Route::get('/email/verify', function () {
 
 Route::post('/logout', function (Request $request) {
 
+    $user = Auth::user();
     Auth::logout();
 
     $request->session()->invalidate();
     $request->session()->regenerateToken();
 
+    if ($user && $user->is_admin) {
+        return redirect('/admin/login');
+    }
     return redirect('/login');
+});
+
+Route::get('/admin/login', function () {
+    return view('auth.admin_login');
+});
+Route::middleware('auth')->group(function () {
+    Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index']);
 });
 
 

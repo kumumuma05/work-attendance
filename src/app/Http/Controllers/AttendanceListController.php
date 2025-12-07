@@ -36,5 +36,4 @@ class AttendanceListController extends Controller
             'nextMonth' => $next,
         ]);
     }
-
 }

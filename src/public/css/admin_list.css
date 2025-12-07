@@ -1,0 +1,151 @@
+.attendance-list {
+    min-height: calc(95vh - 80px);
+    padding: 90px 60px;
+    background: #F0EFF2;
+}
+
+/* タイトル */
+.attendance-list__title {
+    width: 900px;
+    margin: 0 auto;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    padding-left: 20px;
+    border-left: 8px solid #000;
+}
+
+/* 月の切り替え */
+.attendance-list__date-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 900px;
+    height: 60px;
+    margin: 0 auto;
+    background: #FFF;
+    border-radius: 10px;
+    margin-bottom: 50px;
+    padding: 0 25px;
+    position: relative;
+}
+
+.attendance-list__date-button {
+    display: flex;
+    align-items: center;
+    color: #737373;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+
+.attendance-list__date-arrow {
+    width: 20px;
+    height: 15px;
+    opacity: 0.3;
+    margin-right: 8px;
+}
+
+.attendance-list__date-nav a:last-child .attendance-list__date-arrow {
+    width: 20px;
+    height: 15px;
+    opacity: 0.3;
+    margin-right: 0;
+    transform: scalex(-1);
+}
+
+.attendance-list__current-date {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 700;
+    position: absolute;
+    left: 42%;
+}
+
+.attendance-list__calendar-img {
+    width: 25px;
+    margin-right: 10px;
+}
+
+/* テーブル */
+.attendance-list__table-inner {
+    width: 900px;
+    margin: 0 auto;
+    background: #FFF;
+    border-radius: 10px;
+}
+
+.attendance-list__table {
+    table-layout: fixed;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #737373;
+}
+
+.attendance-list__table th {
+    padding: 8px;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+.attendance-list__table td {
+    padding: 10px;
+    border-top: 2px solid #E1E1E1;
+    text-align: center;
+}
+
+.attendance-list__table th:first-child,
+.attendance-list__table td:first-child {
+    width: 140px;
+    padding-left: 60px;
+    text-align: left;
+    font-variant-numeric: tabular-nums;
+}
+
+.attendance-list__table th:not(:first-child),
+.attendance-list__table td:not(:first-child) {
+    width: calc((100% - 40%) / 4);
+}
+
+.attendance-list__table th:last-child,
+.attendance-list__table td:last-child {
+    width: 18%;
+    padding-left: 40px;
+    text-align: left;
+}
+
+.attendance-list__detail-link {
+    color: #000;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .attendance-list__title {
+        width: 600px;
+    }
+
+    .attendance-list__date-nav {
+        width: 600px;
+    }
+
+    .attendance-list__table-inner {
+        width: 600px;
+    }
+
+    .attendance-list__table th:first-child,
+    .attendance-list__table td:first-child {
+        width: 25%;
+        padding-left: 25px;
+    }
+
+    .attendance-list__table th:last-child,
+    .attendance-list__table td:last-child {
+        width: 15%;
+        text-align: center;
+        padding-right: 15px;
+        padding-left: 0;
+    }
+}

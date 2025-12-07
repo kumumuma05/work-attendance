@@ -25,9 +25,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'user1@test.com',
             'password' => Hash::make('password'),
             'is_admin' => false,
+            'email_verified_at' => now(),
         ]);
         Attendance::factory(30)->create([
             'user_id' => $testUser->id,
+            'email_verified_at' => now(),
         ]);
 
         // ランダム一般ユーザー

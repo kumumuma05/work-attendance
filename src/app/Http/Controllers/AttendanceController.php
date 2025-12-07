@@ -65,7 +65,6 @@ class AttendanceController extends Controller
     {
         Attendance::create([
             'user_id' => auth()->id(),
-            'date' => today(),
             'clock_in' => now(),
         ]);
 
