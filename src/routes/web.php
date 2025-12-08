@@ -30,6 +30,7 @@ Route::post('/logout', function (Request $request) {
 Route::get('/admin/login', function () {
     return view('auth.admin_login');
 });
+
 Route::middleware('auth')->group(function () {
     Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index']);
 });

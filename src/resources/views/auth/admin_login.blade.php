@@ -37,6 +37,8 @@
         <!-- 送信ボタン -->
         <button class="form__button login__button" type="submit">管理者ログインする</button>
 
+        <input type="hidden" name="login_type" value="admin">
+
     </form>
 
 @endsection

@@ -6,7 +6,8 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use App\Http\Requests\LoginRequest as AppLoginRequest;
+use App\Http\Requests\LoginRequest as LoginRequest;
+use App\Http\Requests\AdminLoginRequest as AdminLoginRequest;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -17,6 +18,10 @@ use Laravel\Fortify\Http\Requests\LoginRequest as FortifyLoginRequest;
 use Laravel\Fortify\Contracts\LogoutResponse;
 use App\Http\Responses\LoginResponse;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -34,8 +39,8 @@ class FortifyServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->app->bind(
-        \Laravel\Fortify\Http\Requests\LoginRequest::class,
-        \App\Http\Requests\LoginRequest::class
+            FortifyLoginRequest::class,
+            LoginRequest::class
         );
 
         Fortify::createUsersUsing(CreateNewUser::class);
