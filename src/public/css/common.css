@@ -28,7 +28,7 @@ body {
 
 .header__nav {
     display: flex;
-    gap: 50px;
+    gap: 45px;
     padding-right: 15px;
     align-items: center;
     justify-content: space-between;

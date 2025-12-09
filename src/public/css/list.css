@@ -1,5 +1,5 @@
 .attendance-list {
-    min-height: calc(95vh - 80px);
+    min-height: calc(100vh - 80px);
     padding: 90px 60px;
     background: #F0EFF2;
 }
