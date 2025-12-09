@@ -19,18 +19,18 @@
         </h1>
 
         <!-- 月の切り替え -->
-        <div class="attendance-list__month-nav">
-            <a class="attendance-list__month-button" href="{{ url('/attendance/list?month=' . $previousMonth) }}">
-                <img class="attendance-list__month-arrow" src="{{ asset('images/矢印.png') }}">
+        <div class="attendance-list__date-nav">
+            <a class="attendance-list__date-button" href="{{ url('/attendance/list?month=' . $previousMonth) }}">
+                <img class="attendance-list__date-arrow" src="{{ asset('images/矢印.png') }}">
                 前月
             </a>
-            <div class="attendance-list__current-month">
+            <div class="attendance-list__current-date">
                 <img class="attendance-list__calendar-img" src="{{ asset('images/カレンダ.png') }}"alt="">
                 <span>{{ $currentMonth }}</span>
             </div>
-            <a class="attendance-list__month-button" href="{{ url('/attendance/list?month=' . $nextMonth) }}">
+            <a class="attendance-list__date-button" href="{{ url('/attendance/list?month=' . $nextMonth) }}">
                 翌月
-                <img class="attendance-list__month-arrow" src="{{ asset('images/矢印.png') }}">
+                <img class="attendance-list__date-arrow" src="{{ asset('images/矢印.png') }}">
             </a>
         </div>
 

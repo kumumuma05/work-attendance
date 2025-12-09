@@ -8,6 +8,7 @@ use App\Http\Controllers\AttendanceListController;
 use App\Http\Controllers\AttendanceDetailController;
 use App\Http\Requests\AttendanceDetailRequest;
 use App\Http\Controllers\AdminAttendanceController;
+use App\Http\Controllers\AdminAttendanceDetailController;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -31,8 +32,11 @@ Route::get('/admin/login', function () {
     return view('auth.admin_login');
 });
 
+// 管理者
 Route::middleware('auth')->group(function () {
+    // 勤怠一覧画面表示
     Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index']);
+    Route::get('/admin/attendance/{id}', [AdminAttendanceDetailController::class, 'show']);
 });
 
 
@@ -44,13 +48,12 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/attendance/break_in', [AttendanceController::class, 'breakIn']);
     Route::post('/attendance/break_out', [AttendanceController::class, 'breakOut']);
     Route::post('/attendance/clock_out', [AttendanceController::class, 'clockOut']);
-
+    // 勤怠一覧画面表示
+    Route::get('/attendance/list', [AttendanceListController::class, 'index']);
+    // 勤怠詳細画面表示
+    Route::get('/attendance/detail/{id}', [AttendanceDetailController::class, 'show']);
 });
 
-// 勤怠一覧画面表示
-    Route::get('/attendance/list', [AttendanceListController::class, 'index']);
-
-    Route::get('/attendance/detail/{id}', [AttendanceDetailController::class, 'show']);
 
     // バリデテスト
     Route::post('/attendance/detail/test', function(AttendanceDetailRequest $request) {

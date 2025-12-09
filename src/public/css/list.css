@@ -15,8 +15,8 @@
     border-left: 8px solid #000;
 }
 
-/* 月の切り替え */
-.attendance-list__month-nav {
+/* 月日の切り替え */
+.attendance-list__date-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -30,7 +30,7 @@
     position: relative;
 }
 
-.attendance-list__month-button {
+.attendance-list__date-button {
     display: flex;
     align-items: center;
     color: #737373;
@@ -39,15 +39,15 @@
     letter-spacing: 3px;
 }
 
-.attendance-list__month-arrow {
+.attendance-list__date-arrow {
     width: 20px;
     height: 15px;
     opacity: 0.3;
     margin-right: 8px;
 }
 
-.attendance-list__month-nav a:last-child
-.attendance-list__month-arrow {
+.attendance-list__date-nav a:last-child
+.attendance-list__date-arrow {
     width: 20px;
     height: 15px;
     opacity: 0.3;
@@ -55,7 +55,7 @@
     transform: scalex(-1);
 }
 
-.attendance-list__current-month {
+.attendance-list__current-date {
     display: flex;
     align-items: center;
     font-size: 20px;
@@ -128,7 +128,7 @@
             width: 600px;
         }
 
-    .attendance-list__month-nav {
+    .attendance-list__date-nav {
         width: 600px;
     }
 
