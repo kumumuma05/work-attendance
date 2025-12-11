@@ -23,13 +23,13 @@
             <div class="attendance-detail__card">
                 <div class="attendance-detail__row">
                     <dt class="attendance-detail__term">名前</dt>
-                    <dd class="attendance-detail__date">{{ $attendance->user->name }}
+                    <dd class="attendance-detail__data">{{ $attendance->user->name }}
                     </dd>
                 </div>
 
                 <div class="attendance-detail__row">
                     <dt class="attendance-detail__term">日付</dt>
-                    <dd class="attendance-detail__date">
+                    <dd class="attendance-detail__data">
                         <span class="attendance-detail__data-year">
                             {{ $attendance->clock_in->isoFormat('Y年') }}
                         </span>
@@ -41,7 +41,7 @@
 
                 <div class="attendance-detail__row">
                     <dt class="attendance-detail__term">出勤・退勤</dt>
-                    <dd class="attendance-detail__date attendance-detail__date--column">
+                    <dd class="attendance-detail__data attendance-detail__dat--column">
                         <div class="attendance-detail__date-row">
                             <input class="attendance-detail__time" type="text" name="requested_clock_in" value="{{ old('requested_clock_in', $attendance->clock_in->format('H:i')) }}" inputmode="numeric">
                             <span>～</span>

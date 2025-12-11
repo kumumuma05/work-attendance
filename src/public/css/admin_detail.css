@@ -31,7 +31,7 @@
     padding: 31px 60px;
 }
 
-.attendance-detail__row:first-child{
+.attendance-detail__row:first-child {
     padding: 35px 60px 20px;
 }
 
@@ -50,7 +50,7 @@
 }
 
 /* 右データ */
-.attendance-detail__data{
+.attendance-detail__data {
     flex: 1;
     display: flex;
     align-items: center;
@@ -59,8 +59,7 @@
     letter-spacing: 2.4px;
 }
 
-.attendance-detail__row:nth-of-type(-n+2)
-.attendance-detail__data {
+.attendance-detail__row:nth-of-type(-n+2) .attendance-detail__data {
     margin-left: 25px;
 }
 
@@ -125,6 +124,7 @@
     letter-spacing: 3.3px;
     cursor: pointer;
 }
+
 /* エラーメッセージ */
 .form__error {
     font-size: 14px;
@@ -157,8 +157,7 @@
         width: 170px;
     }
 
-    .attendance-detail__row:nth-of-type(-n+2)
-    .attendance-detail__data {
+    .attendance-detail__row:nth-of-type(-n+2) .attendance-detail__data {
         padding-left: 18px;
     }
 

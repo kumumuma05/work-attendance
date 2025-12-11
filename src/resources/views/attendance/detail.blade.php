@@ -21,15 +21,16 @@
         <form class="attendance-detail__form" action="/attendance/detail/test" method="post" novalidate>
             @csrf
             <div class="attendance-detail__card">
+                <!-- 名前 -->
                 <div class="attendance-detail__row">
                     <dt class="attendance-detail__term">名前</dt>
-                    <dd class="attendance-detail__date">{{ $user->name }}
+                    <dd class="attendance-detail__data">{{ $user->name }}
                     </dd>
                 </div>
-
+                <!-- 日付 -->
                 <div class="attendance-detail__row">
                     <dt class="attendance-detail__term">日付</dt>
-                    <dd class="attendance-detail__date">
+                    <dd class="attendance-detail__data">
                         <span class="attendance-detail__data-year">
                             {{ $attendance->clock_in->isoFormat('Y年') }}
                         </span>
@@ -38,57 +39,66 @@
                         </span>
                     </dd>
                 </div>
-
+                <!-- 出勤・退勤 -->
                 <div class="attendance-detail__row">
                     <dt class="attendance-detail__term">出勤・退勤</dt>
-                    <dd class="attendance-detail__date attendance-detail__date--column">
-                        <div class="attendance-detail__date-row">
-                            <input class="attendance-detail__time" type="text" name="requested_clock_in" value="{{ old('requested_clock_in', $attendance->clock_in->format('H:i')) }}" inputmode="numeric">
-                            <span>～</span>
-                            <input class="attendance-detail__time" type="text" name="requested_clock_out" value="{{ old('requested_clock_out',$attendance->clock_out->format('H:i')) }}" inputmode="numeric">
-                        </div>
-                        <div class="form__error">
+                    <dd class="attendance-detail__data">
+                        <div class="attendance-detail__data-wrap">
+                            <div class="attendance-detail__data-row">
+                                <input class="attendance-detail__time" type="text" name="requested_clock_in" value="{{ old('requested_clock_in', $attendance->clock_in->format('H:i')) }}" inputmode="numeric">
+                                <span>～</span>
+                                <input class="attendance-detail__time" type="text" name="requested_clock_out" value="{{ old('requested_clock_out',$attendance->clock_out->format('H:i')) }}" inputmode="numeric">
+                            </div>
                             @error('requested_clock_in')
-                                {{ $message }}<br>
+                                <div class="form__error">
+                                    {{ $message }}
+                                </div>
                             @enderror
                             @error('requested_clock_out')
-                                {{ $message }}
+                                <div class="form__error">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                     </dd>
                 </div>
-
+                <!-- 休憩 -->
                 @foreach($displayBreaks as $index => $break)
                     <div class="attendance-detail__row">
                         <dt class="attendance-detail__term">{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</dt>
-                        <dd class="attendance-detail__date attendance-detail__date--column">
-                            <div class="attendance-detail__date-row">
-                                <input class="attendance-detail__time" type="text" name="requested_breaks[{{ $index }}][break_in]" value="{{ old('requested_breaks.' . $index . '.break_in',optional($break->break_in)->format('H:i')) }}" inputmode="numeric">
-                                <span>～</span>
-                                <input class="attendance-detail__time" type="text" name="requested_breaks[{{ $index }}][break_out]" value="{{ old('requested_breaks.' . $index . '.break_out', optional($break->break_out)->format('H:i')) }}" inputmode="numeric">
-                            </div>
-                            <div class="form__error">
+                        <dd class="attendance-detail__data">
+                            <div class="attendance-detail__data-wrap">
+                                <div class="attendance-detail__data-row">
+                                    <input class="attendance-detail__time" type="text" name="requested_breaks[{{ $index }}][break_in]" value="{{ old('requested_breaks.' . $index . '.break_in',optional($break->break_in)->format('H:i')) }}" inputmode="numeric">
+                                    <span>～</span>
+                                    <input class="attendance-detail__time" type="text" name="requested_breaks[{{ $index }}][break_out]" value="{{ old('requested_breaks.' . $index . '.break_out', optional($break->break_out)->format('H:i')) }}" inputmode="numeric">
+                                </div>
                                 @error("requested_breaks.$index.break_in")
-                                    {{ $message }}<br>
+                                    <div class="form__error">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                                 @error("requested_breaks.$index.break_out")
-                                    {{ $message }}
+                                    <div class="form__error">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                             </div>
                         </dd>
                     </div>
                 @endforeach
-
+                <!-- 備考 -->
                 <div class="attendance-detail__row">
-                    <dt class="attendance-detail__term">備考
-                    </dt>
-                    <dd class="attendance-detail__date attendance-detail__date--column">
-                        <textarea class="attendance-detail__remark" name="remarks">
-                            {{ old('remarks', $attendance->remarks ?? '') }}
-                        </textarea>
-                        <div class="form__error">
+                    <dt class="attendance-detail__term">備考</dt>
+                    <dd class="attendance-detail__data">
+                        <div class="attendance-detail__data-wrap">
+                            <textarea class="attendance-detail__remark" name="remarks">
+                                {{ old('remarks', $attendance->remarks ?? '') }}
+                            </textarea>
                             @error('remarks')
-                                {{ $message }}
+                                <div class="form__error">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                     </dd>

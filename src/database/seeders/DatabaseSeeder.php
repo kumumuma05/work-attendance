@@ -29,7 +29,6 @@ class DatabaseSeeder extends Seeder
         ]);
         Attendance::factory(30)->create([
             'user_id' => $testUser->id,
-            'email_verified_at' => now(),
         ]);
 
         // ランダム一般ユーザー
