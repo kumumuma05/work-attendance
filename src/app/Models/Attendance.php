@@ -90,7 +90,7 @@ class Attendance extends Model
 
     /**
      * この勤怠記録に紐づくユーザー情報を取得
-     * - attendance.user_id -> users.id
+     * - attendances.user_id -> users.id
      */
     public function user()
     {
@@ -103,5 +103,14 @@ class Attendance extends Model
     public function breaks()
     {
         return $this->hasMany(BreakTime::class);
+    }
+
+    /**
+     * この勤怠記録に紐づく修正申請一覧を取得
+     * -attendances.id -> attendance_requests.attendance_id
+     */
+    public function attendanceRequests()
+    {
+        return $this->hasMany(AttendanceRequest::class);
     }
 }

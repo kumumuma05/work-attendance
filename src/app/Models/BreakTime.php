@@ -27,7 +27,7 @@ class BreakTime extends Model
 
     /**
      * この休憩が属する勤怠記録を取得
-     * - breaks.attendance_id -> attendance.id
+     * - breaks.attendance_id -> attendances.id
      */
     public function attendance()
     {

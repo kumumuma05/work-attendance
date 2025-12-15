@@ -28,4 +28,23 @@ class AttendanceRequest extends Model
     protected $casts = [
         'requested_breaks' => 'array',
     ];
+
+    /**
+     * この修正申請が属する勤怠情報を取得
+     * - attendance_requests.attendance_id -> attendances.id
+     */
+    public function attendance()
+    {
+        return $this->belongsTo(Attendance::class);
+    }
+
+    /**
+     * この修正申請が属するユーザー情報を取得
+     * -attendance_requests.user_id -> users.id
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
+

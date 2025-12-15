@@ -44,10 +44,19 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * ユーザーが持つ勤怠記録一覧を取得
-     * - user.id -> attendance.user_id
+     * - users.id -> attendances.user_id
      */
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    /**
+     * ユーザーが持つ勤怠修正申請一覧を取得
+     * -users.id -> attendance_requests.user_id
+     */
+    public function attendanceRequests()
+    {
+        return $this->hasMany(AttendanceRequest::class);
     }
 }
