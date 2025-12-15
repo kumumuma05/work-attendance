@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Attendance;
+use Carbon\Carbon;
 
 class AttendanceDetailRequest extends FormRequest
 {
@@ -53,11 +55,20 @@ class AttendanceDetailRequest extends FormRequest
     {
         $validator->after(function ($validator) {
 
-            $clockIn = $this->requested_clock_in;
-            $clockOut = $this->requested_clock_out;
+            $attendance = Attendance::findOrFail($this->route('id'));
+            $baseDate = $attendance->clock_in->format('Y-m-d');
+            $clockIn = Carbon::parse("{$baseDate} {$this->requested_clock_in}");
+            $clockOut = $this->requested_clock_out
+                ? Carbon::parse("{$baseDate}  {$this->requested_clock_out}")
+                : null;
 
-            // 出勤 > 退勤 の異常
-            if ($clockIn && $clockOut && $clockIn > $clockOut) {
+            // 日またぎ勤務対応
+            if ($clockIn && $clockOut && $clockOut->lt($clockIn)) {
+                    $clockOut->addDay();
+            }
+
+            // 出勤 > 退勤のバリデーション
+            if ($clockIn && $clockOut && $clockIn->gt($clockOut)) {
                 $validator->errors()->add('requested_clock_in', '出勤時間もしくは退勤時間が不適切な値です');
             }
 
@@ -65,11 +76,15 @@ class AttendanceDetailRequest extends FormRequest
             if ($this->requested_breaks) {
                 foreach ($this->requested_breaks as $index => $break) {
 
-                $breakIn  = $break['break_in']  ?? null;
-                $breakOut = $break['break_out'] ?? null;
+                    $breakIn  = !empty($break['break_in'])
+                        ? Carbon::parse("{$baseDate} {$break['break_in']}")
+                        : null;
+                    $breakOut = !empty($break['break_out'])
+                    ? Carbon::parse("{$baseDate} {$break['break_out']}")
+                    : null;
 
-                    // 休憩開始 < 出勤
-                    if ($breakIn && $clockIn && $breakIn < $clockIn) {
+                    // 休憩開始 < 出勤のバリデーション
+                    if ($breakIn && $clockIn && $breakIn->lt($clockIn)) {
                         $validator->errors()->add("requested_breaks.$index.break_in", '休憩時間が不適切な値です');
                     }
 

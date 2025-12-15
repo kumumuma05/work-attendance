@@ -5,38 +5,38 @@
 
 <!-- CSS -->
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/list.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin_list.css') }}">
 @endsection
 
 <!-- 本体 -->
 @section('content')
     @include('header.admin')
 
-    <div class="attendance-list">
+    <div class="admin-list">
         <!-- タイトル -->
-        <h1 class="attendance-list__title">
+        <h1 class="admin-list__title">
             {{ $currentDay->isoformat('YYYY年M月D日') }}の勤怠
         </h1>
 
         <!-- 日付の切り替え -->
-        <div class="attendance-list__date-nav">
-            <a class="attendance-list__date-button" href="{{ url('/admin/attendance/list?date=' . $previousDay) }}">
-                <img class="attendance-list__date-arrow" src="{{ asset('images/矢印.png') }}">
+        <div class="admin-list__date-nav">
+            <a class="admin-list__date-button" href="{{ url('/admin/attendance/list?date=' . $previousDay) }}">
+                <img class="admin-list__date-arrow" src="{{ asset('images/矢印.png') }}">
                 前日
             </a>
-            <div class="attendance-list__current-date">
-                <img class="attendance-list__calendar-img" src="{{ asset('images/カレンダ.png') }}"alt="">
+            <div class="admin-list__current-date">
+                <img class="admin-list__calendar-img" src="{{ asset('images/カレンダ.png') }}"alt="">
                 <span>{{ $currentDay->format('Y/m/d') }}</span>
             </div>
-            <a class="attendance-list__date-button" href="{{ url('/admin/attendance/list?date=' . $nextDay) }}">
+            <a class="admin-list__date-button" href="{{ url('/admin/attendance/list?date=' . $nextDay) }}">
                 翌日
-                <img class="attendance-list__date-arrow" src="{{ asset('images/矢印.png') }}">
+                <img class="admin-list__date-arrow" src="{{ asset('images/矢印.png') }}">
             </a>
         </div>
 
         <!-- テーブル -->
-        <div class="attendance-list__table-inner">
-            <table class="attendance-list__table">
+        <div class="admin-list__table-inner">
+            <table class="admin-list__table">
                 <thead>
                     <tr>
                         <th>名前</th>
@@ -57,7 +57,7 @@
                             <td>{{ $attendance->break_duration ? $attendance->break_duration : ''}}</td>
                             <td>{{ $attendance->total_hours }}</td>
                             <td>
-                                <a class="attendance-list__detail-link" href="{{ $attendance->id }}">詳細</a>
+                                <a class="admin-list__detail-link" href="{{ $attendance->id }}">詳細</a>
                             </td>
                         </tr>
                     @endforeach

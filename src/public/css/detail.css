@@ -35,7 +35,7 @@
     padding: 35px 60px 20px;
 }
 
-.attendance-detail__row:last-child {
+.attendance-detail__row .attendance-detail__row:last-of-type {
     padding: 15px 60px 20px;
     border-bottom: none;
 }
@@ -80,7 +80,7 @@
     padding-right: 135px;
 }
 
-.attendance-detail__time {
+.attendance-detail__time-input {
     width: 100px;
     height: 30px;
     border: 1px solid #E1E1E1;
@@ -91,8 +91,14 @@
     letter-spacing: 2.5px;
 }
 
+.attendance-detail__time-text {
+    display: flex;
+    width: 100px;
+    justify-content: center;
+}
+
 /* 備考入力 */
-.attendance-detail__remark {
+.attendance-detail__remark-input {
     width: 316px;
     height: 70px;
     border: 1px solid #D9D9D9;
@@ -125,6 +131,15 @@
     letter-spacing: 3.3px;
     cursor: pointer;
 }
+
+.attendance-detail__form-message {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 2.7px;
+    color: #FF000080;
+}
+
 /* エラーメッセージ */
 .form__error {
     font-size: 14px;

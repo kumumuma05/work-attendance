@@ -52,10 +52,6 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('/attendance/list', [AttendanceListController::class, 'index']);
     // 勤怠詳細画面表示
     Route::get('/attendance/detail/{id}', [AttendanceDetailController::class, 'show']);
+    // 勤怠修正依頼登録
+    Route::post('/attendance/detail/{id}', [AttendanceDetailController::class, 'create']);
 });
-
-
-    // バリデテスト
-    Route::post('/attendance/detail/test', function(AttendanceDetailRequest $request) {
-    return back()->withInput();
-    });

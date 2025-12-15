@@ -10,6 +10,10 @@
 
 <!-- 本体 -->
 @section('content')
+    @php
+        $readonly = $hasPendingRequest;
+    @endphp
+
     @include('header.user_working')
     <div class="attendance-detail">
         <!-- タイトル -->
@@ -18,7 +22,7 @@
         </h1>
 
         <!-- 勤務詳細 -->
-        <form class="attendance-detail__form" action="/attendance/detail/test" method="post" novalidate>
+        <form class="attendance-detail__form" action="/attendance/detail/{{ $attendance->id }}" method="post" novalidate>
             @csrf
             <div class="attendance-detail__card">
                 <!-- 名前 -->
@@ -45,9 +49,21 @@
                     <dd class="attendance-detail__data">
                         <div class="attendance-detail__data-wrap">
                             <div class="attendance-detail__data-row">
-                                <input class="attendance-detail__time" type="text" name="requested_clock_in" value="{{ old('requested_clock_in', $attendance->clock_in->format('H:i')) }}" inputmode="numeric">
+                                @if (!$readonly)
+                                    <input class="attendance-detail__time-input" type="text" name="requested_clock_in" value="{{ old('requested_clock_in', $attendance->clock_in->format('H:i')) }}" inputmode="numeric">
+                                @else
+                                    <span class="attendance-detail__time-text">
+                                        {{ $attendance->clock_in->format('H:i')}}
+                                    </span class="attendance-detail__time-text">
+                                @endif
                                 <span>～</span>
-                                <input class="attendance-detail__time" type="text" name="requested_clock_out" value="{{ old('requested_clock_out',$attendance->clock_out->format('H:i')) }}" inputmode="numeric">
+                                @if (!$readonly)
+                                    <input class="attendance-detail__time-input" type="text" name="requested_clock_out" value="{{ old('requested_clock_out',optional($attendance->clock_out)->format('H:i')) }}" inputmode="numeric">
+                                @else
+                                <span class="attendance-detail__time-text">
+                                    {{ optional($attendance->clock_out)->format('H:i') }}
+                                </span class="attendance-detail__time-text">
+                            @endif
                             </div>
                             @error('requested_clock_in')
                                 <div class="form__error">
@@ -69,9 +85,21 @@
                         <dd class="attendance-detail__data">
                             <div class="attendance-detail__data-wrap">
                                 <div class="attendance-detail__data-row">
-                                    <input class="attendance-detail__time" type="text" name="requested_breaks[{{ $index }}][break_in]" value="{{ old('requested_breaks.' . $index . '.break_in',optional($break->break_in)->format('H:i')) }}" inputmode="numeric">
+                                    @if (!$readonly)
+                                        <input class="attendance-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_in]" value="{{ old('requested_breaks.' . $index . '.break_in',optional($break->break_in)->format('H:i')) }}" inputmode="numeric">
+                                    @else
+                                        <span class="attendance-detail__time-text">
+                                            {{ optional($break->break_in)->format('H:i') }}
+                                        </span class="attendance-detail__time-text">
+                                    @endif
                                     <span>～</span>
-                                    <input class="attendance-detail__time" type="text" name="requested_breaks[{{ $index }}][break_out]" value="{{ old('requested_breaks.' . $index . '.break_out', optional($break->break_out)->format('H:i')) }}" inputmode="numeric">
+                                    @if (!$readonly)
+                                        <input class="attendance-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_out]" value="{{ old('requested_breaks.' . $index . '.break_out', optional($break->break_out)->format('H:i')) }}" inputmode="numeric">
+                                    @else
+                                        <span class="attendance-detail__time-text">
+                                            {{ optional($break->break_out)->format('H:i') }}
+                                        </span class="attendance-detail__time-text">
+                                    @endif
                                 </div>
                                 @error("requested_breaks.$index.break_in")
                                     <div class="form__error">
@@ -92,9 +120,13 @@
                     <dt class="attendance-detail__term">備考</dt>
                     <dd class="attendance-detail__data">
                         <div class="attendance-detail__data-wrap">
-                            <textarea class="attendance-detail__remark" name="remarks">
-                                {{ old('remarks', $attendance->remarks ?? '') }}
-                            </textarea>
+                            @if (!$readonly)
+                                <textarea class="attendance-detail__remark-input" name="remarks">{{ old('remarks', $attendance->remarks ?? '') }}</textarea>
+                            @else
+                                <div class="attendance-detail__remark attendance-detail__remark-text">
+                                    {{ $pendingRequest->remarks }}
+                                </div>
+                            @endif
                             @error('remarks')
                                 <div class="form__error">
                                     {{ $message }}
@@ -106,7 +138,13 @@
             </div>
 
             <div class="attendance-detail__button">
-                <button class="attendance-detail__form-button">修正</button>
+                @if (!$readonly)
+                    <button class="attendance-detail__form-button">修正</button>
+                @else
+                    <p class="attendance-detail__form-message">
+                        *承認待ちのため修正はできません。
+                    </p>
+                @endif
             </div>
         </form>
     </div>
