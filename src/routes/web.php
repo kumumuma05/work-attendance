@@ -9,6 +9,8 @@ use App\Http\Controllers\AttendanceDetailController;
 use App\Http\Requests\AttendanceDetailRequest;
 use App\Http\Controllers\AdminAttendanceController;
 use App\Http\Controllers\AdminAttendanceDetailController;
+use App\Http\Controllers\CorrectionRequestController;
+
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -53,5 +55,6 @@ Route::middleware('auth', 'verified')->group(function () {
     // 勤怠詳細画面表示
     Route::get('/attendance/detail/{id}', [AttendanceDetailController::class, 'show']);
     // 勤怠修正依頼登録
-    Route::post('/attendance/detail/{id}', [AttendanceDetailController::class, 'create']);
+    Route::post('/attendance/detail/{id}', [AttendanceDetailController::class, 'store']);
+    Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'index']);
 });

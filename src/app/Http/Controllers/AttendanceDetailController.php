@@ -40,7 +40,7 @@ class AttendanceDetailController extends Controller
     /**
      * 勤怠修正依頼登録
      */
-    public function create(AttendanceDetailRequest $request, $id)
+    public function store(AttendanceDetailRequest $request, $id)
     {
         // レコードの抜き出し
         $attendance = Attendance::findOrFail($id);
