@@ -1,6 +1,6 @@
 .correction-request {
     min-height: calc(100vh - 80px);
-    padding: 90px 60px;
+    padding: 80px 60px;
     background: #F0EFF2;
 }
 
@@ -10,7 +10,7 @@
     margin: 0 auto;
     font-size: 30px;
     font-weight: 700;
-    margin-bottom: 60px;
+    margin-bottom: 50px;
     padding-left: 20px;
     border-left: 8px solid #000;
 }
@@ -40,6 +40,7 @@
     font-weight: 700;
 }
 
+/* テーブル */
 .correction-request__table-inner {
     width: 900px;
     margin: 0 auto;
@@ -59,7 +60,7 @@
 }
 
 .correction-request__table th {
-    padding: 8px;
+    padding: 10px;
     border-bottom: 3px solid #E1E1E1;
 }
 
@@ -88,6 +89,53 @@
     letter-spacing: 0;
 }
 
+.correction-request__table th:last-child,
+.correction-request__table td:last-child {
+    padding-left: 30px;
+}
+
 .correction-request__link {
     color: #000;
+}
+
+/* レスポンシブデザイン */
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .correction-request {
+        padding: 90px 0;
+    }
+
+    .correction-request__title {
+        width: 680px;
+    }
+
+    .correction-request__tab {
+        width: 680px;
+        padding-left: 40px;
+    }
+
+    .correction-request__tab-list {
+        gap: 60px;
+    }
+
+    .correction-request__table-inner {
+        width: 680px;
+    }
+
+    .correction-request__table {
+        table-layout: auto;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0;
+        padding: 0;
+    }
+
+    .correction-request__table th:nth-of-type(2),
+    .correction-request__table td:nth-of-type(2) {
+        padding-left: 15px;
+    }
+
+    .correction-request__table th:last-child,
+    .correction-request__table td:last-child {
+        padding-left: 10px;
+    }
 }

@@ -33,12 +33,12 @@
             <div class="correction-request__table-inner">
                 <table class="correction-request__table">
                     <colgroup>
-                        <col style="width: 140px;">
-                        <col style="width: 150px;">  <!-- 名前 -->
-                        <col style="width: 160px;">  <!-- 対象日 -->
-                        <col style="width: auto;">   <!-- 申請理由 -->
-                        <col style="width: 160px;">  <!-- 申請日 -->
-                        <col style="width: 130px;">   <!-- 詳細 -->
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
                     </colgroup>
                     <thead>
                         <tr>
