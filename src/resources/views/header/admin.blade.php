@@ -7,7 +7,7 @@
         <a class="header__link" href="/admin/attendance/list">勤怠一覧</a>
         <a class="header__link" href="/admin/staff/list">スタッフ一覧</a>
         <a class="header__link" href="/stamp_correction_request/list">申請一覧</a>
-        <form class="logout" action="/logout" method="post">
+        <form class="logout" action="/admin/logout" method="post">
             @csrf
             <button class="logout__button" type="submit">ログアウト</button>
         </form>

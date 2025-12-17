@@ -10,39 +10,42 @@ use App\Http\Requests\AttendanceDetailRequest;
 use App\Http\Controllers\AdminAttendanceController;
 use App\Http\Controllers\AdminAttendanceDetailController;
 use App\Http\Controllers\CorrectionRequestController;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
-
+// 一般ログイン認証用
+Route::get('/login', function() {
+    return view('auth.login');
+})->middleware('guest:web');
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
-
+})->middleware('auth:web')->name('verification.notice');
 Route::post('/logout', function (Request $request) {
 
-    $user = Auth::user();
-    Auth::logout();
+    Auth::guard('web')->logout();
 
     $request->session()->invalidate();
     $request->session()->regenerateToken();
 
-    if ($user && $user->is_admin) {
-        return redirect('/admin/login');
-    }
     return redirect('/login');
 });
 
+// 管理者認証用
 Route::get('/admin/login', function () {
     return view('auth.admin_login');
+})->middleware('guest:admin');
+Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])->name('admin.login');
+Route::post('/admin/logout', function (Request $request) {
+    Auth::guard('admin')->logout();
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect('/admin/login');
 });
 
-// 管理者
-Route::middleware('auth')->group(function () {
-    // 勤怠一覧画面表示
-    Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index']);
-    Route::get('/admin/attendance/{id}', [AdminAttendanceDetailController::class, 'show']);
-});
-
-
-Route::middleware('auth', 'verified')->group(function () {
+// 一般ユーザ用
+Route::middleware(['auth:web', 'verified'])->group(function () {
     // 勤怠登録画面表示
     Route::get('/attendance', [AttendanceController::class, 'index']);
     // 勤怠登録
@@ -57,4 +60,12 @@ Route::middleware('auth', 'verified')->group(function () {
     // 勤怠修正依頼登録
     Route::post('/attendance/detail/{id}', [AttendanceDetailController::class, 'store']);
     Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'index']);
+});
+
+// 管理者用
+Route::middleware('auth:admin')->group(function () {
+    // 勤怠一覧画面表示
+    Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index']);
+    // 勤怠詳細画面表示
+    Route::get('/admin/attendance/{id}', [AdminAttendanceDetailController::class, 'show']);
 });

@@ -21,6 +21,7 @@ use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 
 class FortifyServiceProvider extends ServiceProvider
@@ -61,6 +62,30 @@ class FortifyServiceProvider extends ServiceProvider
             $email = (string) $request->email;
 
             return Limit::perMinute(10)->by($email . $request->ip());
+        });
+
+        Fortify::authenticateUsing(function (Request $request) {
+            if ($request->routeIs('admin.login')) {
+                if (Auth::guard('admin')->attempt(
+                    $request->only('email', 'password'),
+                    $request->boolean('remember')
+                )) {
+
+                    return Auth::guard('admin')->user();
+                }
+
+                return null;
+            }
+
+            if (Auth::guard('web')->attempt(
+                $request->only('email', 'password'),
+                $request->boolean('remember')
+            )) {
+
+                return Auth::guard('web')->user();
+            }
+
+            return null;
         });
     }
 }
