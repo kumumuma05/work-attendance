@@ -24,7 +24,7 @@ class AttendanceFactory extends Factory
         $clockIn = Carbon::parse("$date 08:00")
             ->addMinutes($this->faker->numberBetween(0,180));
         $clockOut = $clockIn->copy()->addHours(
-            $this->faker->numberBetween(7,16)
+            $this->faker->numberBetween(7,12)
         );
 
         return [

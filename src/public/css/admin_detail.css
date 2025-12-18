@@ -1,11 +1,11 @@
-.attendance-detail {
+.admin-detail {
     min-height: calc(95vh - 80px);
     padding: 90px 60px;
     background: #F0EFF2;
 }
 
 /* タイトル */
-.attendance-detail__title {
+.admin-detail__title {
     width: 900px;
     margin: 0 auto;
     font-size: 30px;
@@ -16,7 +16,7 @@
 }
 
 /* 勤務詳細 */
-.attendance-detail__card {
+.admin-detail__card {
     width: 900px;
     margin: 0 auto;
     background: #FFF;
@@ -24,24 +24,24 @@
 }
 
 /* 1行 */
-.attendance-detail__row {
+.admin-detail__row {
     display: flex;
     align-items: center;
     border-bottom: 2px solid #E1E1E1;
     padding: 31px 60px;
 }
 
-.attendance-detail__row:first-child {
+.admin-detail__row:first-child {
     padding: 35px 60px 20px;
 }
 
-.attendance-detail__row:last-child {
-    padding: 15px 60px 20px;
+.admin-detail__row:last-of-type {
+    padding: 15px 60px;
     border-bottom: none;
 }
 
 /* 左ラベル */
-.attendance-detail__term {
+.admin-detail__term {
     width: 270px;
     font-size: 16px;
     font-weight: 700;
@@ -50,7 +50,7 @@
 }
 
 /* 右データ */
-.attendance-detail__data {
+.admin-detail__data {
     flex: 1;
     display: flex;
     align-items: center;
@@ -59,27 +59,28 @@
     letter-spacing: 2.4px;
 }
 
-.attendance-detail__row:nth-of-type(-n+2) .attendance-detail__data {
+.admin-detail__row:nth-of-type(-n+2)
+.admin-detail__data {
     margin-left: 25px;
 }
 
-.attendance-detail__data--column {
+.admin-detail__data--column {
     display: flex;
     flex-direction: column;
     width: 100%;
     gap: 5px;
 }
 
-.attendance-detail__data-row {
+.admin-detail__data-row {
     display: flex;
     gap: 50px;
 }
 
-.attendance-detail__data-year {
+.admin-detail__data-year {
     padding-right: 135px;
 }
 
-.attendance-detail__time {
+.admin-detail__time-input {
     width: 100px;
     height: 30px;
     border: 1px solid #E1E1E1;
@@ -90,8 +91,14 @@
     letter-spacing: 2.5px;
 }
 
+.admin-detail__time-text {
+    display: flex;
+    width: 100px;
+    justify-content: center;
+}
+
 /* 備考入力 */
-.attendance-detail__remark {
+.admin-detail__remark-input {
     width: 316px;
     height: 70px;
     border: 1px solid #D9D9D9;
@@ -103,14 +110,14 @@
 }
 
 /* 修正ボタン */
-.attendance-detail__button {
+.admin-detail__button {
     width: 900px;
     margin: 0 auto;
     display: flex;
     justify-content: end;
 }
 
-.attendance-detail__form-button {
+.admin-detail__form-button {
     margin-top: 35px;
     width: 130px;
     height: 50px;
@@ -125,6 +132,14 @@
     cursor: pointer;
 }
 
+.admin-detail__form-message {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 2.7px;
+    color: #FF000080;
+}
+
 /* エラーメッセージ */
 .form__error {
     font-size: 14px;
@@ -133,39 +148,40 @@
 
 /* レスポンシブデザイン */
 @media screen and (min-width: 768px) and (max-width: 850px) {
-    .attendance-detail__title {
+    .admin-detail__title {
         width: 600px;
     }
 
-    .attendance-detail__card {
+    .admin-detail__card {
         width: 600px;
     }
 
-    .attendance-detail__row {
+    .admin-detail__row {
         padding: 31px 60px;
     }
 
-    .attendance-detail__row:first-child {
+    .admin-detail__row:first-child {
         padding: 35px 40px 20px;
     }
 
-    .attendance-detail__row:last-child {
-        padding: 15px 40px 20px;
+    .admin-detail__row:last-of-type {
+        padding: 15px 40px;
     }
 
-    .attendance-detail__term {
+    .admin-detail__term {
         width: 170px;
     }
 
-    .attendance-detail__row:nth-of-type(-n+2) .attendance-detail__data {
+    .admin-detail__row:nth-of-type(-n+2)
+    .admin-detail__data {
         padding-left: 18px;
     }
 
-    .attendance-detail__data-year {
+    .admin-detail__data-year {
         padding-right: 150px;
     }
 
-    .attendance-detail__button {
+    .admin-detail__button {
         width: 600px;
     }
 }

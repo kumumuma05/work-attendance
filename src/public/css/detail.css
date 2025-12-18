@@ -35,8 +35,8 @@
     padding: 35px 60px 20px;
 }
 
-.attendance-detail__row .attendance-detail__row:last-of-type {
-    padding: 15px 60px 20px;
+.attendance-detail__row:last-of-type {
+    padding: 15px 60px;
     border-bottom: none;
 }
 
@@ -62,13 +62,6 @@
 .attendance-detail__row:nth-of-type(-n+2)
 .attendance-detail__data {
     margin-left: 25px;
-}
-
-.attendance-detail__data--column {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 5px;
 }
 
 .attendance-detail__data-row {
@@ -164,8 +157,8 @@
         padding: 35px 40px 20px;
     }
 
-    .attendance-detail__row:last-child {
-        padding: 15px 40px 20px;
+    .attendance-detail__row:last-of-type {
+        padding: 15px 40px;
     }
 
     .attendance-detail__term {

@@ -62,11 +62,6 @@ class AttendanceDetailRequest extends FormRequest
                 ? Carbon::parse("{$baseDate}  {$this->requested_clock_out}")
                 : null;
 
-            // 日またぎ勤務対応
-            if ($clockIn && $clockOut && $clockOut->lt($clockIn)) {
-                    $clockOut->addDay();
-            }
-
             // 出勤 > 退勤のバリデーション
             if ($clockIn && $clockOut && $clockIn->gt($clockOut)) {
                 $validator->errors()->add('requested_clock_in', '出勤時間もしくは退勤時間が不適切な値です');

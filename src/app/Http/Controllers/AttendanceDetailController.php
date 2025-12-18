@@ -50,10 +50,6 @@ class AttendanceDetailController extends Controller
         // 出勤・退勤時間をdatetimeに変換
         $clockIn  = Carbon::parse("{$baseDate} {$request->requested_clock_in}");
         $clockOut = Carbon::parse("{$baseDate} {$request->requested_clock_out}");
-        // 日またぎ勤務の補正
-        if ($clockOut->lt($clockIn)) {
-            $clockOut->addDay();
-        }
 
         // 休憩時間をdatetimeに変換
         $breaks = [];
@@ -65,10 +61,6 @@ class AttendanceDetailController extends Controller
                 $breakOut = $break['break_out']
                     ? Carbon::parse("{$baseDate} {$break['break_out']}")
                     : null;
-
-                if ($breakOut && $breakIn && $breakOut->lt($breakIn)) {
-                    $breakOut->addDay();
-                }
 
                 $breaks[] = [
                     'break_in' => $breakIn ? $breakIn->toDateTimeString() : null,

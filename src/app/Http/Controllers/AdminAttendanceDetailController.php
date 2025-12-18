@@ -21,7 +21,5 @@ class AdminAttendanceDetailController extends Controller
         ]);
         return view('attendance.admin_detail', compact('attendance', 'displayBreaks'));
     }
-
-    
 }
 

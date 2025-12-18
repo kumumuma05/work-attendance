@@ -19,6 +19,7 @@ class CreateAttendancesTable extends Migration
             $table->datetime('clock_in')->nullable();
             $table->datetime('clock_out')->nullable();
             $table->timestamps();
+            $table->foreignId('updated_by_admin_id')->nullable()->constrained('admins');
         });
     }
 
