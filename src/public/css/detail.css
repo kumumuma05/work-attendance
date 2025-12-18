@@ -86,12 +86,12 @@
 
 .attendance-detail__time-text {
     display: flex;
-    width: 100px;
+    width: 105px;
     justify-content: center;
 }
 
 /* 備考入力 */
-.attendance-detail__remark-input {
+.attendance-detail__remark-text {
     width: 316px;
     height: 70px;
     border: 1px solid #D9D9D9;
@@ -150,7 +150,7 @@
     }
 
     .attendance-detail__row {
-        padding: 31px 60px;
+        padding: 31px 40px;
     }
 
     .attendance-detail__row:first-child {
@@ -167,11 +167,15 @@
 
     .attendance-detail__row:nth-of-type(-n+2)
     .attendance-detail__data {
-        padding-left: 18px;
+        margin-left: 18px;
+    }
+
+    .attendance-detail__data-row {
+        gap: 40px;
     }
 
     .attendance-detail__data-year {
-        padding-right: 150px;
+        padding-right: 120px;
     }
 
     .attendance-detail__button {

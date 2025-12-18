@@ -64,13 +64,6 @@
     margin-left: 25px;
 }
 
-.admin-detail__data--column {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 5px;
-}
-
 .admin-detail__data-row {
     display: flex;
     gap: 50px;
@@ -93,12 +86,12 @@
 
 .admin-detail__time-text {
     display: flex;
-    width: 100px;
+    width: 105px;
     justify-content: center;
 }
 
 /* 備考入力 */
-.admin-detail__remark-input {
+.admin-detail__remark-text {
     width: 316px;
     height: 70px;
     border: 1px solid #D9D9D9;
@@ -157,7 +150,7 @@
     }
 
     .admin-detail__row {
-        padding: 31px 60px;
+        padding: 31px 40px;
     }
 
     .admin-detail__row:first-child {
@@ -174,11 +167,15 @@
 
     .admin-detail__row:nth-of-type(-n+2)
     .admin-detail__data {
-        padding-left: 18px;
+        margin-left: 18px;
+    }
+
+    .admin-detail__data-row {
+        gap: 40px;
     }
 
     .admin-detail__data-year {
-        padding-right: 150px;
+        padding-right: 120px;
     }
 
     .admin-detail__button {

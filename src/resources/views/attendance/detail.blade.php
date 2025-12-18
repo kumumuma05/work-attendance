@@ -49,21 +49,21 @@
                     <dd class="attendance-detail__data">
                         <div class="attendance-detail__data-wrap">
                             <div class="attendance-detail__data-row">
-                                @if (!$readonly)
+                                @if (!$hasPendingRequest)
                                     <input class="attendance-detail__time-input" type="text" name="requested_clock_in" value="{{ old('requested_clock_in', $attendance->clock_in->format('H:i')) }}" inputmode="numeric">
                                 @else
                                     <span class="attendance-detail__time-text">
                                         {{ $attendance->clock_in->format('H:i')}}
-                                    </span class="attendance-detail__time-text">
+                                    </span>
                                 @endif
                                 <span>～</span>
-                                @if (!$readonly)
+                                @if (!$hasPendingRequest)
                                     <input class="attendance-detail__time-input" type="text" name="requested_clock_out" value="{{ old('requested_clock_out',optional($attendance->clock_out)->format('H:i')) }}" inputmode="numeric">
                                 @else
-                                <span class="attendance-detail__time-text">
+                                    <span class="attendance-detail__time-text">
                                     {{ optional($attendance->clock_out)->format('H:i') }}
-                                </span class="attendance-detail__time-text">
-                            @endif
+                                    </span>
+                                @endif
                             </div>
                             @error('requested_clock_in')
                                 <div class="form__error">
@@ -85,20 +85,20 @@
                         <dd class="attendance-detail__data">
                             <div class="attendance-detail__data-wrap">
                                 <div class="attendance-detail__data-row">
-                                    @if (!$readonly)
+                                    @if (!$hasPendingRequest)
                                         <input class="attendance-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_in]" value="{{ old('requested_breaks.' . $index . '.break_in',optional($break->break_in)->format('H:i')) }}" inputmode="numeric">
                                     @else
                                         <span class="attendance-detail__time-text">
                                             {{ optional($break->break_in)->format('H:i') }}
-                                        </span class="attendance-detail__time-text">
+                                        </span>
                                     @endif
                                     <span>～</span>
-                                    @if (!$readonly)
+                                    @if (!$hasPendingRequest)
                                         <input class="attendance-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_out]" value="{{ old('requested_breaks.' . $index . '.break_out', optional($break->break_out)->format('H:i')) }}" inputmode="numeric">
                                     @else
                                         <span class="attendance-detail__time-text">
                                             {{ optional($break->break_out)->format('H:i') }}
-                                        </span class="attendance-detail__time-text">
+                                        </span>
                                     @endif
                                 </div>
                                 @error("requested_breaks.$index.break_in")
@@ -120,10 +120,12 @@
                     <dt class="attendance-detail__term">備考</dt>
                     <dd class="attendance-detail__data">
                         <div class="attendance-detail__data-wrap">
-                            @if (!$readonly)
-                                <textarea class="attendance-detail__remark-input" name="remarks">{{ old('remarks', $attendance->remarks ?? '') }}</textarea>
+                            @if (!$hasPendingRequest)
+                                <textarea class="attendance-detail__remark-text" name="remarks">
+                                    {{ old('remarks', $attendance->remarks ?? '') }}
+                                </textarea>
                             @else
-                                <div class="attendance-detail__remark attendance-detail__remark-text">
+                                <div class="attendance-detail__remark">
                                     {{ $pendingRequest->remarks }}
                                 </div>
                             @endif
@@ -138,7 +140,7 @@
             </div>
 
             <div class="attendance-detail__button">
-                @if (!$readonly)
+                @if (!$hasPendingRequest)
                     <button class="attendance-detail__form-button">修正</button>
                 @else
                     <p class="attendance-detail__form-message">

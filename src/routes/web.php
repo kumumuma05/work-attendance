@@ -69,4 +69,5 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index']);
     // 勤怠詳細画面表示
     Route::get('/admin/attendance/{id}', [AdminAttendanceDetailController::class, 'show']);
+    Route::post('/admin/attendance/{id}', [AdminAttendanceDetailController::class, 'update']);
 });

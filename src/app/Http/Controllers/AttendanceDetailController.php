@@ -18,10 +18,14 @@ class AttendanceDetailController extends Controller
             ->firstOrFail();
 
         $user = auth()->user();
+
         $breaks = $attendance->breaks;
-        $hasPendingRequest = AttendanceRequest::where('attendance_id', $attendance->id)
+
+        $pendingRequest = AttendanceRequest::where('attendance_id', $attendance->id)
             ->where('status', 'pending')
-            ->exists();
+            ->latest()
+            ->first();
+        $hasPendingRequest = $pendingRequest !== null;
         $displayBreaks = $breaks->toBase();
         if (!$hasPendingRequest) {
             $displayBreaks->push((object)[
@@ -29,10 +33,6 @@ class AttendanceDetailController extends Controller
                 'break_out' => null,
             ]);
         }
-        $pendingRequest = AttendanceRequest::where('attendance_id', $attendance->id)
-            ->where('status', 'pending')
-            ->latest()
-            ->first();
 
         return view('attendance.detail', compact('attendance', 'user', 'displayBreaks', 'hasPendingRequest', 'pendingRequest'));
     }

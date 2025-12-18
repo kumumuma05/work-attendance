@@ -18,7 +18,7 @@
         </h1>
 
         <!-- 勤務詳細 -->
-        <form class="admin-detail__form" action="/attendance/detail/test" method="post" novalidate>
+        <form class="admin-detail__form" action="/admin/attendance/{{ $attendance->id }}" method="post" novalidate>
             @csrf
             <div class="admin-detail__card">
                 <!-- 名前 -->
@@ -42,54 +42,93 @@
                 <!-- 出勤・退勤 -->
                 <div class="admin-detail__row">
                     <dt class="admin-detail__term">出勤・退勤</dt>
-                    <dd class="admin-detail__data admin-detail__data--column">
-                        <div class="admin-detail__data-row">
-                            <input class="admin-detail__time" type="text" name="requested_clock_in" value="{{ old('requested_clock_in', $attendance->clock_in->format('H:i')) }}" inputmode="numeric">
-                            <span>～</span>
-                            <input class="admin-detail__time" type="text" name="requested_clock_out" value="{{ old('requested_clock_out',$attendance->clock_out->format('H:i')) }}" inputmode="numeric">
-                        </div>
-                        <div class="form__error">
+                    <dd class="admin-detail__data">
+                        <div class="admin-detail__data-wrap">
+                            <div class="admin-detail__data-row">
+                                @if (!$hasPendingRequest)
+                                    <input class="admin-detail__time-input" type="text" name="requested_clock_in" value="{{ old('requested_clock_in', $attendance->clock_in->format('H:i')) }}" inputmode="numeric">
+                                @else
+                                    <span class="admin-detail__time-text">
+                                        {{ $attendance->clock_in->format('H:i')}}
+                                    </span >
+                                @endif
+                                <span>～</span>
+                                @if (!$hasPendingRequest)
+                                    <input class="admin-detail__time-input" type="text" name="requested_clock_out" value="{{ old('requested_clock_out',$attendance->clock_out->format('H:i')) }}" inputmode="numeric">
+                                @else
+                                    <span class="admin-detail__time-text">
+                                    {{ optional($attendance->clock_out)->format('H:i') }}
+                                    </span>
+                                @endif
+                            </div>
                             @error('requested_clock_in')
-                                {{ $message }}<br>
+                                <div class="form__error">
+                                    {{ $message }}
+                                </div>
                             @enderror
                             @error('requested_clock_out')
-                                {{ $message }}
+                                <div class="form__error">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                     </dd>
                 </div>
-
+                <!-- 休憩 -->
                 @foreach($displayBreaks as $index => $break)
                     <div class="admin-detail__row">
                         <dt class="admin-detail__term">{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</dt>
-                        <dd class="admin-detail__data admin-detail__data--column">
-                            <div class="admin-detail__data-row">
-                                <input class="admin-detail__time" type="text" name="requested_breaks[{{ $index }}][break_in]" value="{{ old('requested_breaks.' . $index . '.break_in',optional($break->break_in)->format('H:i')) }}" inputmode="numeric">
-                                <span>～</span>
-                                <input class="admin-detail__time" type="text" name="requested_breaks[{{ $index }}][break_out]" value="{{ old('requested_breaks.' . $index . '.break_out', optional($break->break_out)->format('H:i')) }}" inputmode="numeric">
-                            </div>
-                            <div class="form__error">
+                        <dd class="admin-detail__data">
+                            <div class="admin-detail__data-wrap">
+                                <div class="admin-detail__data-row">
+                                    @if (!$hasPendingRequest)
+                                        <input class="admin-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_in]" value="{{ old('requested_breaks.' . $index . '.break_in',optional($break->break_in)->format('H:i')) }}" inputmode="numeric">
+                                    @else
+                                        <span class="admin-detail__time-text">
+                                            {{ optional($break->break_in)->format('H:i') }}
+                                        </span>
+                                    @endif
+                                    <span>～</span>
+                                    @if (!$hasPendingRequest)
+                                        <input class="admin-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_out]" value="{{ old('requested_breaks.' . $index . '.break_out', optional($break->break_out)->format('H:i')) }}" inputmode="numeric">
+                                    @else
+                                        <span class="admin-detail__time-text">
+                                            {{ optional($break->break_out)->format('H:i') }}
+                                        </span>
+                                    @endif
+                                </div>
                                 @error("requested_breaks.$index.break_in")
-                                    {{ $message }}<br>
+                                    <div class="form__error">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                                 @error("requested_breaks.$index.break_out")
-                                    {{ $message }}
+                                    <div class="form__error">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                             </div>
                         </dd>
                     </div>
                 @endforeach
-
+                <!-- 備考 -->
                 <div class="admin-detail__row">
-                    <dt class="admin-detail__term">備考
-                    </dt>
-                    <dd class="admin-detail__data admin-detail__data--column">
-                        <textarea class="admin-detail__remark" name="remarks">
-                            {{ old('remarks', $attendance->remarks ?? '') }}
-                        </textarea>
-                        <div class="form__error">
+                    <dt class="admin-detail__term">備考</dt>
+                    <dd class="admin-detail__data">
+                        <div class="admin-detail__data-wrap">
+                            @if (!$hasPendingRequest)
+                                <textarea class="admin-detail__remark-text" name="remarks">
+                                    {{ old('remarks', $attendance->remarks ?? '') }}
+                                </textarea>
+                            @else
+                                <div class="admin-detail__remark">
+                                        {{ $pendingRequest->remarks }}
+                                </div>
+                            @endif
                             @error('remarks')
-                                {{ $message }}
+                                <div class="form__error">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                     </dd>
@@ -97,7 +136,13 @@
             </div>
 
             <div class="admin-detail__button">
-                <button class="admin-detail__form-button">修正</button>
+                @if (!$hasPendingRequest)
+                    <button class="admin-detail__form-button">修正</button>
+                @else
+                    <p class="admin-detail__form-message">
+                        *承認待ちのため修正はできません。
+                    </p>
+                @endif
             </div>
         </form>
     </div>
