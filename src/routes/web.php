@@ -70,4 +70,5 @@ Route::middleware('auth:admin')->group(function () {
     // 勤怠詳細画面表示
     Route::get('/admin/attendance/{id}', [AdminAttendanceDetailController::class, 'show']);
     Route::post('/admin/attendance/{id}', [AdminAttendanceDetailController::class, 'update']);
+    Route::get('/stamp_correction_request/list', [AdminCorrectionRequestController::class, 'index']);
 });

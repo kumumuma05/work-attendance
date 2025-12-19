@@ -135,6 +135,12 @@
                 </div>
             </div>
 
+            @if (session('status'))
+                <p class="admin-detail__form-success">
+                    {{ session('status') }}
+                </p>
+            @endif
+
             <div class="admin-detail__button">
                 @if (!$hasPendingRequest)
                     <button class="admin-detail__form-button">修正</button>

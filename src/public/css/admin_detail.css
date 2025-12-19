@@ -125,6 +125,17 @@
     cursor: pointer;
 }
 
+.admin-detail__form-success {
+    width: 900px;
+    margin: 0 auto;
+    margin-top: 10px;
+    text-align: end;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 2.7px;
+    color: #FF000080;
+}
+
 .admin-detail__form-message {
     margin-top: 20px;
     font-size: 18px;
