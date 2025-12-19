@@ -7,10 +7,11 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceListController;
 use App\Http\Controllers\AttendanceDetailController;
 use App\Http\Requests\AttendanceDetailRequest;
-use App\Http\Controllers\AdminAttendanceController;
+use App\Http\Controllers\AdminAttendanceListController;
 use App\Http\Controllers\AdminAttendanceDetailController;
 use App\Http\Controllers\CorrectionRequestController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use App\Http\Controllers\AdminCorrectionRequestController;
 
 // 一般ログイン認証用
 Route::get('/login', function() {
@@ -66,9 +67,10 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
 // 管理者用
 Route::middleware('auth:admin')->group(function () {
     // 勤怠一覧画面表示
-    Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index']);
+    Route::get('/admin/attendance/list', [AdminAttendanceListController::class, 'index']);
     // 勤怠詳細画面表示
     Route::get('/admin/attendance/{id}', [AdminAttendanceDetailController::class, 'show']);
+    // 勤怠詳細修正
     Route::post('/admin/attendance/{id}', [AdminAttendanceDetailController::class, 'update']);
-    Route::get('/stamp_correction_request/list', [AdminCorrectionRequestController::class, 'index']);
+    Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminCorrectionApproveController::class, 'show']);
 });

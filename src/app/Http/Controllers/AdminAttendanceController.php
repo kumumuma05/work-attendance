@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use App\Models\Attendance;
 
 
-class AdminAttendanceController extends Controller
+class AdminAttendanceListController extends Controller
 {
     /**
      * 勤怠一覧表示
