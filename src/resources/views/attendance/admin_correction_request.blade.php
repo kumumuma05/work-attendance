@@ -64,7 +64,7 @@
                                 <td>{{ $correction->remarks }}</td>
                                 <td>{{ $correction->created_at->isoFormat('YYYY/MM/DD') }}</td>
                                 <td>
-                                    <a class="correction-request__link" href="/admin/attendance/{{ $correction->attendance->id }}">詳細</a>
+                                    <a class="correction-request__link" href="/stamp_correction_request/approve/{{ $correction->id }}">詳細</a>
                                 </td>
                             </tr>
                         @endforeach

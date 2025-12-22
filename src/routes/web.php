@@ -12,6 +12,7 @@ use App\Http\Controllers\AdminAttendanceDetailController;
 use App\Http\Controllers\CorrectionRequestController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\AdminCorrectionRequestController;
+use App\Http\Controllers\AdminCorrectionApproveController;
 
 // 一般ログイン認証用
 Route::get('/login', function() {
@@ -72,5 +73,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/attendance/{id}', [AdminAttendanceDetailController::class, 'show']);
     // 勤怠詳細修正
     Route::post('/admin/attendance/{id}', [AdminAttendanceDetailController::class, 'update']);
+    // 修正申請承認画面表示
     Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminCorrectionApproveController::class, 'show']);
+    Route::post('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminCorrectionApproveController::class, 'approve']);
 });

@@ -74,7 +74,7 @@ class AttendanceDetailController extends Controller
             'user_id' => auth()->id(),
             'requested_clock_in' => $clockIn,
             'requested_clock_out' => $clockOut,
-            'requested_breaks' => json_encode($breaks),
+            'requested_breaks' => $breaks,
             'remarks' => $request->remarks,
             'status' => 'pending',
         ]);

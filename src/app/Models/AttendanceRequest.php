@@ -26,6 +26,8 @@ class AttendanceRequest extends Model
      * 配列に変換
      */
     protected $casts = [
+        'requested_clock_in' => 'datetime',
+        'requested_clock_out' => 'datetime',
         'requested_breaks' => 'array',
     ];
 

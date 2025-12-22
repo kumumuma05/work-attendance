@@ -1,0 +1,194 @@
+.correction-approve {
+    min-height: calc(95vh - 80px);
+    padding: 90px 60px;
+    background: #F0EFF2;
+}
+
+/* タイトル */
+.correction-approve__title {
+    width: 900px;
+    margin: 0 auto;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 46px;
+    padding-left: 20px;
+    border-left: 8px solid #000;
+}
+
+/* 勤務詳細 */
+.correction-approve__card {
+    width: 900px;
+    margin: 0 auto;
+    background: #FFF;
+    border-radius: 10px;
+}
+
+/* 1行 */
+.correction-approve__row {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #E1E1E1;
+    padding: 32px 60px;
+}
+
+.correction-approve__row:first-child {
+    padding: 35px 60px 20px;
+}
+
+.correction-approve__row:last-of-type {
+    padding: 40px 60px;
+    border-bottom: none;
+}
+
+/* 左ラベル */
+.correction-approve__term {
+    width: 270px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: #737373;
+}
+
+/* 右データ */
+.correction-approve__data {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2.4px;
+}
+
+.correction-approve__row:nth-of-type(-n+2) .correction-approve__data,
+.correction-approve__row:last-of-type .correction-approve__data {
+    margin-left: 25px;
+}
+
+.correction-approve__data-row {
+    display: flex;
+    gap: 50px;
+}
+
+.correction-approve__data-year {
+    padding-right: 135px;
+}
+
+.correction-approve__time-input {
+    width: 100px;
+    height: 30px;
+    border: 1px solid #E1E1E1;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+}
+
+.correction-approve__time-text {
+    display: flex;
+    width: 105px;
+    justify-content: center;
+}
+
+/* 備考入力 */
+.correction-approve__remark-text {
+    width: 316px;
+    height: 70px;
+    border: 1px solid #D9D9D9;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+/* 修正ボタン */
+.correction-approve__button {
+    width: 900px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: end;
+}
+
+.correction-approve__form-button {
+    margin-top: 35px;
+    width: 130px;
+    height: 50px;
+    line-height: 1;
+    background: #000;
+    color: #fff;
+    border-radius: 5px;
+    border: none;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 3.3px;
+    cursor: pointer;
+}
+
+.correction-approve__form-success {
+    width: 900px;
+    margin: 0 auto;
+    margin-top: 10px;
+    text-align: end;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 2.7px;
+    color: #FF000080;
+}
+
+.correction-approve__form-message {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 2.7px;
+    color: #FF000080;
+}
+
+/* エラーメッセージ */
+.form__error {
+    font-size: 14px;
+    color: #F00;
+}
+
+/* レスポンシブデザイン */
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .correction-approve__title {
+        width: 600px;
+    }
+
+    .correction-approve__card {
+        width: 600px;
+    }
+
+    .correction-approve__row {
+        padding: 31px 40px;
+    }
+
+    .correction-approve__row:first-child {
+        padding: 35px 40px 20px;
+    }
+
+    .correction-approve__row:last-of-type {
+        padding: 15px 40px;
+    }
+
+    .correction-approve__term {
+        width: 170px;
+    }
+
+    .correction-approve__row:nth-of-type(-n+2) .correction-approve__data {
+        margin-left: 18px;
+    }
+
+    .correction-approve__data-row {
+        gap: 40px;
+    }
+
+    .correction-approve__data-year {
+        padding-right: 120px;
+    }
+
+    .correction-approve__button {
+        width: 600px;
+    }
+}
