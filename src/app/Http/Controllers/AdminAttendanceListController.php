@@ -14,8 +14,10 @@ class AdminAttendanceListController extends Controller
      */
     public function index(Request $request)
     {
-        // 当日を表示
-        $current = $request->date ? Carbon::parse($request->date) : Carbon::today();
+        // 表示する日付
+        $current = $request->date
+            ? Carbon::parse($request->date)
+            : Carbon::today();
 
         // 前日と翌日を定義
         $previous = $current->copy()->subDay()->format('Y-m-d');

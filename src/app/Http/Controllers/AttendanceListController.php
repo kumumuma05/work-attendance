@@ -15,7 +15,9 @@ class AttendanceListController extends Controller
     public function index(Request $request)
     {
         // 当月を表示
-        $current = $request->month ? Carbon::parse($request->month . '-01') : Carbon::now()->startOfMonth();
+        $current = $request->month
+            ? Carbon::parse($request->month . '-01')
+            : Carbon::now()->startOfMonth();
 
         // 前月と翌月を定義
         $previous = $current->copy()->subMonth()->format('Y-m');
