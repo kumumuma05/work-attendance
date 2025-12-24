@@ -68,6 +68,10 @@
                 </tbody>
             </table>
         </div>
+        <!-- CSV出力ボタン -->
+        <div class="staff-attendance__button">
+            <button class="staff-attendance__button-submit" type="submit">CSV出力</button>
+        </div>
     </div>
 @endsection
 

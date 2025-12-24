@@ -41,7 +41,7 @@ class AdminAttendanceStaffController extends Controller
         $calendar = [];
         for ($date = $start->copy(); $date->lte($end); $date->addDay()) {
             $calendar[] = [
-                'date' => $date,
+                'date' => $date->copy(),
                 'attendance' => $attendances->get($date->toDateString()),
             ];
         }
