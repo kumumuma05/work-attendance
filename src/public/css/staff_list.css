@@ -1,0 +1,100 @@
+.staff-list {
+    min-height: calc(100vh - 80px);
+    padding: 130px 90px 60px;
+    background: #F0EFF2;
+}
+
+/* タイトル */
+.staff-list__title {
+    width: 900px;
+    margin: 0 auto;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 85px;
+    padding-left: 20px;
+    border-left: 8px solid #000;
+}
+
+/* テーブル */
+.staff-list__table-inner {
+    width: 900px;
+    margin: 0 auto;
+    background: #FFF;
+    border-radius: 10px;
+}
+
+.staff-list__table {
+    table-layout: fixed;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #737373;
+}
+
+.staff-list__table th {
+    padding: 9px;
+    border-bottom: 3px solid #E1E1E1;
+}
+
+.staff-list__table td {
+    padding: 10px;
+    border-top: 2px solid #E1E1E1;
+    text-align: center;
+}
+
+.staff-list__table th:first-child,
+.staff-list__table td:first-child {
+    width: auto;
+}
+
+.staff-list__table th:nth-child(2),
+.staff-list__table td:nth-child(2) {
+    width: 400px;
+}
+
+.staff-list__table td:nth-child(2) {
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.staff-list__table th:last-child,
+.staff-list__table td:last-child {
+    width: auto;
+}
+
+.staff-list__detail-link {
+    color: #000;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .staff-list__title {
+        width: 650px;
+    }
+
+    .staff-list__date-nav {
+        width: 650px;
+    }
+
+    .staff-list__table-inner {
+        width: 650px;
+    }
+
+    .staff-list__table th:nth-child(2),
+    .staff-list__table td:nth-child(2) {
+        width: 350px;
+    }
+
+    .staff-list__table td:nth-child(2) {
+        font-size: 14px;
+    }
+
+    .staff-list__table th:last-child,
+    .staff-list__table td:last-child {
+        width: 120px;
+    }
+}

@@ -14,6 +14,7 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\AdminCorrectionRequestController;
 use App\Http\Controllers\AdminCorrectionApproveController;
 use App\Http\Controllers\AdminAttendanceStaffController;
+use App\Http\Controllers\AdminStaffListController;
 
 
 // 一般ログイン認証用
