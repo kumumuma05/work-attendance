@@ -19,7 +19,7 @@ class AdminAttendanceStaffController extends Controller
             ? Carbon::parse($request->date)
             : Carbon::now()->startOfMonth();
 
-        // 先月と翌月を定義
+        // 前月と翌月を定義
         $previous = $current->copy()->subMonth()->format('Y-m');
         $next = $current->copy()->addMonth()->format('Y-m');
 

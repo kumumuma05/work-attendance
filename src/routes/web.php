@@ -80,7 +80,8 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminCorrectionApproveController::class, 'show']);
     // 修正申請承認
     Route::post('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminCorrectionApproveController::class, 'approve']);
-    // スタッフ別勤怠一覧画面標示
+    // スタッフ別勤怠一覧画面表示
     Route::get('/admin/attendance/staff/{id}', [AdminAttendanceStaffController::class, 'index']);
+    // スッタフ一覧画面表示
     Route::get('admin/staff/list', [AdminStaffListController::class, 'index']);
 });

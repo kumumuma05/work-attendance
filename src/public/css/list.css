@@ -117,7 +117,8 @@
     text-align: left;
 }
 
-.attendance-list__detail-link {
+.attendance-list__detail-link,
+.attendance-list__detail-text {
     color: #000;
     font-size: 16px;
     font-weight: 700;

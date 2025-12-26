@@ -60,7 +60,7 @@
                                 @if ($day['attendance'])
                                     <a  class="staff-attendance__detail-link" href="/admin/attendance/{{$day['attendance']->id }}">詳細</a>
                                 @else
-                                    <span class="staff-attendance__detail-link">詳細</span>
+                                    <span class="staff-attendance__detail-text">詳細</span>
                                 @endif
                             </td>
                         </tr>

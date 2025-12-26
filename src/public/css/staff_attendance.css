@@ -116,7 +116,8 @@
     text-align: left;
 }
 
-.staff-attendance__detail-link {
+.staff-attendance__detail-link,
+.staff-attendance__detail-text {
     color: #000;
     font-size: 16px;
     font-weight: 700;

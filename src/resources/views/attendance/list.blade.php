@@ -20,15 +20,15 @@
 
         <!-- 月の切り替え -->
         <div class="attendance-list__date-nav">
-            <a class="attendance-list__date-button" href="{{ url('/attendance/list?month=' . $previousMonth) }}">
+            <a class="attendance-list__date-button" href="{{ url('/attendance/list?date=' . $previousMonth) }}">
                 <img class="attendance-list__date-arrow" src="{{ asset('images/矢印.png') }}">
                 前月
             </a>
             <div class="attendance-list__current-date">
                 <img class="attendance-list__calendar-img" src="{{ asset('images/カレンダ.png') }}"alt="">
-                <span>{{ $currentMonth }}</span>
+                <span>{{ $currentMonth->format('Y/m') }}</span>
             </div>
-            <a class="attendance-list__date-button" href="{{ url('/attendance/list?month=' . $nextMonth) }}">
+            <a class="attendance-list__date-button" href="{{ url('/attendance/list?date=' . $nextMonth) }}">
                 翌月
                 <img class="attendance-list__date-arrow" src="{{ asset('images/矢印.png') }}">
             </a>
@@ -49,15 +49,19 @@
                 </thead>
 
                 <tbody>
-                    @foreach ($attendances as $attendance)
+                    @foreach ($calendar as $day)
                         <tr>
-                            <td>{{ $attendance->clock_in->isoFormat('MM/DD(ddd)') }}</td>
-                            <td>{{ $attendance->clock_in ? $attendance->clock_in->format('H:i') : ''}}</td>
-                            <td>{{ $attendance->clock_out ? $attendance->clock_out->format('H:i') : ''}}</td>
-                            <td>{{ $attendance->break_duration ? $attendance->break_duration : ''}}</td>
-                            <td>{{ $attendance->total_hours }}</td>
+                            <td>{{ $day['date']->isoFormat('MM/DD(ddd)') }}</td>
+                            <td>{{ $day['attendance'] ? $day['attendance']->clock_in?->format('H:i') : ''}}</td>
+                            <td>{{ $day['attendance'] ?  $day['attendance']->clock_out?->format('H:i') : ''}}</td>
+                            <td>{{ $day['attendance']->break_duration ?? ''}}</td>
+                            <td>{{ $day['attendance']->total_hours ?? '' }}</td>
                             <td>
-                                <a class="attendance-list__detail-link" href="/attendance/detail/{{ $attendance->id }}">詳細</a>
+                                @if ($day['attendance'])
+                                    <a class="attendance-list__detail-link" href="/attendance/detail/{{ $day['attendance']->id }}">詳細</a>
+                                @else
+                                    <span class="attendance-list__detail-text">詳細</span>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
