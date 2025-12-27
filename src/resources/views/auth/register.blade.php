@@ -45,9 +45,9 @@
 
         <!-- 確認用パスワード -->
         <label class="form__label" for="password_confirm">パスワード確認</label>
-        <input class="form__input register__input" type="password" id="password_confirm" name="password_confirm">
+        <input class="form__input register__input" type="password" id="password_confirm" name="password_confirmation">
         <div class="form__error">
-            @error('password_confirm')
+            @error('password_confirmation')
                 {{ $message }}
             @enderror
         </div>
