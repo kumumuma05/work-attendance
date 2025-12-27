@@ -47,12 +47,58 @@ class AdminAttendanceStaffController extends Controller
         }
 
         return view('attendance.staff_attendance', [
-            'user' =>$user,
+            'current' => $current,
+            'user' => $user,
             'attendances' => $attendances,
             'currentMonth' => $current,
             'previousMonth' => $previous,
             'nextMonth' => $next,
             'calendar' => $calendar,
         ]);
+    }
+
+    /**
+     * CSV出力
+     */
+    public function exportCsv (Request $request, $id)
+    {
+        // 作成する月を特定
+        $month = $request->input('date', now()->format('Y-m'));
+        $start = Carbon::parse($month)->startOfMonth();
+        $end   = Carbon::parse($month)->endOfMonth();
+
+        // 特定した月のデータを取得
+        $attendances = Attendance::where('user_id', $id)
+            ->whereBetween('clock_in',[$start, $end])
+            ->orderBy('clock_in')
+            ->get();
+
+        // CSVで使う配列を作成
+        $user = User::findOrFail($id);
+
+        $csv = [];
+        $csv[] = ["ユーザー名: $user->name"];
+        $csv[] = ["対象月: {$month}"];
+        $csv[] = [];
+        $csv[] = ['日付', '出勤', '退勤', '休憩', '合計'];
+        foreach ($attendances as $attendance) {
+            $csv[] = [
+                $attendance->clock_in->isoFormat('YYYY/MM/DD(ddd)'),
+                optional($attendance->clock_in)->format('H:i'),
+                optional($attendance->clock_out)->format('H:i'),
+                $attendance->break_duration ?? '',
+                $attendance->total_hours ?? '',
+            ];
+        }
+
+        // CSVを作成
+        return response()->streamDownload(function () use ($csv) {
+            $handle = fopen('php://output', 'w');
+            fwrite($handle, "\xEF\xBB\xBF");
+            foreach ($csv as $row) {
+                fputcsv($handle, $row);
+            }
+            fclose($handle);
+        }, 'attendance.csv');
     }
 }

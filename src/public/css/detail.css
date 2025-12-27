@@ -36,6 +36,7 @@
 }
 
 .attendance-detail__row:last-of-type {
+    min-height: 106px;
     padding: 15px 60px;
     border-bottom: none;
 }

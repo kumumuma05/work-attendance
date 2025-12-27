@@ -69,9 +69,12 @@
             </table>
         </div>
         <!-- CSV出力ボタン -->
-        <div class="staff-attendance__button">
-            <button class="staff-attendance__button-submit" type="submit">CSV出力</button>
-        </div>
+        <form action="/admin/attendance/staff/{{ $user->id }}/csv" method="get">
+            <input type="hidden" name="date" value="{{ $current->format('Y-m') }}">
+            <div class="staff-attendance__button">
+                <button class="staff-attendance__button-submit" type="submit">CSV出力</button>
+            </div>
+        </form>
     </div>
 @endsection
 
