@@ -33,7 +33,7 @@
         </p>
         <!-- 日時表示 -->
         <div class="attendance__date">
-            {{ now()->isoFormat('Y年M月D日(dd)') }}
+            {{ now()->isoFormat('Y年M月D日(ddd)') }}
         </div>
         <div class="attendance__time">
             {{ now()->format('H:i') }}
