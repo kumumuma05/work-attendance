@@ -11,8 +11,10 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthFunctionTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
-     * 新規登録の名前が未入力の場合
+     * 新規登録の名前が未入力の場合、バリデーションメッセージが表示される
      */
     public function test_validation_error_is_displayed_when_name_is_missing()
     {
@@ -35,7 +37,7 @@ class AuthFunctionTest extends TestCase
     }
 
     /**
-     * 新規登録のメールアドレスが未入力の場合
+     * 新規登録のメールアドレスが未入力の場合、バリデーションメッセージが表示される
      */
     public function test_validation_error_is_displayed_when_email_is_missing()
     {
@@ -58,7 +60,7 @@ class AuthFunctionTest extends TestCase
     }
 
     /**
-     * 新規登録のパスワードが８文字未満の場合
+     * 新規登録のパスワードが8文字未満の場合、バリデーションメッセージが表示される
      */
     public function test_validation_error_is_displayed_when_password_is_less_than_8()
     {
@@ -81,7 +83,7 @@ class AuthFunctionTest extends TestCase
     }
 
     /**
-     * 新規登録のパスワードが一致しない場合
+     * 新規登録のパスワードが一致しない場合、バリデーションメッセージが表示される
      */
     public function test_validation_error_is_displayed_when_password_mismatch()
     {
@@ -104,7 +106,7 @@ class AuthFunctionTest extends TestCase
     }
 
     /**
-     * 新規登録のパスワードが未入力の場合
+     * 新規登録のパスワードが未入力の場合、バリデーションメッセージが表示される
      */
     public function test_validation_error_is_displayed_when_password_is_missing()
     {
