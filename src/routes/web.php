@@ -13,7 +13,7 @@ use App\Http\Controllers\CorrectionRequestController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\AdminCorrectionRequestController;
 use App\Http\Controllers\AdminCorrectionApproveController;
-use App\Http\Controllers\AdminAttendanceStaffController;
+use App\Http\Controllers\AdminStaffAttendanceListController;
 use App\Http\Controllers\AdminStaffListController;
 
 
@@ -81,7 +81,7 @@ Route::middleware('auth:admin')->group(function () {
     // 修正申請承認
     Route::post('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminCorrectionApproveController::class, 'approve']);
     // スタッフ別勤怠一覧画面表示
-    Route::get('/admin/attendance/staff/{id}', [AdminAttendanceStaffController::class, 'index']);
+    Route::get('/admin/attendance/staff/{id}', [AdminStaffAttendanceListController::class, 'index']);
     // スッタフ別勤怠一覧CSV出力
     Route::get('/admin/attendance/staff/{id}/csv',[AdminAttendanceStaffController::class, 'exportCsv']);
     // スッタフ一覧画面表示

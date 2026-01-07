@@ -47,34 +47,71 @@ class AttendanceDetailController extends Controller
         // 基準日設定
         $baseDate = $attendance->clock_in->format('Y-m-d');
 
-        // 出勤・退勤時間をdatetimeに変換
-        $clockIn  = Carbon::parse("{$baseDate} {$request->requested_clock_in}");
-        $clockOut = Carbon::parse("{$baseDate} {$request->requested_clock_out}");
+        // 元データ（時刻だけ）を用意
+        $originalClockIn = optional($attendance->clock_in)->format('H:i');
+        $originalClockOut = optional($attendance->clock_out)->format('H:i');
 
-        // 休憩時間をdatetimeに変換
-        $breaks = [];
-        if ($request->requested_breaks) {
-            foreach ($request->requested_breaks as $break) {
-                $breakIn = $break['break_in']
-                    ? Carbon::parse("{$baseDate} {$break['break_in']}")
-                    : null;
-                $breakOut = $break['break_out']
-                    ? Carbon::parse("{$baseDate} {$break['break_out']}")
-                    : null;
+        // 勤怠修正リクエスト
+        $reqClockIn = $request->requested_clock_in;
+        $reqClockOut = $request->requested_clock_out;
 
-                $breaks[] = [
-                    'break_in' => $breakIn ? $breakIn->toDateTimeString() : null,
-                    'break_out' => $breakOut ? $breakOut->toDateTimeString() : null,
-                ];
-            }
+        // 勤怠修正リクエストだけdatetimeに変換
+        $clockIn  = null;
+        if (!empty($reqClockIn) && $reqClockIn !== $originalClockIn) {
+            $clockIn = Carbon::parse("{$baseDate} {$reqClockIn}");
+        }
+        $clockOut  = null;
+        if (!empty($reqClockOut) && $reqClockOut !== $originalClockOut) {
+            $clockOut = Carbon::parse("{$baseDate} {$reqClockOut}");
         }
 
-            AttendanceRequest::create([
+        // 休憩の元データ（時刻だけ）を用意
+        $originalBreaks = $attendance->breaks()
+            ->get()
+            ->keyBy('id')
+            ->map(function($break) {
+                return [
+                    'break_in' => optional($break->break_in)->format('H:i'),
+                    'break_out' => optional($break->break_out)->format('H:i'),
+                ];
+            });
+
+        // 休憩修正リクエストだけdatetimeに変換
+        $breaks = [];
+        foreach(($request->requested_breaks ?? []) as $index => $break) {
+            $breakId = $break['break_id'] ?? null;
+            $in = $break['break_in'] ?? null;
+            $out = $break['break_out'] ?? null;
+
+            // 余剰の休憩欄が空欄のままだったらスキップ
+            if (empty($in) && empty($out)) {
+                continue;
+            }
+            // 休憩が未変更時はスキップ
+            if (!empty($breakId) && isset($originalBreaks[$breakId])) {
+                $original = $originalBreaks[$breakId];
+
+                if (($in ?? '') === ($original['break_in'] ?? '') && ($out ?? '') === ($original['break_out'] ?? '')) {
+                    continue;
+                }
+            }
+
+            $breakIn = !empty($in) ? Carbon::parse("{$baseDate} {$in}") : null;
+            $breakOut = !empty($out) ? Carbon::parse("{$baseDate} {$out}") : null;
+
+            $breaks[] = [
+                    'break_id' => !empty($breakId) ? (int)$breakId : null,
+                    'break_in' => $breakIn?->toDateTimeString(),
+                    'break_out' => $breakOut?->toDateTimeString(),
+                ];
+            }
+
+        AttendanceRequest::create([
             'attendance_id' => $id,
             'user_id' => auth()->id(),
             'requested_clock_in' => $clockIn,
             'requested_clock_out' => $clockOut,
-            'requested_breaks' => $breaks,
+            'requested_breaks' => $breaks ?: null,
             'remarks' => $request->remarks,
             'status' => 'pending',
         ]);

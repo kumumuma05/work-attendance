@@ -29,13 +29,13 @@ class AttendanceAtatusConfirmationTest extends TestCase
     }
 
     /**
-     * 勤務中の場合、勤怠ステータスが正しく表示される
+     * 出勤中の場合、勤怠ステータスが正しく表示される
      */
     public function test_attendance_status_is_displayed_correctly_when_working()
     {
         Carbon::setTestNow(Carbon::create(2026, 1, 5, 10, 0));
 
-        $user = User::factory()->create([]);
+        $user = User::factory()->create();
         Attendance::create([
             'user_id' => $user->id,
             'clock_in' => now()->subHours(1), //9:30
@@ -47,7 +47,7 @@ class AttendanceAtatusConfirmationTest extends TestCase
         $response = $this->get('/attendance');
         $response->assertStatus(200);
 
-        $response->assertSee('勤務中');
+        $response->assertSee('出勤中');
 
         Carbon::setTestNow();
     }
@@ -86,7 +86,7 @@ class AttendanceAtatusConfirmationTest extends TestCase
      */
     public function test_attendance_status_is_displayed_correctly_when_after_work()
     {
-        Carbon::setTestNow(Carbon::create(2026, 1, 5, 20, 00));
+        Carbon::setTestNow(Carbon::create(2026, 1, 5, 20, 0));
 
         $user = User::factory()->create([]);
         $attendance = Attendance::create([

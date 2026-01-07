@@ -86,6 +86,7 @@
                             <div class="attendance-detail__data-wrap">
                                 <div class="attendance-detail__data-row">
                                     @if (!$hasPendingRequest)
+                                        <input type="hidden" name="requested_breaks[{{ $index }}][break_id]" value="{{ $break->id ?? '' }}">
                                         <input class="attendance-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_in]" value="{{ old('requested_breaks.' . $index . '.break_in',optional($break->break_in)->format('H:i')) }}" inputmode="numeric">
                                     @else
                                         <span class="attendance-detail__time-text">

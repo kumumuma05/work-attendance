@@ -36,25 +36,28 @@ class AttendanceController extends Controller
 
         // 勤怠状態判定
         if (!$attendance) {
-            $state = 'before_work';
+            $status = 'before_work';
         } elseif ($attendance->clock_in && !$attendance->clock_out) {
 
             // 休憩中判定
-            $lastBreak = $attendance->breaks()->latest()->first();
+            $lastBreak = $attendance->breaks()
+                ->whereNull('break_out')
+                ->orderBy('id', 'desc')
+                ->first();
 
             if ($lastBreak && $lastBreak->break_in && !$lastBreak->break_out) {
-                $state = 'on_break';
+                $status = 'on_break';
             } else {
-                $state = 'working';
+                $status = 'working';
             }
 
         } elseif ($attendance->clock_out) {
-            $state = 'after_work';
+            $status = 'after_work';
         }
 
         return view('attendance.index', [
             'attendance' => $attendance,
-            'state'      => $state,
+            'status'      => $status,
         ]);
     }
 
@@ -68,7 +71,7 @@ class AttendanceController extends Controller
             'clock_in' => now(),
         ]);
 
-        return back();
+        return redirect('/attendance');
     }
 
     /**
@@ -85,7 +88,7 @@ class AttendanceController extends Controller
             'break_in' => now(),
         ]);
 
-        return back();
+        return redirect('/attendance');
     }
 
     /**
@@ -107,7 +110,7 @@ class AttendanceController extends Controller
             'break_out' => now(),
         ]);
 
-        return back();
+        return redirect('/attendance');
     }
 
     /**
@@ -123,6 +126,6 @@ class AttendanceController extends Controller
             'clock_out' => now(),
         ]);
 
-        return back();
+        return redirect('/attendance');
     }
 }

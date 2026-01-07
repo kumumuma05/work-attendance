@@ -18,7 +18,8 @@ class CreateAttendanceRequests extends Migration
             $table->foreignId('attendance_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->datetime('requested_clock_in')->nullable();
-            $table->datetime('requested_clock_out')->nullable();$table->json('requested_breaks')->nullable();
+            $table->datetime('requested_clock_out')->nullable();
+            $table->json('requested_breaks')->nullable();
             $table->text('remarks');
             $table->string('status')->default('pending');
             $table->foreignId('approved_by')->nullable()->constrained('users');
