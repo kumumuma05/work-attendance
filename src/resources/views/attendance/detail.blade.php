@@ -53,7 +53,7 @@
                                     <input class="attendance-detail__time-input" type="text" name="requested_clock_in" value="{{ old('requested_clock_in', $attendance->clock_in->format('H:i')) }}" inputmode="numeric">
                                 @else
                                     <span class="attendance-detail__time-text">
-                                        {{ $attendance->clock_in->format('H:i')}}
+                                        {{ $pendingClockInText}}
                                     </span>
                                 @endif
                                 <span>～</span>
@@ -61,7 +61,7 @@
                                     <input class="attendance-detail__time-input" type="text" name="requested_clock_out" value="{{ old('requested_clock_out',optional($attendance->clock_out)->format('H:i')) }}" inputmode="numeric">
                                 @else
                                     <span class="attendance-detail__time-text">
-                                    {{ optional($attendance->clock_out)->format('H:i') }}
+                                    {{ $pendingClockOutText }}
                                     </span>
                                 @endif
                             </div>
@@ -86,11 +86,13 @@
                             <div class="attendance-detail__data-wrap">
                                 <div class="attendance-detail__data-row">
                                     @if (!$hasPendingRequest)
-                                        <input type="hidden" name="requested_breaks[{{ $index }}][break_id]" value="{{ $break->id ?? '' }}">
+                                        @if (!empty($break->id))
+                                            <input type="hidden" name="requested_breaks[{{ $index }}][break_id]" value="{{ $break->id ?? '' }}">
+                                        @endif
                                         <input class="attendance-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_in]" value="{{ old('requested_breaks.' . $index . '.break_in',optional($break->break_in)->format('H:i')) }}" inputmode="numeric">
                                     @else
                                         <span class="attendance-detail__time-text">
-                                            {{ optional($break->break_in)->format('H:i') }}
+                                            {{ $pendingBreakTexts[$index]['break_in'] }}
                                         </span>
                                     @endif
                                     <span>～</span>
@@ -98,7 +100,7 @@
                                         <input class="attendance-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_out]" value="{{ old('requested_breaks.' . $index . '.break_out', optional($break->break_out)->format('H:i')) }}" inputmode="numeric">
                                     @else
                                         <span class="attendance-detail__time-text">
-                                            {{ optional($break->break_out)->format('H:i') }}
+                                            {{ $pendingBreakTexts[$index]['break_out'] }}
                                         </span>
                                     @endif
                                 </div>
