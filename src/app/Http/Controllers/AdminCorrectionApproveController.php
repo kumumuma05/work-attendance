@@ -22,23 +22,49 @@ class AdminCorrectionApproveController extends Controller
         // 名前・日付表示用
         $attendance = $attendanceRequest->attendance;
 
-        // 申請された休憩
-        $requestedBreaks = collect($attendanceRequest->requested_breaks ?? [])
-            ->map(function($break) {
-                return (object) [
-                    'break_in' => isset($break['break_in'])
-                        ? Carbon::parse($break['break_in'])
-                        : null,
-                    'break_out' => isset($break['break_out'])
-                        ? Carbon::parse($break['break_out'])
-                        : null
+        // 出勤・退勤表示用
+        $displayClockIn = optional($attendanceRequest->requested_clock_in ?? $attendance->clock_in)->format('H:i');
+        $displayClockOut = optional($attendanceRequest->requested_clock_out ?? $attendance->clock_out)->format('H:i');
+
+        // 修正申請があった休憩をbreak_idをキーにして抜き出す
+        $requestedBreakId = [];
+        foreach (($attendanceRequest->requested_breaks ?? []) as $requestedBreak) {
+                if (!empty($requestedBreak['break_id'])) {
+                    $requestedBreakId[(int)$requestedBreak['break_id']] = [
+                        'break_in' => $requestedBreak['break_in'] ?? null,
+                        'break_out' => $requestedBreak['break_out'] ?? null,
+                    ];
+                }
+        }
+
+        // 表示用の休憩データを作成
+        $displayBreaks = [];
+
+        // 休憩の修正申請があればそれを表示、修正がなければ元の休憩データを表示させる
+        foreach ($attendance->breaks as $break) {
+            if (isset($requestedBreakId[$break->id])) {
+                $displayBreaks[] = (object)[
+                    'id' => $break->id,
+                    'break_in' => !empty($requestedBreakId[$break->id]['break_in'])
+                        ? Carbon::parse($requestedBreakId[$break->id]['break_in'])->format('H:i')
+                        : optional($break->break_in)->format('H:i'),
+                    'break_out' => !empty($requestedBreakId[$break->id]['break_out'])
+                        ? Carbon::parse($requestedBreakId[$break->id]['break_out'])->format('H:i')
+                        : optional($break->break_out)->format('H:i'),
                 ];
-            });
+            } else {
+                $displayBreaks[] = (object)[
+                    'id' => $break->id,
+                    'break_in' => optional($break->break_in)->format('H:i'),
+                    'break_out' =>optional($break->break_out)->format('H:i'),
+                ];
+            }
+        }
 
         // 承認済みかどうかを判断
         $isApproved = $attendanceRequest->status === 'approved';
 
-        return view('attendance.admin_correction_approve', compact('attendanceRequest', 'attendance',  'requestedBreaks', 'isApproved'));
+        return view('attendance.admin_correction_approve', compact('attendanceRequest', 'attendance', 'displayClockIn', 'displayClockOut', 'displayBreaks', 'isApproved'));
     }
 
     /**

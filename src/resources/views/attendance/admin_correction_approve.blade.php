@@ -45,29 +45,29 @@
                     <dd class="correction-approve__data">
                         <div class="correction-approve__data-row">
                             <span class="correction-approve__time-text">
-                                {{ $attendanceRequest->requested_clock_in->format('H:i')}}
+                                {{ $displayClockIn }}
                             </span >
                             <span>～</span>
                             <span class="correction-approve__time-text">
-                                {{ $attendanceRequest->requested_clock_out->format('H:i') }}
+                                {{ $displayClockOut }}
                             </span>
                         </div>
                     </dd>
                 </div>
                 <!-- 休憩 -->
-                @foreach($requestedBreaks as $index => $break)
+                @foreach($displayBreaks as $index => $break)
                     <div class="correction-approve__row">
                         <dt class="correction-approve__term">{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</dt>
                         <dd class="correction-approve__data">
                             <div class="correction-approve__data-row">
                                 <span class="correction-approve__time-text">
-                                    {{ optional($break->break_in)->format('H:i') }}
+                                    {{ $break->break_in }}
                                 </span>
                                 @if ($break->break_in || $break->break_out)
                                     <span>～</span>
                                 @endif
                                 <span class="correction-approve__time-text">
-                                    {{ optional($break->break_out)->format('H:i') }}
+                                    {{ $break->break_out }}
                                 </span>
                             </div>
                         </dd>
