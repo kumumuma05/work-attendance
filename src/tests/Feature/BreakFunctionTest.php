@@ -11,6 +11,8 @@ use Carbon\Carbon;
 
 class BreakFunctionTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * 休憩ボタンが正しく機能する
      */
