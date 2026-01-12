@@ -136,19 +136,37 @@ class BreakFunctionTest extends TestCase
     {
         // ステータスが出勤中のユーザーにログイン
         $user = User::factory()->create();
-        carbon::setTestNow(Carbon::create(2026, 1, 5, 12, 0));
+        carbon::setTestNow(Carbon::create(2026, 1, 5, 9, 0));
         Attendance::create([
             'user_id' => $user->id,
-            'clock_in' => now()->subHours(3), // 9:00
+            'clock_in' => now(),
             'clock_out' => null,
         ]);
         $this->actingAs($user, 'web');
 
         // 休憩入と休憩戻の処理を行う
+        Carbon::setTestNow(Carbon::create(2026, 1, 5, 12, 0));
         $response = $this->post('/attendance/break_in');
+        $response->assertStatus(302);
+        Carbon::setTestNow(Carbon::create(2026, 1, 5, 13, 0));
         $response = $this->post('/attendance/break_out');
+        $response->assertStatus(302);
 
-        
+        // DBに休憩が正しく保存されてることを確認
+        $this->assertDatabaseHas('breaks', [
+            'attendance_id' => Attendance::where('user_id', $user->id)->first()->id,
+            'break_in'  => '2026-01-05 12:00:00',
+            'break_out' => '2026-01-05 13:00:00',
+        ]);
 
+        // 勤怠一覧画面を開く
+        $response = $this->get('/attendance/list?date=2026-01');
+        $response->assertStatus(200);
+
+        // 勤怠一覧画面に休日の日付と時刻が正確に記録されているか確認する
+        $response->assertSee('01/05');
+        $response->assertSee('1:00');
+
+        Carbon::setTestNow();
     }
 }

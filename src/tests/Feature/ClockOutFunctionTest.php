@@ -8,5 +8,5 @@ use Tests\TestCase;
 
 class ClockOutFunctionTest extends TestCase
 {
-
+    
 }
