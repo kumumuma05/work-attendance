@@ -46,7 +46,7 @@ class ClockOutFunctionTest extends TestCase
     /**
      * 退勤時刻が勤怠一覧画面で確認できる
      */
-    public function test_can_check_clock_out_time_on_the_attendance_list()
+    public function test_clock_out_time_is_displayed_on_attendance_list()
     {
         // ステータスが勤務外のユーザーにログイン
         $user = User::factory()->create();

@@ -10,7 +10,7 @@ use App\Models\Attendance;
 use App\Models\BreakTime;
 use Carbon\Carbon;
 
-class AttendanceAtatusConfirmationTest extends TestCase
+class AttendanceStatusConfirmationTest extends TestCase
 {
     use RefreshDatabase;
 
