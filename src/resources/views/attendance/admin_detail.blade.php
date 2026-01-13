@@ -49,7 +49,7 @@
                                     <input class="admin-detail__time-input" type="text" name="requested_clock_in" value="{{ old('requested_clock_in', $attendance->clock_in->format('H:i')) }}" inputmode="numeric">
                                 @else
                                     <span class="admin-detail__time-text">
-                                        {{ $attendance->clock_in->format('H:i')}}
+                                        {{ $displayClockIn }}
                                     </span >
                                 @endif
                                 <span>～</span>
@@ -57,7 +57,7 @@
                                     <input class="admin-detail__time-input" type="text" name="requested_clock_out" value="{{ old('requested_clock_out',$attendance->clock_out->format('H:i')) }}" inputmode="numeric">
                                 @else
                                     <span class="admin-detail__time-text">
-                                    {{ optional($attendance->clock_out)->format('H:i') }}
+                                    {{ $displayClockOut }}
                                     </span>
                                 @endif
                             </div>
@@ -85,7 +85,7 @@
                                         <input class="admin-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_in]" value="{{ old('requested_breaks.' . $index . '.break_in',optional($break->break_in)->format('H:i')) }}" inputmode="numeric">
                                     @else
                                         <span class="admin-detail__time-text">
-                                            {{ optional($break->break_in)->format('H:i') }}
+                                            {{ $break->break_in }}
                                         </span>
                                     @endif
                                     <span>～</span>
@@ -93,7 +93,7 @@
                                         <input class="admin-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_out]" value="{{ old('requested_breaks.' . $index . '.break_out', optional($break->break_out)->format('H:i')) }}" inputmode="numeric">
                                     @else
                                         <span class="admin-detail__time-text">
-                                            {{ optional($break->break_out)->format('H:i') }}
+                                            {{ $break->break_out }}
                                         </span>
                                     @endif
                                 </div>

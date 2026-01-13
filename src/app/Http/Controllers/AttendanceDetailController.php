@@ -33,16 +33,22 @@ class AttendanceDetailController extends Controller
         $displayClockIn = optional($pendingRequest->requested_clock_in ?? $attendance->clock_in)->format('H:i');
         $displayClockOut = optional($pendingRequest->requested_clock_out ?? $attendance->clock_out)->format('H:i');
 
-        // 修正申請があった休憩をbreak_idをキーにして抜き出す
+        // 修正申請があった休憩を取り出す
         $requestedBreakId = [];
+        $requestedCreates = [];
         if ($hasPendingRequest) {
-            foreach ($pendingRequest->requested_breaks as $requestedBreak) {
-                if (!empty($requestedBreak['break_id'])) {
-                    $requestedBreakId[(int)$requestedBreak['break_id']] = [
-                        'break_in' => $requestedBreak['break_in'] ?? null,
-                        'break_out' => $requestedBreak['break_out'] ?? null,
-                    ];
-                }
+            $req = $pendingRequest->requested_breaks ?? [];
+            foreach (($req['update'] ?? []) as $breakId => $requestedBreak) {
+                $requestedBreakId[(int)$breakId] = [
+                    'break_in' => $requestedBreak['break_in'] ?? null,
+                    'break_out' => $requestedBreak['break_out'] ?? null,
+                ];
+            }
+            foreach (($req['create'] ?? []) as $createBreak) {
+                $requestedCreates[] = [
+                    'break_in' => $createBreak['break_in'] ?? null,
+                    'break_out' => $createBreak['break_out'] ?? null,
+                ];
             }
         }
 
@@ -70,6 +76,15 @@ class AttendanceDetailController extends Controller
             }
         }
 
+        // 申請で追加された休憩を表示する
+        foreach ($requestedCreates as $createBreak) {
+            $displayBreaks[] = (object)[
+                'id' => null,
+                'break_in' => !empty($createBreak['break_in']) ? Carbon::parse($createBreak['break_in'])->format('H:i') : null,
+                'break_out' => !empty($createBreak['break_out']) ? Carbon::parse($createBreak['break_out'])->format('H:i') : null,
+            ];
+        }
+
         // 通常画面（申請待ち画面ではない）時、空の休憩行を１つ追加する
         if (!$hasPendingRequest) {
             $displayBreaks[] = (object)[
@@ -79,7 +94,7 @@ class AttendanceDetailController extends Controller
             ];
         }
 
-        return view('attendance.detail', compact('attendance', 'user', 'displayBreaks', 'hasPendingRequest', 'pendingRequest', 'displayClockIn', 'displayClockOut', 'displayBreaks'));
+        return view('attendance.detail', compact('attendance', 'user', 'displayBreaks', 'hasPendingRequest', 'pendingRequest', 'displayClockIn', 'displayClockOut'));
     }
 
     /**
@@ -121,8 +136,9 @@ class AttendanceDetailController extends Controller
         }
 
         // 休憩修正リクエストだけdatetimeに変換
-        $breaks = [];
-        foreach(($request->requested_breaks ?? []) as $index => $break) {
+        $updateBreaks = [];
+        $createBreaks = [];
+        foreach(($request->requested_breaks ?? []) as $break) {
             $breakId = $break['break_id'] ?? null;
             $in = $break['break_in'] ?? null;
             $out = $break['break_out'] ?? null;
@@ -131,31 +147,46 @@ class AttendanceDetailController extends Controller
             if (empty($in) && empty($out)) {
                 continue;
             }
+
+            $breakIn = !empty($in) ? Carbon::parse("{$baseDate}{$in}")->toDateTimeString() : null;
+            $breakOut = !empty($out) ? Carbon::parse("{$baseDate}{$out}")->toDateTimeString() : null;
+
             // 休憩が未変更時はスキップ
-            if (!empty($breakId) && isset($originalBreaks[$breakId])) {
-                $original = $originalBreaks[$breakId];
-
-                if (($in ?? '') === ($original['break_in'] ?? '') && ($out ?? '') === ($original['break_out'] ?? '')) {
-                    continue;
+            if (!empty($breakId)) {
+                if (isset($originalBreaks[$breakId])) {
+                    $original = $originalBreaks[$breakId];
+                    if (($in ?? '') === ($original['break_in'] ?? '') && ($out ?? '') === ($original['break_out'] ?? '')) {
+                        continue;
+                    }
                 }
-            }
-
-            $breakIn = !empty($in) ? Carbon::parse("{$baseDate} {$in}") : null;
-            $breakOut = !empty($out) ? Carbon::parse("{$baseDate} {$out}") : null;
-
-            $breaks[] = [
-                    'break_id' => !empty($breakId) ? (int)$breakId : null,
-                    'break_in' => $breakIn?->toDateTimeString(),
-                    'break_out' => $breakOut?->toDateTimeString(),
+                // 更新用
+                $updateBreaks[(int)$breakId] = [
+                    'break_in' => $breakIn,
+                    'break_out' =>$breakOut,
+                ];
+            } else {
+                // 新規作成用
+                $createBreaks[] = [
+                    'break_in' => $breakIn,
+                    'break_out' =>$breakOut,
                 ];
             }
+        }
+
+        $requestedBreaks = [];
+        if (!empty($updateBreaks)) {
+            $requestedBreaks['update'] = $updateBreaks;
+        }
+        if (!empty($createBreaks)) {
+            $requestedBreaks['create'] = $createBreaks;
+        }
 
         AttendanceRequest::create([
             'attendance_id' => $id,
             'user_id' => auth()->id(),
             'requested_clock_in' => $clockIn,
             'requested_clock_out' => $clockOut,
-            'requested_breaks' => $breaks ?: null,
+            'requested_breaks' => $requestedBreaks ?: null,
             'remarks' => $request->remarks,
             'status' => 'pending',
         ]);
