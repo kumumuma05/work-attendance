@@ -54,7 +54,7 @@
                                 @endif
                                 <span>～</span>
                                 @if (!$hasPendingRequest)
-                                    <input class="admin-detail__time-input" type="text" name="requested_clock_out" value="{{ old('requested_clock_out',$attendance->clock_out->format('H:i')) }}" inputmode="numeric">
+                                    <input class="admin-detail__time-input" type="text" name="requested_clock_out" value="{{ old('requested_clock_out', optional($attendance->clock_out)->format('H:i')) }}" inputmode="numeric">
                                 @else
                                     <span class="admin-detail__time-text">
                                     {{ $displayClockOut }}
@@ -82,7 +82,10 @@
                             <div class="admin-detail__data-wrap">
                                 <div class="admin-detail__data-row">
                                     @if (!$hasPendingRequest)
-                                        <input class="admin-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_in]" value="{{ old('requested_breaks.' . $index . '.break_in',optional($break->break_in)->format('H:i')) }}" inputmode="numeric">
+                                        @if (!empty($break->id))
+                                            <input type="hidden" name="requested_breaks[{{ $index }}][break_id]" value="{{ $break->id }}">
+                                        @endif
+                                        <input class="admin-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_in]" value="{{ old('requested_breaks.' . $index . '.break_in',$break->break_in) }}" inputmode="numeric">
                                     @else
                                         <span class="admin-detail__time-text">
                                             {{ $break->break_in }}
@@ -90,7 +93,7 @@
                                     @endif
                                     <span>～</span>
                                     @if (!$hasPendingRequest)
-                                        <input class="admin-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_out]" value="{{ old('requested_breaks.' . $index . '.break_out', optional($break->break_out)->format('H:i')) }}" inputmode="numeric">
+                                        <input class="admin-detail__time-input" type="text" name="requested_breaks[{{ $index }}][break_out]" value="{{ old('requested_breaks.' . $index . '.break_out', $break->break_out) }}" inputmode="numeric">
                                     @else
                                         <span class="admin-detail__time-text">
                                             {{ $break->break_out }}

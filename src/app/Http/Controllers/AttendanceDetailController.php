@@ -115,7 +115,7 @@ class AttendanceDetailController extends Controller
         $reqClockIn = $request->requested_clock_in;
         $reqClockOut = $request->requested_clock_out;
 
-        // 勤怠修正リクエストだけdatetimeに変換
+        // 勤怠修正リクエストが元のデータと異なるときのみ日時に変換
         $clockIn  = null;
         if (!empty($reqClockIn) && $reqClockIn !== $originalClockIn) {
             $clockIn = Carbon::parse("{$baseDate} {$reqClockIn}");
@@ -148,8 +148,8 @@ class AttendanceDetailController extends Controller
                 continue;
             }
 
-            $breakIn = !empty($in) ? Carbon::parse("{$baseDate}{$in}")->toDateTimeString() : null;
-            $breakOut = !empty($out) ? Carbon::parse("{$baseDate}{$out}")->toDateTimeString() : null;
+            $breakIn = !empty($in) ? Carbon::parse("{$baseDate} {$in}")->toDateTimeString() : null;
+            $breakOut = !empty($out) ? Carbon::parse("{$baseDate} {$out}")->toDateTimeString() : null;
 
             // 休憩が未変更時はスキップ
             if (!empty($breakId)) {

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
 use App\Http\Requests\AdminDetailRequest;
@@ -84,6 +86,15 @@ class AdminAttendanceDetailController extends Controller
             ];
         }
 
+        // 通常画面（申請待ち画面ではない）時、空の休憩行を１つ追加する
+        if (!$hasPendingRequest) {
+            $displayBreaks[] = (object)[
+                'id' => null,
+                'break_in' => null,
+                'break_out' => null,
+            ];
+        }
+
         return view('attendance.admin_detail', compact('attendance', 'pendingRequest', 'hasPendingRequest', 'displayClockIn', 'displayClockOut', 'displayBreaks'));
     }
 
@@ -93,39 +104,133 @@ class AdminAttendanceDetailController extends Controller
     public function update(AdminDetailRequest $request, $id)
     {
         // レコードの抜き出し
-        $attendance = Attendance::findOrFail($id);
+        $attendance = Attendance::with('breaks')->findOrFail($id);
         // 基準日設定
         $baseDate = $attendance->clock_in->format('Y-m-d');
 
-        // 出勤・退勤時間をdatetimeに変換
-        $clockIn  = Carbon::parse("{$baseDate} {$request->requested_clock_in}");
-        $clockOut = Carbon::parse("{$baseDate} {$request->requested_clock_out}");
+        // 元の勤怠データ（時刻だけ）を用意
+        $originalClockIn = optional($attendance->clock_in)->format('H:i');
+        $originalClockOut = optional($attendance->clock_out)->format('H:i');
 
-        // attendancesテーブルの修正
-        $attendance->update([
-            'clock_in' => $clockIn,
-            'clock_out' => $clockOut,
-        ]);
+        // 勤怠修正リクエスト
+        $reqClockIn = $request->requested_clock_in;
+        $reqClockOut = $request->requested_clock_out;
 
-        // この勤怠データに紐づいている休憩レコードを削除する(->再作成)
-        $attendance->breaks()->delete();
+        // 勤怠修正リクエストが元データと異なる場合のみ日時に変換
+        $clockIn  = null;
+        if (!empty($reqClockIn) && $reqClockIn !== $originalClockIn) {
+            $clockIn = Carbon::parse("{$baseDate} {$reqClockIn}");
+        }
+        $clockOut  = null;
+        if (!empty($reqClockOut) && $reqClockOut !== $originalClockOut) {
+            $clockOut = Carbon::parse("{$baseDate} {$reqClockOut}");
+        }
 
-        if ($request->requested_breaks) {
-            // もし休憩入りまたは休憩終わりが入力されていなかったらそのレコードは飛ばす
-            foreach ($request->requested_breaks as $break) {
-                if (empty($break['break_in']) || empty($break['break_out'])) {
+        // 元の休憩データ（時刻だけ）を用意
+        $originalBreaks = [];
+
+        foreach ($attendance->breaks as $break) {
+            $originalBreaks[$break->id] = [
+                'break_in'  => optional($break->break_in)->format('H:i'),
+                'break_out' => optional($break->break_out)->format('H:i'),
+            ];
+        }
+
+        // 休憩をupdateとcreateに分解
+        $updateBreaks = [];
+        $createBreaks = [];
+
+        foreach (($request->requested_breaks ?? []) as $requestedBreak) {
+            $breaksId = $requestBreak['break_id'] ?? null;
+            $in = $requestBreak['break_in'] ?? null;
+            $out = $requestBreak['break_out'] ?? null;
+
+            // 修正がなければスキップ
+            if (empty($in) && empty($out)) {
+                continue;
+            }
+
+            $breakIn = !empty($in) ? Carbon::parse("{$baseDate} {$in}")->toDateTimeString() : null;
+            $breakOut = !empty($out) ? Carbon::parse("{$baseDate} {$out}")->toDateTimeString() : null;
+
+            // 元データと同じ（差分なし）ならスキップ
+            if (!empty($breakId)) {
+                if (isset($originalBreaks[$breakId])) {
+                    $original = $originalBreaks[$breakId];
+                    if (($in ?? '') === ($original['break_in'] ?? '') && ($out ?? '') === ($original['break_out'] ?? '')) {
+                        continue;
+                    }
+                }
+                $updateBreaks[(int)$breakId] = [
+                    'break_in' => $breakIn,
+                    'break_out' => $breakOut,
+                ];
+            } else {
+                $createBreaks[] = [
+                    'break_in' => $breakIn,
+                    'break_out' => $breakOut,
+                ];
+            }
+        }
+
+        $requestedBreaks = [];
+        if (!empty($updateBreaks)) $requestedBreaks['update'] = $updateBreaks;
+        if (!empty($createBreaks)) $requestedBreaks['create'] = $createBreaks;
+
+        DB::transaction(function() use ($request, $attendance, $clockIn, $clockOut, $requestedBreaks) {
+            // attendance_requestsにデータ登録する（履歴を残す）
+            $attendanceRequest = AttendanceRequest::create([
+                'attendance_id' => $attendance->id,
+                'user_id' => $attendance->user_id,
+                'requested_clock_in' => $clockIn,
+                'requested_clock_out' => $clockOut,
+                'requested_breaks' => $requestedBreaks ?: null,
+                'remarks' => $request->remarks,
+                'status' => 'approved',
+                'approved_by' => Auth::guard('admin')->id(),
+                'approved_at' => now(),
+            ]);
+
+            // attendancesテーブル書き換え（差分のみ）
+            $attendanceUpdate = [];
+            if (!is_null($request->requested_clock_in)) {
+                $attendanceUpdate['clock_in'] = $request->requested_clock_in;
+            }
+            if (!is_null($request->requested_clock_out)) {
+                $attendanceUpdate['clock_out'] = $request->requested_clock_out;
+            }
+            if (!empty($attendanceUpdate)) {
+                $attendance->update($attendanceUpdate);
+            }
+
+            // 既存のbreaksテーブル書き換え（差分のみ）
+            $reqBreaks = $attendanceRequest->requested_breaks ?? [];
+            foreach (($reqBreaks['update'] ?? []) as $breakId => $break) {
+                $breakId = (int)$breakId;
+                if (empty($break['break_in']) && empty($break['break_out'])) {
                     continue;
                 }
 
-                $breakIn = Carbon::parse("{$baseDate} {$break['break_in']}");
-                $breakOut = Carbon::parse("{$baseDate} {$break['break_out']}");
-                // breaksテーブルの再作成
+                $attendance->breaks()
+                    ->where('id', $breakId)
+                    ->update([
+                        'break_in' => $break['break_in'] ?? null,
+                        'break_out' => $break['break_out'] ?? null,
+                    ]);
+            }
+
+            // 新規休憩の追加
+            foreach (($reqBreaks['create'] ?? []) as $break) {
+                if (empty($break['break_in']) && empty($break['break_out'])) {
+                    continue;
+                }
+
                 $attendance->breaks()->create([
-                    'break_in'  => $breakIn,
-                    'break_out' => $breakOut,
+                    'break_in' => $break['break_in'] ?? null,
+                    'break_out' => $break['break_out'] ?? null,
                 ]);
             }
-        }
+        });
 
         return back()->with('status', '*修正が終了しました。');
     }
