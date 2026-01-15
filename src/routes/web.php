@@ -64,6 +64,8 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::get('/attendance/detail/{id}', [AttendanceDetailController::class, 'show']);
     // 勤怠修正依頼登録
     Route::post('/attendance/detail/{id}', [AttendanceDetailController::class, 'store']);
+});
+
     // 申請一覧画面表示
     Route::get('/stamp_correction_request/list', function (
         CorrectionRequestController $userController,
@@ -73,7 +75,8 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
             ? $adminController->index(request())
             : $userController->index(request());
     })->middleware('auth.any');
-});
+
+
 
 // 管理者用
 Route::middleware('auth:admin')->group(function () {

@@ -7,18 +7,18 @@ use Illuminate\Http\Request;
 
 class AuthenticateAny
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-     */
     public function handle(Request $request, Closure $next)
     {
-        if (auth('web')->check() || auth('admin')->check()) {
+        if (Auth::guard('admin')->check()) {
+            Auth::shouldUse('admin');
             return $next($request);
         }
+
+        if (Auth::guard('web')->check()) {
+            Auth::shouldUse('web');
+            return $next($request);
+        }
+
         return redirect()->route('login');
     }
 }
