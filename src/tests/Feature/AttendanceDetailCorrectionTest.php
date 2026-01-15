@@ -67,6 +67,7 @@ class AttendanceDetailCorrectionTest extends TestCase
             ],
         ]);
 
+        // エラーメッセージが表示される
         $response->assertStatus(302);
         $response->assertSessionHasErrors([
             "requested_breaks.{$break->id}.break_in" => '休憩時間が不適切な値です',
@@ -102,9 +103,38 @@ class AttendanceDetailCorrectionTest extends TestCase
             ],
         ]);
 
+        // エラーメッセージが表示される
         $response->assertStatus(302);
         $response->assertSessionHasErrors([
             "requested_breaks.{$break->id}.break_out" => '休憩時間もしくは退勤時間が不適切な値です',
+        ]);
+    }
+
+    public function test_error_message_is_displayed_when_remarks_is_null(){
+        // 勤怠情報が登録されたユーザーにログインする
+        $user = User::factory()->create();
+        $attendance = Attendance::factory()->create([
+            'user_id' => $user->id,
+            'clock_in' => Carbon::create(2026, 1, 5, 9, 0),
+            'clock_out' => Carbon::create(2026, 1, 5, 18, 0),
+        ]);
+        $break = $attendance->breaks()->create([
+            'break_in' => Carbon::create(2026, 1, 5, 12, 0),
+            'break_out' => Carbon::create(2026, 1, 5, 13, 0),
+        ]);
+        $this->actingAs($user, 'web');
+
+        // 勤怠詳細ページを開く
+        $response = $this->get("/attendance/detail/{$attendance->id}");
+        $response->assertStatus(200);
+
+        // 備考を未入力のまま処理
+        $response = $this->post("/attendance/detail/{$attendance->id}", []);
+
+        // エラーメッセージが表示される
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors([
+            'remarks' => '備考を記入してください',
         ]);
     }
 }
