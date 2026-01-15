@@ -95,7 +95,7 @@ class AttendanceDetailCorrectionTest extends TestCase
         // 休憩開始時間を退勤時間より後に設定する
         $response = $this->post("/attendance/detail/{$attendance->id}", [
             'requested_clock_out' => '18:00',
-                'requested_breaks' => [
+            'requested_breaks' => [
                 $break->id => [
                     'break_in' => '12:00',
                     'break_out' => '20:00',
@@ -115,12 +115,6 @@ class AttendanceDetailCorrectionTest extends TestCase
         $user = User::factory()->create();
         $attendance = Attendance::factory()->create([
             'user_id' => $user->id,
-            'clock_in' => Carbon::create(2026, 1, 5, 9, 0),
-            'clock_out' => Carbon::create(2026, 1, 5, 18, 0),
-        ]);
-        $break = $attendance->breaks()->create([
-            'break_in' => Carbon::create(2026, 1, 5, 12, 0),
-            'break_out' => Carbon::create(2026, 1, 5, 13, 0),
         ]);
         $this->actingAs($user, 'web');
 
@@ -136,5 +130,41 @@ class AttendanceDetailCorrectionTest extends TestCase
         $response->assertSessionHasErrors([
             'remarks' => '備考を記入してください',
         ]);
+    }
+
+    public function test_correction_equest_process_is_executed(){
+        // 勤怠情報が登録されたユーザーにログインする
+        $user = User::factory()->create();
+        $attendance = Attendance::factory()->create([
+            'user_id' => $user->id,
+        ]);
+        $break = $attendance->breaks()->create([
+            'break_in' => '2026-01-05 12:00:00',
+            'break_out' => '2026-01-05 13:00:00',
+        ]);
+        $this->actingAs($user, 'web');
+
+        // 勤怠詳細を修正し保存処理
+        $response = $this->post("/attendance/detail/{$attendance->id}", [
+            'requested_clock_in' => '08:00','requested_clock_out' => '08:00',
+            'requested_breaks' => [
+                $break->id => [
+                    'break_in' => '12:00',
+                    'break_out' => '20:00',
+                ],
+            ],
+            'remarks' => 'テスト',
+        ]);
+        $response->assertStatus(302);
+
+        // 申請が作成された
+        $this->assertDatabaseHas('attendance_requests', [
+            'attendance_id' => $attendance->id,
+            'remarks' => 'テスト',
+            'status' => 'pending',
+        ]);
+
+        // 管理者ユーザーで承認画面と申請一覧画面を確認
+        $user = User::factory()->create();
     }
 }
