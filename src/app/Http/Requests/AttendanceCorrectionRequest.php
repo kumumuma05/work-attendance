@@ -79,7 +79,7 @@ class AttendanceCorrectionRequest extends FormRequest
                     ? Carbon::parse("{$baseDate} {$break['break_out']}")
                     : null;
 
-                    // 休憩開始 < 出勤のバリデーション
+                    // 休憩開始 < 出勤
                     if ($breakIn && $clockIn && $breakIn->lt($clockIn)) {
                         $validator->errors()->add("requested_breaks.$index.break_in", '休憩時間が不適切な値です');
                     }

@@ -44,11 +44,11 @@ class AttendanceDetailCorrectionTest extends TestCase
         $attendance = Attendance::factory()->create([
             'user_id' => $user->id,
             'clock_in' => Carbon::create(2026, 1, 5, 9, 0),
-            'clock_in' => Carbon::create(2026, 1, 5, 18, 0),
+            'clock_out' => Carbon::create(2026, 1, 5, 18, 0),
         ]);
         $break = $attendance->breaks()->create([
             'break_in' => Carbon::create(2026, 1, 5, 12, 0),
-            'break_in' => Carbon::create(2026, 1, 5, 13, 0),
+            'break_out' => Carbon::create(2026, 1, 5, 13, 0),
         ]);
         $this->actingAs($user, 'web');
 
@@ -58,7 +58,8 @@ class AttendanceDetailCorrectionTest extends TestCase
 
         // 休憩開始時間を退勤時間より後に設定する
         $response = $this->post("/attendance/detail/{$attendance->id}", [
-            'requested_breaks' => [
+            'requested_clock_out' => '18:00',
+                'requested_breaks' => [
                 $break->id => [
                     'break_in' => '19:00',
                     'break_out' => '20:00',
@@ -66,10 +67,9 @@ class AttendanceDetailCorrectionTest extends TestCase
             ],
         ]);
 
-        // エラーメッセージが表示される
         $response->assertStatus(302);
         $response->assertSessionHasErrors([
-            "requested_breaks.{$break->id}.break_in" => '休憩時間もしくは退勤時間が不適切な値です',
+            "requested_breaks.{$break->id}.break_in" => '休憩時間が不適切な値です',
         ]);
     }
 }
