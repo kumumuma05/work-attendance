@@ -11,7 +11,7 @@
 <!-- 本体 -->
 @section('content')
     @include('header.guest')
-    <form class="login-form" action="/admin/login" method="post" novalidate>
+    <form class="login-form" action="{{ route('admin.login.store') }}" method="post" novalidate>
         @csrf
         <!-- 見出し -->
         <h1 class="page__title">管理者ログイン</h1>

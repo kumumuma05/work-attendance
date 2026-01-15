@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
-use App\Http\Requests\AdminDetailRequest;
+use App\Http\Requests\AttendanceCorrectionRequest;
 use Carbon\Carbon;
 
 class AdminAttendanceDetailController extends Controller
@@ -101,7 +101,7 @@ class AdminAttendanceDetailController extends Controller
     /**
      * 勤怠・休憩テーブル修正
      */
-    public function update(AdminDetailRequest $request, $id)
+    public function update(AttendanceCorrectionRequest $request, $id)
     {
         // レコードの抜き出し
         $attendance = Attendance::with('breaks')->findOrFail($id);
@@ -141,9 +141,9 @@ class AdminAttendanceDetailController extends Controller
         $createBreaks = [];
 
         foreach (($request->requested_breaks ?? []) as $requestedBreak) {
-            $breaksId = $requestBreak['break_id'] ?? null;
-            $in = $requestBreak['break_in'] ?? null;
-            $out = $requestBreak['break_out'] ?? null;
+            $breakId = $requestedBreak['break_id'] ?? null;
+            $in = $requestedBreak['break_in'] ?? null;
+            $out = $requestedBreak['break_out'] ?? null;
 
             // 修正がなければスキップ
             if (empty($in) && empty($out)) {
@@ -193,11 +193,11 @@ class AdminAttendanceDetailController extends Controller
 
             // attendancesテーブル書き換え（差分のみ）
             $attendanceUpdate = [];
-            if (!is_null($request->requested_clock_in)) {
-                $attendanceUpdate['clock_in'] = $request->requested_clock_in;
+            if (!is_null($clockIn)) {
+                $attendanceUpdate['clock_in'] = $clockIn;
             }
-            if (!is_null($request->requested_clock_out)) {
-                $attendanceUpdate['clock_out'] = $request->requested_clock_out;
+            if (!is_null($clockOut)) {
+                $attendanceUpdate['clock_out'] = $clockOout;
             }
             if (!empty($attendanceUpdate)) {
                 $attendance->update($attendanceUpdate);

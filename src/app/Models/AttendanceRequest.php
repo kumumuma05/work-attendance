@@ -20,6 +20,8 @@ class AttendanceRequest extends Model
         'requested_breaks',
         'remarks',
         'status',
+        'approved_by',
+        'approved_at',
     ];
 
     /**
@@ -29,6 +31,7 @@ class AttendanceRequest extends Model
         'requested_clock_in' => 'datetime',
         'requested_clock_out' => 'datetime',
         'requested_breaks' => 'array',
+        'approved_at' => 'datetime',
     ];
 
     /**

@@ -25,7 +25,7 @@ class LoginRequest extends FortifyLoginRequest
      */
     public function rules()
     {
-        if ($this->routeIs('admin.login')) {
+        if ($this->routeIs('admin.*')) {
             return [
                 'email' => 'required|email|exists:admins,email',
                 'password' => 'required',

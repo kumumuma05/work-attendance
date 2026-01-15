@@ -19,6 +19,7 @@ use Laravel\Fortify\Contracts\LogoutResponse;
 use App\Http\Responses\LoginResponse;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -65,24 +66,13 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         Fortify::authenticateUsing(function (Request $request) {
-            if ($request->routeIs('admin.login')) {
-                if (Auth::guard('admin')->attempt(
-                    $request->only('email', 'password'),
-                    $request->boolean('remember')
-                )) {
+            $guard = config('fortify.guard', 'web');
 
-                    return Auth::guard('admin')->user();
-                }
-
-                return null;
-            }
-
-            if (Auth::guard('web')->attempt(
+            if (Auth::guard($guard)->attempt(
                 $request->only('email', 'password'),
                 $request->boolean('remember')
             )) {
-
-                return Auth::guard('web')->user();
+                return Auth::guard($guard)->user();
             }
 
             return null;

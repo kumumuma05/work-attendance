@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
-use App\Http\Requests\AttendanceDetailRequest;
+use App\Http\Requests\AttendanceCorrectionRequest;
 use Carbon\Carbon;
 
 class AttendanceDetailController extends Controller
@@ -100,7 +100,7 @@ class AttendanceDetailController extends Controller
     /**
      * 勤怠修正依頼登録
      */
-    public function store(AttendanceDetailRequest $request, $id)
+    public function store(AttendanceCorrectionRequest $request, $id)
     {
         // レコードの抜き出し
         $attendance = Attendance::findOrFail($id);

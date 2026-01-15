@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // ランダム一般ユーザー
-        $users = User::factory(15)->create();
+        $users = User::factory(15)->unverified()->create();
 
         foreach ($users as $user) {
             Attendance::factory(30)->create([

@@ -12,11 +12,6 @@ class CorrectionRequestController extends Controller
      */
     public function index(Request $request) {
 
-        // 管理者がログイン中の場合は管理者用のコントローラへ移動
-        if (auth('admin')->check()) {
-            return app(AdminCorrectionRequestController::class)->index($request);
-        }
-
         $tab = $request->query('tab', 'pending');
         $requests = AttendanceRequest::with(['attendance.user'])
             ->where('user_id', auth()->id())

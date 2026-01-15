@@ -13,15 +13,15 @@ use App\Http\Controllers\CorrectionRequestController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\AdminCorrectionRequestController;
 use App\Http\Controllers\AdminCorrectionApproveController;
-use App\Http\Controllers\AdminStaffAttendanceListController;
+use App\Http\Controllers\AdminAttendanceByStaffController;
 use App\Http\Controllers\AdminStaffListController;
 
 
 // 一般ログイン認証用
 Route::get('/login', function() {
     return view('auth.login');
-})->middleware('guest:web');
-Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
+})->middleware('guest:web')->name('login');
+Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth:web')->name('verification.notice');
@@ -38,8 +38,8 @@ Route::post('/logout', function (Request $request) {
 // 管理者認証用
 Route::get('/admin/login', function () {
     return view('auth.admin_login');
-})->middleware('guest:admin');
-Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])->name('admin.login');
+})->middleware(['web', 'guest:admin'])->name('admin.login');
+Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])->middleware(['guest:admin', 'fortify.admin'])->name('admin.login.store');
 Route::post('/admin/logout', function (Request $request) {
     Auth::guard('admin')->logout();
 
@@ -65,7 +65,14 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     // 勤怠修正依頼登録
     Route::post('/attendance/detail/{id}', [AttendanceDetailController::class, 'store']);
     // 申請一覧画面表示
-    Route::get('/stamp_correction_request/list', [CorrectionRequestController::class, 'index']);
+    Route::get('/stamp_correction_request/list', function (
+        CorrectionRequestController $userController,
+        AdminCorrectionRequestController $adminController
+    ) {
+        return auth('admin')->check()
+            ? $adminController->index(request())
+            : $userController->index(request());
+    })->middleware('auth.any');
 });
 
 // 管理者用
@@ -81,9 +88,9 @@ Route::middleware('auth:admin')->group(function () {
     // 修正申請承認
     Route::post('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminCorrectionApproveController::class, 'approve']);
     // スタッフ別勤怠一覧画面表示
-    Route::get('/admin/attendance/staff/{id}', [AdminStaffAttendanceListController::class, 'index']);
+    Route::get('/admin/attendance/staff/{id}', [AdminAttendanceByStaffController::class, 'index']);
     // スッタフ別勤怠一覧CSV出力
-    Route::get('/admin/attendance/staff/{id}/csv',[AdminAttendanceStaffController::class, 'exportCsv']);
+    Route::get('/admin/attendance/staff/{id}/csv',[AdminAttendanceByStaffController::class, 'exportCsv']);
     // スッタフ一覧画面表示
-    Route::get('admin/staff/list', [AdminStaffListController::class, 'index']);
+    Route::get('/admin/staff/list', [AdminStaffListController::class, 'index']);
 });

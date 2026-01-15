@@ -28,7 +28,7 @@ class AdminDetailRequest extends FormRequest
         return [
             'requested_clock_in' => 'required|date_format:H:i',
             'requested_clock_out' => 'required|date_format:H:i',
-            'remarks' => 'required',
+            'remarks' => 'required|string|max:100',
             'requested_breaks' => 'nullable|array',
             'requested_breaks.*.break_in'      => 'nullable|date_format:H:i',
             'requested_breaks.*.break_out'     => 'nullable|date_format:H:i',
@@ -46,6 +46,8 @@ class AdminDetailRequest extends FormRequest
             'requested_clock_out.required' => '退勤時間が入力されていません',
             'requested_clock_out.date_format' => '00:00の形式で入力してください',
             'remarks.required' => '備考を記入してください',
+            'remarks.string' => '備考は文字で入力してください',
+            'remarks.max' => '備考は100文字以下で入力してください',
             'requested_breaks.*.break_in.date_format' => '00:00の形式で入力してください',
             'requested_breaks.*.break_out.date_format' => '00:00の形式で入力してください',
         ];
