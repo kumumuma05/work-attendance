@@ -15,6 +15,7 @@ use App\Http\Controllers\AdminCorrectionRequestController;
 use App\Http\Controllers\AdminCorrectionApproveController;
 use App\Http\Controllers\AdminAttendanceByStaffController;
 use App\Http\Controllers\AdminStaffListController;
+use App\Http\Controllers\StampCorrectionRequestEntryController;
 
 
 // 一般ログイン認証用
@@ -66,18 +67,6 @@ Route::middleware(['auth:web', 'verified'])->group(function () {
     Route::post('/attendance/detail/{id}', [AttendanceDetailController::class, 'store']);
 });
 
-    // 申請一覧画面表示
-    Route::get('/stamp_correction_request/list', function (
-        CorrectionRequestController $userController,
-        AdminCorrectionRequestController $adminController
-    ) {
-        return auth('admin')->check()
-            ? $adminController->index(request())
-            : $userController->index(request());
-    })->middleware('auth.any');
-
-
-
 // 管理者用
 Route::middleware('auth:admin')->group(function () {
     // 勤怠一覧画面表示
@@ -96,4 +85,13 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/attendance/staff/{id}/csv',[AdminAttendanceByStaffController::class, 'exportCsv']);
     // スッタフ一覧画面表示
     Route::get('/admin/staff/list', [AdminStaffListController::class, 'index']);
+});
+
+// 一般・管理者共通
+Route::middleware('auth.any')->group(function () {
+    // 申請一覧画面表示
+    Route::get('/stamp_correction_request/list', [
+        StampCorrectionRequestEntryController::class,
+        'index'
+    ]);
 });
