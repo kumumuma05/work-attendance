@@ -194,6 +194,7 @@ class AdminAttendanceCorrectionTest extends TestCase
 
         // 「承認」ボタンを押す
         $response = $this->post("/stamp_correction_request/approve/{$attendanceRequest->id}");
+        $response->assertStatus(302);
 
         // 勤怠テーブルを確認
         $this->assertDatabaseHas('attendances', [
