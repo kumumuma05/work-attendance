@@ -103,7 +103,7 @@ class AttendanceDetailCorrectionTest extends TestCase
         $response = $this->get("/attendance/detail/{$attendance->id}");
         $response->assertStatus(200);
 
-        // 休憩開始時間を退勤時間より後に設定する
+        // 休憩終了時間を退勤時間より後に設定する
         $response = $this->post("/attendance/detail/{$attendance->id}", [
             'requested_clock_out' => '18:00',
             'requested_breaks' => [

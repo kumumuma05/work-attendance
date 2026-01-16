@@ -122,4 +122,48 @@ class AdminAttendanceDetailTest extends TestCase
             "requested_breaks.{$break->id}.break_in" => '休憩時間が不適切な値です',
         ]);
     }
+
+    /**
+     * 休憩終了時間が退勤時間より後になっている場合、エラーメッセージが表示されることを確認
+     */
+    public function test_error_message_is_displayed_when_break_out_is_after_clock_out(){
+        // 準備
+        $user = User::factory()->create([
+            'name' => 'user1',
+        ]);
+        $attendance = Attendance::factory()->create([
+            'user_id' => $user->id,
+            'clock_in' => Carbon::create(2026, 1, 5, 9, 0),
+            'clock_out' => Carbon::create(2026, 1, 5, 18, 0),
+        ]);
+        $break = $attendance->breaks()->create([
+            'break_in' => Carbon::create(2026, 1, 5, 12, 0),
+            'break_out' => Carbon::create(2026, 1, 5, 13, 0),
+        ]);
+
+        // 管理者ユーザーログイン
+        $admin = Admin::factory()->create();
+        $this->actingAs($admin, 'admin');
+
+        // 勤怠詳細ページを開く
+        $response = $this->get("/admin/attendance/{$attendance->id}");
+        $response->assertStatus(200);
+
+        // 休憩終了時間を退勤時間より後に設定する
+        $response = $this->post("/admin/attendance/{$attendance->id}", [
+            'requested_clock_out' => '18:00',
+            'requested_breaks' => [
+                $break->id => [
+                    'break_in' => '12:00',
+                    'break_out' => '20:00',
+                ],
+            ],
+        ]);
+
+        // エラーメッセージが表示される
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors([
+            "requested_breaks.{$break->id}.break_out" => '休憩時間もしくは退勤時間が不適切な値です',
+        ]);
+    }
 }
