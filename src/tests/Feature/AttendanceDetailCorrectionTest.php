@@ -249,4 +249,36 @@ class AttendanceDetailCorrectionTest extends TestCase
         $response->assertSee(200);
         $response->assertSee('test');
     }
+
+    /**
+     * 各申請の「詳細」を押下すると勤怠詳細画面に遷移することを確認
+     */
+    public function test_attendance_list_navigates_to_detail_page_when_detail_is_clicked() {
+        // 勤怠情報が登録されたユーザーにログインする
+        $user = User::factory()->create();
+        $attendance = Attendance::factory()->create([
+            'user_id' => $user->id,
+            'clock_in' => '2026-01-05 10:00',
+        ]);
+        $this->actingAs($user, 'web');
+
+        // // 勤怠詳細を修正し保存処理
+        $response = $this->post("/attendance/detail/{$attendance->id}", [
+            'requested_clock_in' => '09:00',
+            'remarks' => 'test',
+        ]);
+        $response->assertStatus(302);
+        $response->assertSessionHasNoErrors();
+
+        // 申請一覧画面を開く
+        $response = $this->get('/stamp_correction_request/list');
+        $response->assertSee(200);
+        $response->assertSee('test');
+        $response->assertSee('詳細');
+
+        // 「詳細」ボタンを押す
+        $response = $this->get("/attendance/detail/{$attendance->id}");
+        $response->assertStatus(200);
+        $response->assertSee('勤怠詳細');
+    }
 }
