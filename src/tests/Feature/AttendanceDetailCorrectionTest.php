@@ -190,23 +190,63 @@ class AttendanceDetailCorrectionTest extends TestCase
     public function test_all_correction_requests_is_displayed(){
         // 勤怠情報が登録されたユーザーにログインする
         $user = User::factory()->create();
-        $attendances = Attendance::factory()->count(2)->create([
+        $attendance1 = Attendance::factory()->create([
             'user_id' => $user->id,
+            'clock_in' => '2026-01-05 10:00:00',
+        ]);
+        $attendance2 = Attendance::factory()->create([
+            'user_id' => $user->id,
+            'clock_in' => '2026-01-06 10:00:00',
         ]);
         $this->actingAs($user, 'web');
 
         // 勤怠詳細を修正し保存処理
-        $response1 = $this->post("/attendance/detail/{$attendances[0]->id}", [
+        $response1 = $this->post("/attendance/detail/{$attendance1->id}", [
             'requested_clock_in' => '09:00',
-            'remarks' => '申請1',
+            'remarks' => 'test1',
         ]);
-        $response2 = $this->post("/attendance/detail/{$attendances[1]->id}", [
+        $response2 = $this->post("/attendance/detail/{$attendance2->id}", [
             'requested_clock_in' => '09:00',
-            'remarks' => '申請2',
+            'remarks' => 'test2',
         ]);
 
         $response = $this->get('/stamp_correction_request/list');$response->assertStatus(200);
-        $response->assertSee('申請1');
-        $response->assertSee('申請2');
+        $response->assertSee('test1');
+        $response->assertSee('test2');
+    }
+
+    /**
+     * 管理者が承認した申請がすべて表示されていることを確認
+     */
+    public function test_approved_correction_requested_are_displayed() {
+        // 勤怠情報が登録されたユーザーにログインする
+        $user = User::factory()->create();
+        $attendance = Attendance::factory()->create([
+            'user_id' => $user->id,
+            'clock_in' => '2026-01-05 10:00',
+        ]);
+        $this->actingAs($user, 'web');
+
+        // 勤怠詳細を修正し保存処理
+        $response = $this->post("/attendance/detail/{$attendance->id}", [
+            'requested_clock_in' => '09:00',
+            'remarks' => 'test',
+        ]);
+        $response->assertStatus(302);
+        $response->assertSessionHasNoErrors();
+
+
+        // 修正認証する
+        $request = AttendanceRequest::where('attendance_id', $attendance->id)
+            ->latest()
+            ->first();
+        $request->update([
+            'status' => 'approved',
+        ]);
+
+        // 申請一覧を開く(承認済み画面)
+        $response = $this->get('stamp_correction_request/list?tab=approved');
+        $response->assertSee(200);
+        $response->assertSee('test');
     }
 }
