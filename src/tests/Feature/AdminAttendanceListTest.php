@@ -65,5 +65,22 @@ class AdminAttendanceListTest extends TestCase
         Carbon::setTestNow();
     }
 
+    /**
+     * 遷移した際、現在の日付が表示されることを確認
+     */
+    public function test_current_date_is_display_when_page_is_opened() {
+        // 準備
+        Carbon::setTestNow(Carbon::create(2026, 1, 5));
+
+        // 管理者ユーザーにログインする
+        $admin = Admin::factory()->create();
+        $this->actingAs($admin, 'admin');
+
+        // 勤怠一覧画面を開く
+        $response = $this->get('/admin/attendance/list');
+        $response->assertStatus(200);
+        $response->assertSee('2026年1月5日の勤怠');
+        Carbon::setTestNow();
+    }
     
 }
