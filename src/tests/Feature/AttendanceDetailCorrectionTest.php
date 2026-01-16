@@ -6,7 +6,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Admin;
 use App\Models\Attendance;
+use App\Models\AttendanceRequest;
 use Carbon\Carbon;
 
 class AttendanceDetailCorrectionTest extends TestCase
@@ -146,25 +148,43 @@ class AttendanceDetailCorrectionTest extends TestCase
 
         // 勤怠詳細を修正し保存処理
         $response = $this->post("/attendance/detail/{$attendance->id}", [
-            'requested_clock_in' => '08:00','requested_clock_out' => '08:00',
+            'requested_clock_in' => '08:00','requested_clock_out' => '18:00',
             'requested_breaks' => [
                 $break->id => [
                     'break_in' => '12:00',
-                    'break_out' => '20:00',
+                    'break_out' => '13:00',
                 ],
             ],
             'remarks' => 'テスト',
         ]);
         $response->assertStatus(302);
 
-        // 申請が作成された
+        // 申請が作成されたことを確認
         $this->assertDatabaseHas('attendance_requests', [
             'attendance_id' => $attendance->id,
             'remarks' => 'テスト',
             'status' => 'pending',
         ]);
 
-        // 管理者ユーザーで承認画面と申請一覧画面を確認
-        $user = User::factory()->create();
+        // 管理者ユーザーの承認画面と申請一画面を確認する
+        $admin = Admin::factory()->create();
+        $this->actingAs($admin, 'admin');
+
+        // 申請承認画面の表示を確認
+        $request = attendanceRequest::where('attendance_id',$attendance->id)
+            ->latest()
+            ->first();
+        $response = $this->get("/stamp_correction_request/approve/{$request->id}");
+        $response->assertStatus(200);
+        $response->assertSee('テスト');
+
+        // 申請一覧画面の表示を確認
+        $response = $this->get('/stamp_correction_request/list');
+        $response->assertStatus(200);
+        $response->assertSee('テスト');
+
+
+
+
     }
 }
