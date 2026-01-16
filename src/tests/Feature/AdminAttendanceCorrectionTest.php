@@ -115,4 +115,43 @@ class AdminAttendanceCorrectionTest extends TestCase
         $response->assertDontSee('pending1');
     }
 
+    /**
+     * 修正申請の詳細内容が正しく表示されていることを確認
+     */
+    public function test_correction_request_are_displayed_correctly() {
+        // 準備
+        $user = User::factory()->create([
+            'name' => 'user1',
+        ]);
+        $attendance = Attendance::factory()->create([
+            'user_id' => $user->id,
+            'clock_in' => Carbon::create(2026, 1, 5, 8, 0),
+            'clock_out' => Carbon::create(2026, 1, 5, 18, 0),
+        ]);
+        $attendanceRequest = AttendanceRequest::create([
+            'user_id' => $user->id,
+            'attendance_id' => $attendance->id,
+            'status' => 'pending',
+            'requested_clock_in' => Carbon::create(2026, 1, 5, 9, 0),
+            'remarks' => 'テストP',
+        ]);
+
+        // 管理者ユーザーログイン
+        $admin = Admin::factory()->create();
+        $this->actingAs($admin, 'admin');
+
+        // 修正申請ページから詳細画面を開く
+        $response = $this->get('/stamp_correction_request/list');
+        $response->assertStatus(200);
+        $response->assertSee('>詳細<', false);
+        $response->assertSee('href="/stamp_correction_request/approve/' . $attendanceRequest->id . '"', false);
+
+        $response = $this->get("/stamp_correction_request/approve/{$attendanceRequest->id}");
+        $response->assertStatus(200);
+        $response->assertSee('2026年');
+        $response->assertSee('1月5日');
+        $response->assertSee('user1');
+        $response->assertSee('09:00');
+        $response->assertSee('18:00');
+    }
 }
