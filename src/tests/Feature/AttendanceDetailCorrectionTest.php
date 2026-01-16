@@ -182,9 +182,31 @@ class AttendanceDetailCorrectionTest extends TestCase
         $response = $this->get('/stamp_correction_request/list');
         $response->assertStatus(200);
         $response->assertSee('テスト');
+    }
 
+    /**
+     * すべての修正申請が表示されていることを確認
+     */
+    public function test_all_correction_requests_is_displayed(){
+        // 勤怠情報が登録されたユーザーにログインする
+        $user = User::factory()->create();
+        $attendances = Attendance::factory()->count(2)->create([
+            'user_id' => $user->id,
+        ]);
+        $this->actingAs($user, 'web');
 
+        // 勤怠詳細を修正し保存処理
+        $response1 = $this->post("/attendance/detail/{$attendances[0]->id}", [
+            'requested_clock_in' => '09:00',
+            'remarks' => '申請1',
+        ]);
+        $response2 = $this->post("/attendance/detail/{$attendances[1]->id}", [
+            'requested_clock_in' => '09:00',
+            'remarks' => '申請2',
+        ]);
 
-
+        $response = $this->get('/stamp_correction_request/list');$response->assertStatus(200);
+        $response->assertSee('申請1');
+        $response->assertSee('申請2');
     }
 }
