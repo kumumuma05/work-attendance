@@ -154,4 +154,52 @@ class AdminAttendanceCorrectionTest extends TestCase
         $response->assertSee('09:00');
         $response->assertSee('18:00');
     }
+
+    /**
+     * 修正申請の承認処理が正しく行われることを確認
+     */
+    public function test_correction_request_approval_is_executed_correctly() {
+        // 準備
+        $user = User::factory()->create([
+            'name' => 'user1',
+        ]);
+        $attendance = Attendance::factory()->create([
+            'user_id' => $user->id,
+            'clock_in' => Carbon::create(2026, 1, 5, 8, 0),
+            'clock_out' => Carbon::create(2026, 1, 5, 18, 0),
+        ]);
+        $attendanceRequest = AttendanceRequest::create([
+            'user_id' => $user->id,
+            'attendance_id' => $attendance->id,
+            'status' => 'pending',
+            'requested_clock_in' => Carbon::create(2026, 1, 5, 9, 0),
+            'remarks' => 'テストP',
+        ]);
+
+        // 勤怠テーブルを確認
+        $this->assertDatabaseHas('attendances', [
+            'user_id' => $user->id,
+            'clock_in' => '2026-01-05 08:00',
+            'clock_out' => '2026-01-05 18:00',
+        ]);
+
+        // 管理者ユーザーログイン
+        $admin = Admin::factory()->create();
+        $this->actingAs($admin, 'admin');
+
+        // 修正申請の詳細画面を開く
+        $response = $this->get("/stamp_correction_request/approve/{$attendanceRequest->id}");
+        $response->assertStatus(200);
+        $response->assertSee('承認</button>', false);
+
+        // 「承認」ボタンを押す
+        $response = $this->post("/stamp_correction_request/approve/{$attendanceRequest->id}");
+
+        // 勤怠テーブルを確認
+        $this->assertDatabaseHas('attendances', [
+            'user_id' => $user->id,
+            'clock_in' => '2026-01-05 09:00',
+            'clock_out' => '2026-01-05 18:00',
+        ]);
+    }
 }
