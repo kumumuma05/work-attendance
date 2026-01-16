@@ -289,7 +289,8 @@ class AttendanceDetailCorrectionTest extends TestCase
         $response = $this->get('/stamp_correction_request/list');
         $response->assertSee(200);
         $response->assertSee('test');
-        $response->assertSee('詳細');
+        $response->assertSee('>詳細<', false);
+        $response->assertSee('href="/attendance/detail/' . $attendance->id . '"', false);
 
         // 「詳細」ボタンを押す
         $response = $this->get("/attendance/detail/{$attendance->id}");

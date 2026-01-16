@@ -104,6 +104,8 @@ class AdminAttendanceListTest extends TestCase
             'clock_in' => Carbon::create(2026, 1, 4, 10, 0),
             'clock_out' => Carbon::create(2026, 1, 4, 19, 0),
         ]);
+        $previousDay = '2026-01-04';
+
 
         // 管理者ユーザーにログインする
         $admin = Admin::factory()->create();
@@ -115,6 +117,8 @@ class AdminAttendanceListTest extends TestCase
         $response->assertSee('2026年1月5日の勤怠');
         $response->assertSee('todayUser');
         $response->assertDontSee('yesterdayUser');
+        $response->assertSee('前日');
+        $response->assertSee('href="' . url('/admin/attendance/list?date=' . $previousDay) . '"', false);
 
         // 「前日」に遷移
         $response = $this->get('/admin/attendance/list?date=2026-01-04');
@@ -148,6 +152,7 @@ class AdminAttendanceListTest extends TestCase
             'clock_in' => Carbon::create(2026, 1, 6, 10, 0),
             'clock_out' => Carbon::create(2026, 1, 6, 19, 0),
         ]);
+        $nextDay = '2026-01-06';
 
         // 管理者ユーザーにログインする
         $admin = Admin::factory()->create();
@@ -159,8 +164,10 @@ class AdminAttendanceListTest extends TestCase
         $response->assertSee('2026年1月5日の勤怠');
         $response->assertSee('todayUser');
         $response->assertDontSee('nextDayUser');
+        $response->assertSee('翌日');
+        $response->assertSee('href="' . url('/admin/attendance/list?date=' . $nextDay) . '"', false);
 
-        // 「前日」に遷移
+        // 「翌日」に遷移
         $response = $this->get('/admin/attendance/list?date=2026-01-06');
         $response->assertStatus(200);
         $response->assertSee('2026年1月6日の勤怠');

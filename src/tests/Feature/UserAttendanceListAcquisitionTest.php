@@ -77,6 +77,7 @@ class UserAttendanceListAcquisitionTest extends TestCase
             ]);
         }
         $this->actingAs($user, 'web');
+        $previousMonth = '2025-12';
 
         // 勤怠一覧ページを開く
         $response = $this->get('/attendance/list?date=2026-01');
@@ -84,6 +85,7 @@ class UserAttendanceListAcquisitionTest extends TestCase
         $response->assertSee('2026/01');
         $response->assertSee('01/01');
         $response->assertSee('前月');
+        $response->assertSee('href="' . url('/attendance/list?date=' . $previousMonth) . '"', false);
 
         // 「前月」ボタンを押すと前月の情報が表示されていることを確認
         $response = $this->get('/attendance/list?date=2025-12');
@@ -112,6 +114,7 @@ class UserAttendanceListAcquisitionTest extends TestCase
             ]);
         }
         $this->actingAs($user, 'web');
+        $nextMonth = '2026-02';
 
         // 勤怠一覧ページを開く
         $response = $this->get('/attendance/list?date=2026-01');
@@ -119,6 +122,8 @@ class UserAttendanceListAcquisitionTest extends TestCase
         $response->assertSee('2026/01');
         $response->assertSee('01/01');
         $response->assertSee('翌月');
+        $response->assertSee('href="' . url('/attendance/list?date=' . $nextMonth) . '"', false);
+
 
         // 「翌月」ボタンを押すと翌月の情報が表示されていることを確認
         $response = $this->get('/attendance/list?date=2026-02');
@@ -144,7 +149,8 @@ class UserAttendanceListAcquisitionTest extends TestCase
         // 勤怠一覧ページを開く
         $response = $this->get('/attendance/list?date=2026-01');
         $response->assertStatus(200);
-        $response->assertSee('詳細');
+        $response->assertSee('>詳細<', false);
+        $response->assertSee('href="/attendance/detail/' . $attendance->id . '"', false);
 
         // 詳細ボタンを押下する
         $response = $this->get("/attendance/detail/{$attendance->id}");

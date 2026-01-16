@@ -94,6 +94,7 @@ class AdminStaffListTest extends TestCase
             'clock_in' => Carbon::create(2025, 12, 5, 9, 0),
             'clock_out' => Carbon::create(2025, 12, 5, 18, 0),
         ]);
+        $previousMonth = '2025-12';
 
         // 管理者でログインする
         $admin =Admin::factory()->create();
@@ -102,6 +103,9 @@ class AdminStaffListTest extends TestCase
         // 選択したユーザーの勤怠一覧ページを開く
         $response = $this->get("/admin/attendance/staff/{$user->id}");
         $response->assertStatus(200);
+        $response->assertSee('前月');
+        $response->assertSee('href="' . url("/admin/attendance/staff/{$user->id}?date={$previousMonth}") . '"', false);
+
 
         // 「前月」ボタンを押す
         $response = $this->get("/admin/attendance/staff/{$user->id}?date=2025-12");
@@ -136,6 +140,7 @@ class AdminStaffListTest extends TestCase
             'clock_in' => Carbon::create(2026, 2, 5, 9, 0),
             'clock_out' => Carbon::create(2026, 2, 5, 18, 0),
         ]);
+        $nextMonth = '2026-02';
 
         // 管理者でログインする
         $admin =Admin::factory()->create();
@@ -144,6 +149,8 @@ class AdminStaffListTest extends TestCase
         // 選択したユーザーの勤怠一覧ページを開く
         $response = $this->get("/admin/attendance/staff/{$user->id}");
         $response->assertStatus(200);
+        $response->assertSee('翌月');
+        $response->assertSee('href="' . url("/admin/attendance/staff/{$user->id}?date={$nextMonth}") . '"', false);
 
         // 「翌月」ボタンを押す
         $response = $this->get("/admin/attendance/staff/{$user->id}?date=2026-02");
@@ -155,6 +162,43 @@ class AdminStaffListTest extends TestCase
         $response->assertSee('09:00');
         $response->assertSee('18:00');
         $response->assertDontSee('2026/01');
+
+        Carbon::setTestNow();
+    }
+
+    /**
+     * 「詳細」を押下すると、その日の勤怠詳細画面に遷移する
+     */
+    public function test_admin_navigates_to_attendance_detail_page_when_detail_is_clicked() {
+        // 準備
+        Carbon::setTestNow(Carbon::create(2026, 1, 5));
+        $user = User::factory()->create([
+            'name' => 'user1',
+        ]);
+        $attendance = Attendance::factory()->create([
+            'user_id' => $user->id,
+            'clock_in' => Carbon::create(2026, 1, 5, 9, 0),
+            'clock_out' => Carbon::create(2026, 1, 5, 18, 0),
+        ]);
+
+        // 管理者でログインする
+        $admin =Admin::factory()->create();
+        $this->actingAs($admin, 'admin');
+
+        // 選択したユーザーの勤怠一覧ページを開く
+        $response = $this->get("/admin/attendance/staff/{$user->id}");
+        $response->assertStatus(200);
+        $response->assertSee('>詳細<', false);
+        $response->assertSee('href="/admin/attendance/' . $attendance->id . '"', false);
+
+        // 「詳細」ボタンを押す
+        $response = $this->get("/admin/attendance/{$attendance->id}");
+        $response->assertStatus(200);
+        $response->assertSee('user1');
+        $response->assertSee('2026年');
+        $response->assertSee('1月5日');
+        $response->assertSee('09:00');
+        $response->assertSee('18:00');
 
         Carbon::setTestNow();
     }
