@@ -43,4 +43,38 @@ class AdminAttendanceDetailTest extends TestCase
         $response->assertSee('user1');
         $response->assertSee('09:00');$response->assertSee('18:00');$response->assertSee('12:00');$response->assertSee('13:00');
     }
+
+    /**
+     * 出勤時間が退勤時間より後になっている場合、エラーメッセージが表示されるのを確認
+     */
+    public function test_error_message_is_displayed_when_clock_in_is_after_clock_out(){
+        // 準備
+        $user = User::factory()->create([
+            'name' => 'user1',
+        ]);
+        $attendance = Attendance::factory()->create([
+            'user_id' => $user->id,
+            'clock_in' => Carbon::create(2026, 1, 5, 9, 0),
+            'clock_out' => Carbon::create(2026, 1, 5, 18, 0),
+        ]);
+        // 管理者ユーザーログイン
+        $admin = Admin::factory()->create();
+        $this->actingAs($admin, 'admin');
+
+        // 勤怠詳細ページを開く
+        $response = $this->get("/admin/attendance/{$attendance->id}");
+        $response->assertStatus(200);
+
+        // 出勤時間を退勤時間より後に設定する
+        $response = $this->post("/admin/attendance/{$attendance->id}", [
+            'requested_clock_in' => '18:00',
+            'requested_clock_out' => '09:00',
+        ]);
+
+        // エラーメッセージが表示される
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors([
+            'requested_clock_in' => '出勤時間もしくは退勤時間が不適切な値です',
+        ]);
+    }
 }
