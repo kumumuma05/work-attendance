@@ -17,7 +17,7 @@ class AdminAttendanceDetailTest extends TestCase
     /**
      * 勤怠詳細画面い表示されるデータが選択した者になっていることを確認
      */
-    public function test_admin_sees_selected_attendance_details(){
+    public function test_admin_sees_selected_attendance_details() {
         // 準備
         $user = User::factory()->create([
             'name' => 'user1',
@@ -47,7 +47,7 @@ class AdminAttendanceDetailTest extends TestCase
     /**
      * 出勤時間が退勤時間より後になっている場合、エラーメッセージが表示されるのを確認
      */
-    public function test_error_message_is_displayed_when_clock_in_is_after_clock_out(){
+    public function test_error_message_is_displayed_when_clock_in_is_after_clock_out() {
         // 準備
         $user = User::factory()->create([
             'name' => 'user1',
@@ -82,7 +82,7 @@ class AdminAttendanceDetailTest extends TestCase
     /**
      * 休憩開始時間が退勤時間より後になっている場合、エラーメッセージが表示されることを確認
      */
-    public function test_error_message_is_displayed_when_break_in_is_after_clock_out(){
+    public function test_error_message_is_displayed_when_break_in_is_after_clock_out() {
         // 準備
         $user = User::factory()->create([
             'name' => 'user1',
@@ -126,7 +126,7 @@ class AdminAttendanceDetailTest extends TestCase
     /**
      * 休憩終了時間が退勤時間より後になっている場合、エラーメッセージが表示されることを確認
      */
-    public function test_error_message_is_displayed_when_break_out_is_after_clock_out(){
+    public function test_error_message_is_displayed_when_break_out_is_after_clock_out() {
         // 準備
         $user = User::factory()->create([
             'name' => 'user1',
@@ -164,6 +164,38 @@ class AdminAttendanceDetailTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHasErrors([
             "requested_breaks.{$break->id}.break_out" => '休憩時間もしくは退勤時間が不適切な値です',
+        ]);
+    }
+
+    /**
+     * 備考欄が未入力の場合エラーメッセージが表示されることを確認
+     */
+    public function test_error_message_is_displayed_when_remarks_is_null() {
+        // 準備
+        $user = User::factory()->create([
+            'name' => 'user1',
+        ]);
+        $attendance = Attendance::factory()->create([
+            'user_id' => $user->id,
+            'clock_in' => Carbon::create(2026, 1, 5, 9, 0),
+            'clock_out' => Carbon::create(2026, 1, 5, 18, 0),
+        ]);
+
+        // 管理者ユーザーログイン
+        $admin = Admin::factory()->create();
+        $this->actingAs($admin, 'admin');
+
+        // 勤怠詳細ページを開く
+        $response = $this->get("/admin/attendance/{$attendance->id}");
+        $response->assertStatus(200);
+
+        // 備考を未入力のまま処理
+        $response = $this->post("/admin/attendance/{$attendance->id}", []);
+
+        // エラーメッセージが表示される
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors([
+            'remarks' => '備考を記入してください',
         ]);
     }
 }

@@ -18,7 +18,7 @@ class AttendanceDetailCorrectionTest extends TestCase
     /**
      * 出勤時間が退勤時間より後になっている場合、エラーメッセージが表示されるのを確認
      */
-    public function test_error_message_is_displayed_when_clock_in_is_after_clock_out(){
+    public function test_error_message_is_displayed_when_clock_in_is_after_clock_out() {
         // 勤怠情報が登録されたユーザーにログインする
         $user = User::factory()->create();
         $attendance = Attendance::factory()->create([
@@ -46,7 +46,7 @@ class AttendanceDetailCorrectionTest extends TestCase
     /**
      * 休憩開始時間が退勤時間より後になっている場合、エラーメッセージが表示されることを確認
      */
-    public function test_error_message_is_displayed_when_break_in_is_after_clock_out(){
+    public function test_error_message_is_displayed_when_break_in_is_after_clock_out() {
         // 勤怠情報が登録されたユーザーにログインする
         $user = User::factory()->create();
         $attendance = Attendance::factory()->create([
@@ -85,7 +85,7 @@ class AttendanceDetailCorrectionTest extends TestCase
     /**
      * 休憩終了時間が退勤時間より後になっている場合、エラーメッセージが表示されることを確認
      */
-    public function test_error_message_is_displayed_when_break_out_is_after_clock_out(){
+    public function test_error_message_is_displayed_when_break_out_is_after_clock_out() {
         // 勤怠情報が登録されたユーザーにログインする
         $user = User::factory()->create();
         $attendance = Attendance::factory()->create([
@@ -124,7 +124,7 @@ class AttendanceDetailCorrectionTest extends TestCase
     /**
      * 備考欄が未入力の場合エラーメッセージが表示されることを確認
      */
-    public function test_error_message_is_displayed_when_remarks_is_null(){
+    public function test_error_message_is_displayed_when_remarks_is_null() {
         // 勤怠情報が登録されたユーザーにログインする
         $user = User::factory()->create();
         $attendance = Attendance::factory()->create([
@@ -149,7 +149,7 @@ class AttendanceDetailCorrectionTest extends TestCase
     /**
      * 修正申請処理が実行されることを確認
      */
-    public function test_correction_equest_process_is_executed(){
+    public function test_correction_equest_process_is_executed() {
         // 勤怠情報が登録されたユーザーにログインする
         $user = User::factory()->create();
         $attendance = Attendance::factory()->create([
@@ -202,7 +202,7 @@ class AttendanceDetailCorrectionTest extends TestCase
     /**
      * すべての修正申請が表示されていることを確認
      */
-    public function test_all_correction_requests_is_displayed(){
+    public function test_all_correction_requests_is_displayed() {
         // 勤怠情報が登録されたユーザーにログインする
         $user = User::factory()->create();
         $attendance1 = Attendance::factory()->create([
