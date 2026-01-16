@@ -88,19 +88,19 @@ class AdminAttendanceListTest extends TestCase
     public function test_previous_day_attendance_is_displayed_when_previous_day_button_is_clicked() {
         // 準備
         Carbon::setTestNow(Carbon::create(2026, 1, 5));
-        $user1 = User::factory()->create([
-            'name' => 'user1',
+        $todayUser = User::factory()->create([
+            'name' => 'todayUser',
         ]);
         $attendance1 = Attendance::factory()->create([
-            'user_id' => $user1->id,
+            'user_id' => $todayUser->id,
             'clock_in' => Carbon::create(2026, 1, 5, 9, 0),
             'clock_out' => Carbon::create(2026, 1, 5, 18, 0),
         ]);
-        $user2 = User::factory()->create([
-            'name' => 'user2',
+        $yesterdayUser = User::factory()->create([
+            'name' => 'yesterdayUser',
         ]);
         $attendance2 = Attendance::factory()->create([
-            'user_id' => $user2->id,
+            'user_id' => $yesterdayUser->id,
             'clock_in' => Carbon::create(2026, 1, 4, 10, 0),
             'clock_out' => Carbon::create(2026, 1, 4, 19, 0),
         ]);
@@ -113,38 +113,38 @@ class AdminAttendanceListTest extends TestCase
         $response = $this->get('/admin/attendance/list');
         $response->assertStatus(200);
         $response->assertSee('2026年1月5日の勤怠');
-        $response->assertSee('user1');
-        $response->assertDontSee('user2');
+        $response->assertSee('todayUser');
+        $response->assertDontSee('yesterdayUser');
 
         // 「前日」に遷移
         $response = $this->get('/admin/attendance/list?date=2026-01-04');
         $response->assertStatus(200);
         $response->assertSee('2026年1月4日の勤怠');
-        $response->assertSee('user2');
-        $response->assertDontSee('user1');
+        $response->assertSee('yesterdayUser');
+        $response->assertDontSee('todayUser');
 
         Carbon::setTestNow();
     }
 
     /**
-     * 「前日」を押下したとき前日の勤怠情報が表示される
+     * 「翌日」を押下したとき翌日の勤怠情報が表示される
      */
     public function test_previous_day_attendance_is_displayed_when_next_day_button_is_clicked() {
         // 準備
         Carbon::setTestNow(Carbon::create(2026, 1, 5));
-        $user1 = User::factory()->create([
-            'name' => 'user1',
+        $todayUser = User::factory()->create([
+            'name' => 'todayUser',
         ]);
         $attendance1 = Attendance::factory()->create([
-            'user_id' => $user1->id,
+            'user_id' => $todayUser->id,
             'clock_in' => Carbon::create(2026, 1, 5, 9, 0),
             'clock_out' => Carbon::create(2026, 1, 5, 18, 0),
         ]);
-        $user2 = User::factory()->create([
-            'name' => 'user2',
+        $nextDayUser = User::factory()->create([
+            'name' => 'nextDayUser',
         ]);
         $attendance2 = Attendance::factory()->create([
-            'user_id' => $user2->id,
+            'user_id' => $nextDayUser->id,
             'clock_in' => Carbon::create(2026, 1, 6, 10, 0),
             'clock_out' => Carbon::create(2026, 1, 6, 19, 0),
         ]);
@@ -157,15 +157,15 @@ class AdminAttendanceListTest extends TestCase
         $response = $this->get('/admin/attendance/list');
         $response->assertStatus(200);
         $response->assertSee('2026年1月5日の勤怠');
-        $response->assertSee('user1');
-        $response->assertDontSee('user2');
+        $response->assertSee('todayUser');
+        $response->assertDontSee('nextDayUser');
 
         // 「前日」に遷移
         $response = $this->get('/admin/attendance/list?date=2026-01-06');
         $response->assertStatus(200);
         $response->assertSee('2026年1月6日の勤怠');
-        $response->assertSee('user2');
-        $response->assertDontSee('user1');
+        $response->assertSee('nextDayUser');
+        $response->assertDontSee('todayUser');
 
         Carbon::setTestNow();
     }

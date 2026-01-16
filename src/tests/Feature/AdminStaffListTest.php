@@ -74,4 +74,45 @@ class AdminStaffListTest extends TestCase
 
         Carbon::setTestNow();
     }
+
+    /**
+     * 「前月」を押下したときに表示月の前月の情報が表示されることを確認
+     */
+    public function test_admin_sees_previous_month_attendance_when_previous_month_is_selected() {
+        // 準備
+        Carbon::setTestNow(Carbon::create(2026, 1, 5));
+        $user = User::factory()->create([
+            'name' => 'user1',
+        ]);
+        $currentMonthAttendance = Attendance::factory()->create([
+            'user_id' => $user->id,
+            'clock_in' => Carbon::create(2026, 1, 5, 9, 0),
+            'clock_out' => Carbon::create(2026, 1, 5, 18, 0),
+        ]);
+        $previousMonthAttendance = Attendance::factory()->create([
+            'user_id' => $user->id,
+            'clock_in' => Carbon::create(2025, 12, 5, 9, 0),
+            'clock_out' => Carbon::create(2025, 12, 5, 18, 0),
+        ]);
+
+        // 管理者でログインする
+        $admin =Admin::factory()->create();
+        $this->actingAs($admin, 'admin');
+
+        // 選択したユーザーの勤怠一覧ページを開く
+        $response = $this->get("/admin/attendance/staff/{$user->id}");
+        $response->assertStatus(200);
+
+        // 「前月」ボタンを押す
+        $response = $this->get("/admin/attendance/staff/{$user->id}?date=2025-12");
+        $response->assertStatus(200);
+
+        $response->assertSee('user1さんの勤怠');
+        $response->assertSee('2025/12');
+        $response->assertSee('12/05');
+        $response->assertSee('09:00');
+        $response->assertSee('18:00');
+
+        Carbon::setTestNow();
+    }
 }
