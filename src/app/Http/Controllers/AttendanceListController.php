@@ -43,7 +43,7 @@ class AttendanceListController extends Controller
             ];
         }
 
-        return view('attendance.list', [
+        return view('user_attendance_list', [
             'attendances' => $attendances,
             'currentMonth' => $current,
             'previousMonth' => $previous,

@@ -18,6 +18,6 @@ class AdminCorrectionRequestController extends Controller
             ->latest()
             ->get();
 
-        return view('attendance.admin_correction_request', compact('tab', 'requests'));
+        return view('admin_correction_request_list', compact('tab', 'requests'));
     }
 }

@@ -95,7 +95,7 @@ class AdminAttendanceDetailController extends Controller
             ];
         }
 
-        return view('attendance.admin_detail', compact('attendance', 'pendingRequest', 'hasPendingRequest', 'displayClockIn', 'displayClockOut', 'displayBreaks'));
+        return view('admin_attendance_detail', compact('attendance', 'pendingRequest', 'hasPendingRequest', 'displayClockIn', 'displayClockOut', 'displayBreaks'));
     }
 
     /**

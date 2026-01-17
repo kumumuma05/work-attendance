@@ -5,7 +5,7 @@
 
 <!-- CSS -->
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/admin_correction_approve.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin_correction_request_approve.css') }}">
 @endsection
 
 <!-- 本体 -->

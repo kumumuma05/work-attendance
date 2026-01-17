@@ -94,7 +94,7 @@ class AttendanceDetailController extends Controller
             ];
         }
 
-        return view('attendance.detail', compact('attendance', 'user', 'displayBreaks', 'hasPendingRequest', 'pendingRequest', 'displayClockIn', 'displayClockOut'));
+        return view('user_attendance_detail', compact('attendance', 'user', 'displayBreaks', 'hasPendingRequest', 'pendingRequest', 'displayClockIn', 'displayClockOut'));
     }
 
     /**

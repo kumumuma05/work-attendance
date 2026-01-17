@@ -46,7 +46,7 @@ class AdminStaffAttendanceListController extends Controller
             ];
         }
 
-        return view('attendance.staff_attendance', [
+        return view('admin_staff_attendance_list', [
             'current' => $current,
             'user' => $user,
             'attendances' => $attendances,

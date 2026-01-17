@@ -79,7 +79,7 @@ class AdminCorrectionApproveController extends Controller
         // 承認済みかどうかを判断
         $isApproved = $attendanceRequest->status === 'approved';
 
-        return view('attendance.admin_correction_approve', compact('attendanceRequest', 'attendance', 'displayClockIn', 'displayClockOut', 'displayBreaks', 'isApproved'));
+        return view('admin_correction_request_approve', compact('attendanceRequest', 'attendance', 'displayClockIn', 'displayClockOut', 'displayBreaks', 'isApproved'));
     }
 
     /**

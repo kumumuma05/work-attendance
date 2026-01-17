@@ -5,7 +5,7 @@
 
 <!-- CSS -->
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/admin_list.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin_attendance_list.css') }}">
 @endsection
 
 <!-- 本体 -->

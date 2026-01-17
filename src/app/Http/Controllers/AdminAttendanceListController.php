@@ -28,7 +28,7 @@ class AdminAttendanceListController extends Controller
             ->orderBy('clock_in', 'asc')
             ->get();
 
-        return view('.attendance.admin_list', [
+        return view('admin_attendance_list', [
             'attendances' => $attendances,
             'currentDay' => $current,
             'previousDay' => $previous,

@@ -19,6 +19,6 @@ class CorrectionRequestController extends Controller
             ->latest()
             ->get();
 
-        return view('attendance.correction_request', compact('tab', 'requests'));
+        return view('user_correction_request_list', compact('tab', 'requests'));
     }
 }

@@ -11,6 +11,6 @@ class AdminStaffListController extends Controller
     {
         $users = User::select('id', 'name', 'email')->get();
 
-        return view('attendance.staff_list', compact('users'));
+        return view('admin_staff_list', compact('users'));
     }
 }

@@ -1,16 +1,16 @@
 @extends('layouts.default')
 
 <!-- タイトル -->
-@section('title', '申請一覧')
+@section('title', '申請一覧（管理者）')
 
 <!-- CSS -->
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/correction_request.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/correction_request_list.css') }}">
 @endsection
 
 <!-- 本体 -->
 @section('content')
-    @include('header.user_working')
+    @include('header.admin')
         <div class="correction-request">
             <!-- タイトル -->
             <h1 class="correction-request__title">
@@ -64,7 +64,7 @@
                                 <td>{{ $correction->remarks }}</td>
                                 <td>{{ $correction->created_at->isoFormat('YYYY/MM/DD') }}</td>
                                 <td>
-                                    <a class="correction-request__link" href="/attendance/detail/{{ $correction->attendance->id }}">詳細</a>
+                                    <a class="correction-request__link" href="/stamp_correction_request/approve/{{ $correction->id }}">詳細</a>
                                 </td>
                             </tr>
                         @endforeach

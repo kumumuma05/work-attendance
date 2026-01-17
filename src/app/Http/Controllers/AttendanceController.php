@@ -55,7 +55,7 @@ class AttendanceController extends Controller
             $status = 'after_work';
         }
 
-        return view('attendance.index', [
+        return view('user_attendance_index', [
             'attendance' => $attendance,
             'status'      => $status,
         ]);
