@@ -10,7 +10,7 @@ use App\Models\User;
 class AdminStaffAttendanceListController extends Controller
 {
     /**
-     * スッタフ別勤怠一覧画面表示
+     * スタッフ別勤怠一覧画面表示
      */
     public function index(Request $request, $id)
     {
@@ -47,7 +47,6 @@ class AdminStaffAttendanceListController extends Controller
         }
 
         return view('admin_staff_attendance_list', [
-            'current' => $current,
             'user' => $user,
             'attendances' => $attendances,
             'currentMonth' => $current,
@@ -60,7 +59,7 @@ class AdminStaffAttendanceListController extends Controller
     /**
      * CSV出力
      */
-    public function exportCsv (Request $request, $id)
+    public function exportCsv(Request $request, $id)
     {
         // 作成する月を特定
         $month = $request->input('date', now()->format('Y-m'));
@@ -99,6 +98,6 @@ class AdminStaffAttendanceListController extends Controller
                 fputcsv($handle, $row);
             }
             fclose($handle);
-        }, 'attendance.csv');
+        }, "attendance_{$user->id}_{$month}.csv");
     }
 }
