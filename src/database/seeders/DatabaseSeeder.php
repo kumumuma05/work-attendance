@@ -45,13 +45,27 @@ class DatabaseSeeder extends Seeder
             foreach ($monthOffsets as $offset) {
                 $monthStart = Carbon::today()->startOfMonth()->addMonths($offset);
 
-                for ($i = 0; $i < $daysPerMonth; $i++) {
-                    $date = $monthStart->copy()->addDays($i);
+                $createdCount = 0;
 
-                    $exists = Attendance::where('user_id', $user->id)
-                        ->whereDate('clock_in', $date->toDateString())
-                        ->exists();
-                    if ($exists) continue;
+                for ($i = 0; $i < 31; $i++) {
+                    $date = $monthStart->copy()->addDays($i);
+                    // 月をまたいだら終了（2月対策）
+                    if ($date->month !== $monthStart->month) {
+                        break;
+                    }
+                    // 土日は基本スキップ（土曜は30%の確率で出勤）
+                    if ($date->isWeekend()) {
+                        if ($date->isSaturday() && rand(1, 100) <= 30) {
+                            // 何も入れない
+                        } else {
+                            continue;
+                        }
+                    }
+
+                    // 24日分作成したら終了
+                    if ($createdCount >= $daysPerMonth) {
+                        break;
+                    }
 
                     Attendance::factory()
                         ->forDate($date)

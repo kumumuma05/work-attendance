@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class StampCorrectionRequestEntryController extends Controller
+class StampCorrectionRequestDispatchController extends Controller
 {
     public function index(
         CorrectionRequestController $userController,

@@ -1,6 +1,7 @@
 # 勤怠管理アプリケーション
 
-スタッフの勤怠を管理することができるWebアプリケーションです。
+> スタッフの勤怠を管理することができるWebアプリケーションです。
+> 出勤・退勤・休憩・修正申請・承認までを一元管理します。
 
 ## 概要
 - スタッフは勤務の出勤・退勤・休憩時間を記録することができます。
@@ -84,14 +85,16 @@ php artisan migrate --seed
 >その際は環境に合わせて権限を調整してください。  
 
 ## ログイン情報
-- 本アプリではテスト用にseederで管理者用とスタッフ用のユーザーを登録しています。  
+  本アプリではテスト用にseederで管理者用とスタッフ用のユーザーを登録しています。  
 （開発環境での動作確認用であり、実際の利用時はユーザー自身が登録します）
-  - 管理者
-   メールアドレス:admin@example.com  
-   パスワード:password123
-   - スタッフ用ユーザー
-   メールアドレス:user1@test.com  
-   パスワード:password
+- 管理者  
+  名前：管理者  
+  メールアドレス:admin@example.com  
+  パスワード:password123
+- スタッフ用ユーザー  
+  名前：テスト太郎  
+  メールアドレス:user@test.com  
+  パスワード:password
 
 ## テスト実施要領
   本アプリではPHPUnitを用いたFeatureテストを用意しています。テストにはテスト専用のデータベースを使用しています。テスト実施手順は下記のとおりです。  
@@ -136,9 +139,15 @@ php artisan test
 ## URL
 
 ### スタッフ側
-- ユーザー登録 : http://localhost/register/  
-- 勤怠登録（勤怠トップ） : http://localhost/attendance/  
+| 機能 | URL |
+|------|------|
+| ユーザー登録 | http://localhost/register/ |
+| 勤怠登録（勤怠トップ）| http://localhost/attendance/ |
 ### 管理者側
-- 勤怠一覧 : http://localhost/admin/attendance/list  
+| 機能 | URL |
+|------|------|
+| 勤怠一覧 | http://localhost/admin/attendance/list |
 ### その他
-- phpMyAdmin : http://localhost:8080/  
+| 機能 | URL |
+|------|------|
+| phpMyAdmin | http://localhost:8080/ |

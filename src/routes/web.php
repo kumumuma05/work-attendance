@@ -13,9 +13,9 @@ use App\Http\Controllers\CorrectionRequestController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\AdminCorrectionRequestController;
 use App\Http\Controllers\AdminCorrectionApproveController;
-use App\Http\Controllers\AdminAttendanceByStaffController;
+use App\Http\Controllers\AdminStaffAttendanceListController;
 use App\Http\Controllers\AdminStaffListController;
-use App\Http\Controllers\StampCorrectionRequestEntryController;
+use App\Http\Controllers\StampCorrectionRequestDispatchController;
 
 
 // 一般ログイン認証用
@@ -80,18 +80,18 @@ Route::middleware('auth:admin')->group(function () {
     // 修正申請承認
     Route::post('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminCorrectionApproveController::class, 'approve']);
     // スタッフ別勤怠一覧画面表示
-    Route::get('/admin/attendance/staff/{id}', [AdminAttendanceByStaffController::class, 'index']);
+    Route::get('/admin/attendance/staff/{id}', [AdminStaffAttendanceListController::class, 'index']);
     // スッタフ別勤怠一覧CSV出力
-    Route::get('/admin/attendance/staff/{id}/csv',[AdminAttendanceByStaffController::class, 'exportCsv']);
+    Route::get('/admin/attendance/staff/{id}/csv',[AdminStaffAttendanceListController::class, 'exportCsv']);
     // スッタフ一覧画面表示
     Route::get('/admin/staff/list', [AdminStaffListController::class, 'index']);
 });
 
 // 一般・管理者共通
-Route::middleware('auth.any')->group(function () {
+Route::middleware('auth.either')->group(function () {
     // 申請一覧画面表示
     Route::get('/stamp_correction_request/list', [
-        StampCorrectionRequestEntryController::class,
+        StampCorrectionRequestDispatchController::class,
         'index'
     ]);
 });
