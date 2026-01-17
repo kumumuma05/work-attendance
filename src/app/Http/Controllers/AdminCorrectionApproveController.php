@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\AttendanceRequest;
 use Carbon\Carbon;
-use App\Models\Attendance;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +14,7 @@ class AdminCorrectionApproveController extends Controller
      */
     public function show($attendance_correct_request_id) {
         // 対象の申請データ特定
-        $attendanceRequest = AttendanceRequest::with(['attendance.user'])
+        $attendanceRequest = AttendanceRequest::with(['attendance.user', 'attendance.breaks'])
             ->findOrFail($attendance_correct_request_id);
 
         // 名前・日付表示用
@@ -27,20 +25,20 @@ class AdminCorrectionApproveController extends Controller
         $displayClockOut = optional($attendanceRequest->requested_clock_out ?? $attendance->clock_out)->format('H:i');
 
         // 修正申請があった休憩を取り出す
-        $requestedBreakId = [];
-        $requestedCreates = [];
+        $requestedBreaksById = [];
+        $requestedCreateBreaks = [];
 
         $req = $attendanceRequest->requested_breaks ?? [];
 
         // 休憩の修正申請があればそれを表示、修正がなければ元の休憩データを表示させる
         foreach (($req['update'] ?? []) as $breakId => $requestedBreak) {
-            $requestedBreakId[(int)$breakId] = [
+            $requestedBreaksById[(int)$breakId] = [
                 'break_in' => $requestedBreak['break_in'] ?? null,
                 'break_out' => $requestedBreak['break_out'] ?? null,
             ];
         }
         foreach (($req['create'] ?? []) as $createBreak) {
-            $requestedCreates[] = [
+            $requestedCreateBreaks[] = [
                 'break_in' => $createBreak['break_in'] ?? null,
                 'break_out' => $createBreak['break_out'] ?? null,
             ];
@@ -48,27 +46,21 @@ class AdminCorrectionApproveController extends Controller
 
         $displayBreaks = [];
         foreach ($attendance->breaks as $break) {
-            if (isset($requestedBreakId[$break->id])) {
-                $displayBreaks[] = (object)[
-                    'id' => $break->id,
-            'break_in' => !empty($requestedBreakId[$break->id]['break_in'])
-                ? Carbon::parse($requestedBreakId[$break->id]['break_in'])->format('H:i')
-                : optional($break->break_in)->format('H:i'),
-            'break_out' => !empty($requestedBreakId[$break->id]['break_out'])
-                ? Carbon::parse($requestedBreakId[$break->id]['break_out'])->format('H:i')
-                : optional($break->break_out)->format('H:i'),
-                ];
-            } else {
-                $displayBreaks[] = (object)[
-                    'id' => $break->id,
-                    'break_in' => optional($break->break_in)->format('H:i'),
-                    'break_out' => optional($break->break_out)->format('H:i'),
-                ];
-            }
+            $reqBreak = $requestedBreaksById[$break->id] ?? null;
+
+            $displayBreaks[] = (object)[
+                'id' => $break->id,
+                'break_in' => !empty($reqBreak['break_in'])
+                        ? Carbon::parse($reqBreak['break_in'])->format('H:i')
+                        : optional($break->break_in)->format('H:i'),
+                'break_out' => !empty($reqBreak['break_out'])
+                        ? Carbon::parse($reqBreak['break_out'])->format('H:i')
+                        : optional($break->break_out)->format('H:i'),
+            ];
         }
 
         // 申請で追加された休憩を表示
-        foreach ($requestedCreates as $createBreak) {
+        foreach ($requestedCreateBreaks as $createBreak) {
             $displayBreaks[] = (object)[
                 'id' => null,
                 'break_in'  => !empty($createBreak['break_in'])  ? Carbon::parse($createBreak['break_in'])->format('H:i')  : null,
@@ -89,14 +81,14 @@ class AdminCorrectionApproveController extends Controller
     {
         // 対象の申請データ特定
         $request = AttendanceRequest::with(['attendance.user'])
-        ->findOrFail($attendance_correct_request_id);
+            ->findOrFail($attendance_correct_request_id);
 
         // 二重承認防止
         if ($request->status === 'approved') {
-            return;
+            return back();
         }
 
-        DB::transaction (function () use ($request) {
+        DB::transaction(function () use ($request) {
 
             $attendance = $request->attendance;
 

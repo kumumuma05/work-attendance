@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Attendance;
@@ -21,7 +20,6 @@ class AdminAttendanceDetailController extends Controller
         $attendance = Attendance::with('user')
             ->where('id', $id)
             ->firstOrFail();
-        $breaks = $attendance->breaks;
 
         // 修正申請待ちを判別
         $pendingRequest = AttendanceRequest::where('attendance_id', $attendance->id)
@@ -35,18 +33,18 @@ class AdminAttendanceDetailController extends Controller
         $displayClockOut = optional($pendingRequest->requested_clock_out ?? $attendance->clock_out)->format('H:i');
 
         // 修正申請があった休憩のbreak_idをキーにして抜き出す
-        $requestedBreakId = [];
-        $requestedCreates = [];
+        $requestedBreaksById = [];
+        $requestedCreateBreaks = [];
         if ($hasPendingRequest) {
             $req = $pendingRequest->requested_breaks ?? [];
             foreach (($req['update'] ?? []) as $breakId => $requestedBreak) {
-                $requestedBreakId[(int)$breakId] = [
+                $requestedBreaksById[(int)$breakId] = [
                     'break_in' => $requestedBreak['break_in'] ?? null,
                     'break_out' => $requestedBreak['break_out'] ?? null,
                 ];
             }
             foreach (($req['create'] ?? []) as $createBreak) {
-                $requestedCreates[] = [
+                $requestedCreateBreaks[] = [
                     'break_in' => $createBreak['break_in'] ?? null,
                     'break_out' => $createBreak['break_out'] ?? null,
                 ];
@@ -58,14 +56,14 @@ class AdminAttendanceDetailController extends Controller
 
         // 休憩の修正申請があればそれを表示、修正がなければ元の休憩データを表示させる
         foreach ($attendance->breaks as $break) {
-            if (isset($requestedBreakId[$break->id])) {
+            if (isset($requestedBreaksById[$break->id])) {
                 $displayBreaks[] = (object)[
                     'id' => $break->id,
-                    'break_in' => !empty($requestedBreakId[$break->id]['break_in'])
-                        ? Carbon::parse($requestedBreakId[$break->id]['break_in'])->format('H:i')
+                    'break_in' => !empty($requestedBreaksById[$break->id]['break_in'])
+                        ? Carbon::parse($requestedBreaksById[$break->id]['break_in'])->format('H:i')
                         : optional($break->break_in)->format('H:i'),
-                    'break_out' => !empty($requestedBreakId[$break->id]['break_out'])
-                        ? Carbon::parse($requestedBreakId[$break->id]['break_out'])->format('H:i')
+                    'break_out' => !empty($requestedBreaksById[$break->id]['break_out'])
+                        ? Carbon::parse($requestedBreaksById[$break->id]['break_out'])->format('H:i')
                         : optional($break->break_out)->format('H:i'),
                 ];
             } else {
@@ -78,7 +76,7 @@ class AdminAttendanceDetailController extends Controller
         }
 
         // 申請で追加された休憩を表示する
-        foreach ($requestedCreates as $createBreak) {
+        foreach ($requestedCreateBreaks as $createBreak) {
             $displayBreaks[] = (object)[
                 'id' => null,
                 'break_in' => !empty($createBreak['break_in']) ? Carbon::parse($createBreak['break_in'])->format('H:i') : null,
@@ -197,7 +195,7 @@ class AdminAttendanceDetailController extends Controller
                 $attendanceUpdate['clock_in'] = $clockIn;
             }
             if (!is_null($clockOut)) {
-                $attendanceUpdate['clock_out'] = $clockOout;
+                $attendanceUpdate['clock_out'] = $clockOut;
             }
             if (!empty($attendanceUpdate)) {
                 $attendance->update($attendanceUpdate);
