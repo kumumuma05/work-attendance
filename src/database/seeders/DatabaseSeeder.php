@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Attendance;
+use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,27 +18,48 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // 管理者
-        $this->call(          AdminSeeder::class);
+        $this->call(AdminSeeder::class);
 
         // 固定テストユーザー
         $testUser = User::create([
-            'name' => 'user1',
-            'email' => 'user1@test.com',
+            'name' => 'テスト太郎',
+            'email' => 'user@test.com',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
         ]);
 
-        Attendance::factory(30)->create([
-            'user_id' => $testUser->id,
-        ]);
-
         // ランダム一般ユーザー
-        $users = User::factory(15)->unverified()->create();
+        $randomUsers = User::factory(5)->unverified()->create();
 
+        $users = $randomUsers->push($testUser);
+
+        $this->seedAttendances($users, [-1, 0, 1], 24);
+    }
+
+    /**
+     * １ユーザー１日１件の勤怠を作成する制限
+     */
+    private function seedAttendances($users, array $monthOffsets, int $daysPerMonth): void
+    {
         foreach ($users as $user) {
-            Attendance::factory(30)->create([
-                'user_id' => $user->id,
-            ]);
+            foreach ($monthOffsets as $offset) {
+                $monthStart = Carbon::today()->startOfMonth()->addMonths($offset);
+
+                for ($i = 0; $i < $daysPerMonth; $i++) {
+                    $date = $monthStart->copy()->addDays($i);
+
+                    $exists = Attendance::where('user_id', $user->id)
+                        ->whereDate('clock_in', $date->toDateString())
+                        ->exists();
+                    if ($exists) continue;
+
+                    Attendance::factory()
+                        ->forDate($date)
+                        ->create([
+                            'user_id' => $user->id,
+                        ]);
+                }
+            }
         }
     }
 }

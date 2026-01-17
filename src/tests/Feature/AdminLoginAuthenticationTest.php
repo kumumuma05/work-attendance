@@ -5,9 +5,9 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\User;
+use App\Models\Admin;
 
-class AdminLoginAuthenicationTest extends TestCase
+class AdminLoginAuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -16,7 +16,7 @@ class AdminLoginAuthenicationTest extends TestCase
      */
     public function test_validation_error_is_displayed_when_email_is_missing()
     {
-        User::factory()->create([
+        Admin::factory()->create([
             'name' => '管理者',
             'email' => 'admin@example.com',
             'password' => bcrypt('password123'),
@@ -37,7 +37,7 @@ class AdminLoginAuthenicationTest extends TestCase
      */
     public function test_validation_error_is_displayed_when_password_is_missing()
     {
-        User::factory()->create([
+        Admin::factory()->create([
             'name' => '管理者',
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),
@@ -58,7 +58,7 @@ class AdminLoginAuthenicationTest extends TestCase
     */
     public function test_validation_error_is_displayed_when_registration_detail_do_not_match()
     {
-        User::factory()->create([
+        Admin::factory()->create([
             'name' => '管理者',
             'email' => 'admin@example.com',
             'password' => bcrypt('password123'),

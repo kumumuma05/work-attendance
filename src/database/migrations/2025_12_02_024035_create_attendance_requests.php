@@ -21,8 +21,8 @@ class CreateAttendanceRequests extends Migration
             $table->datetime('requested_clock_out')->nullable();
             $table->json('requested_breaks')->nullable();
             $table->string('remarks');
-            $table->string('status')->default('pending');
-            $table->foreignId('approved_by')->nullable()->constrained('admins')->nullOnDelete();
+            $table->enum('status', ['pending', 'approved'])->default('pending');
+            $table->foreignId('approved_by')->nullable()->constrained('admins', 'id')->nullOnDelete();
             $table->datetime('approved_at')->nullable();
             $table->timestamps();
         });

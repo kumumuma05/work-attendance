@@ -14,23 +14,26 @@ class AttendanceFactory extends Factory
      *
      * @return array
      */
+
+    private function makeClockTimes(Carbon $date): array
+{
+    $clockIn  = $date->copy()->setTime(8, 0)->addMinutes($this->faker->numberBetween(0, 180));
+    $clockOut = $clockIn->copy()->addHours($this->faker->numberBetween(7, 12));
+
+    return ['clock_in' => $clockIn, 'clock_out' => $clockOut];
+}
     public function definition()
     {
-        $date = $this->faker->dateTimeBetween(
-            now()->subMonths(3)->startOfMonth(),
-            now()->addMonths(3)->endOfMonth()
-        )->format('Y-m-d');
+        return $this->makeClockTimes(Carbon::today());
+    }
 
-        $clockIn = Carbon::parse("$date 08:00")
-            ->addMinutes($this->faker->numberBetween(0,180));
-        $clockOut = $clockIn->copy()->addHours(
-            $this->faker->numberBetween(7,12)
-        );
+    public function forDate(Carbon | string $date)
+    {
+        $date = $date instanceof Carbon ? $date : Carbon::parse($date);
 
-        return [
-            'clock_in' => $clockIn,
-            'clock_out' => $clockOut,
-        ];
+        return $this->state(function () use ($date) {
+            return $this->makeClockTimes($date);
+        });
     }
 
     public function configure()
@@ -39,6 +42,10 @@ class AttendanceFactory extends Factory
 
             // 休憩をランダムに作る
             $breakCount = $this->faker->numberBetween(0, 2);
+            if ($breakCount === 0) return;
+
+            $workStart = $attendance->clock_in->copy();
+            $workEnd = $attendance->clock_out->copy();
 
             for ($i = 0; $i < $breakCount; $i++) {
 
@@ -62,6 +69,8 @@ class AttendanceFactory extends Factory
                     'break_in'  => $breakIn,
                     'break_out' => $breakOut,
                 ]);
+
+                $cursor = $breakOut->copy()->addHours($this->faker->numberBetween(1, 2));
             }
         });
     }
