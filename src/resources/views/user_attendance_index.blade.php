@@ -48,13 +48,6 @@
                 </form>
             <!-- 勤務中 -->
             @elseif($status === 'working')
-
-                @if($hasStaleOpenAttendance)
-                    <p class="attendance__warning">
-                        前日が未退勤のままです。管理者に連絡してください。
-                    </p>
-                @endif
-
                 <form action="/attendance/clock_out" method="post">
                     @csrf
                     <button class="attendance__button attendance__button--main" @if($hasStaleOpenAttendance) disabled @endif>
@@ -79,6 +72,11 @@
                 <p class="attendance__done">お疲れ様でした。</p>
             @endif
         </div>
+        @if($hasStaleOpenAttendance)
+            <p class="attendance__warning">
+                前日が未退勤のままです。管理者に連絡してください。
+            </p>
+        @endif
     </div>
 
 @endsection

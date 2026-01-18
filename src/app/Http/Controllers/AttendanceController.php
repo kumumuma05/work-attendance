@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 
+use Carbon\Carbon;
+
 class AttendanceController extends Controller
 {
 
@@ -16,8 +18,12 @@ class AttendanceController extends Controller
         $user = auth()->user();
 
         $attendance = Attendance::where('user_id', $user->id)
-            ->whereDate('clock_in', today())
-            ->first();
+            ->whereNull('clock_out')
+            ->orderByDesc('clock_in')
+            ->first()
+            ?? Attendance::where('user_id', $user->id)
+                ->whereDate('clock_in', today())
+                ->first();
 
         // 勤怠状態判定
         if (!$attendance) {
@@ -36,9 +42,9 @@ class AttendanceController extends Controller
 
          // 想定外データ検知（昨日以前で clock_out が null のものが残っている）
         $hasStaleOpenAttendance = Attendance::where('user_id', $user->id)
-        ->whereNull('clock_out')
-        ->whereDate('clock_in', '<', today())
-        ->exists();
+            ->whereNull('clock_out')
+            ->whereDate('clock_in', '<', today())
+            ->exists();
 
         return view('user_attendance_index', [
             'attendance' => $attendance,
