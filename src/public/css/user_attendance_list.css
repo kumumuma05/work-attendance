@@ -46,13 +46,12 @@
     margin-right: 8px;
 }
 
-.attendance-list__date-nav a:last-child
-.attendance-list__date-arrow {
+.attendance-list__date-nav a:last-child .attendance-list__date-arrow {
     width: 20px;
     height: 15px;
     opacity: 0.3;
     margin-right: 0;
-    transform: scalex(-1);
+    transform: scaleX(-1);
 }
 
 .attendance-list__current-date {
@@ -61,7 +60,8 @@
     font-size: 20px;
     font-weight: 700;
     position: absolute;
-    left: 42%;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .attendance-list__calendar-img {
@@ -97,17 +97,25 @@
     text-align: center;
 }
 
+/* 名前 */
 .attendance-list__table th:first-child,
 .attendance-list__table td:first-child {
-    width: 140px;
+    width: 22%;
     padding-left: 60px;
     text-align: left;
     font-variant-numeric: tabular-nums;
 }
 
-.attendance-list__table th:not(:first-child),
-.attendance-list__table td:not(:first-child) {
-    width: calc((100% - 40%) / 4);
+/* 出勤〜合計（4列） */
+.attendance-list__table th:nth-child(2),
+.attendance-list__table td:nth-child(2),
+.attendance-list__table th:nth-child(3),
+.attendance-list__table td:nth-child(3),
+.attendance-list__table th:nth-child(4),
+.attendance-list__table td:nth-child(4),
+.attendance-list__table th:nth-child(5),
+.attendance-list__table td:nth-child(5) {
+    width: 15%;
 }
 
 .attendance-list__table th:last-child,
@@ -126,15 +134,15 @@
 
 @media screen and (min-width: 768px) and (max-width: 850px) {
     .attendance-list__title {
-            width: 600px;
-        }
+        width: 650px;
+    }
 
     .attendance-list__date-nav {
-        width: 600px;
+        width: 650px;
     }
 
     .attendance-list__table-inner {
-        width: 600px;
+        width: 650px;
     }
 
     .attendance-list__table th:first-child,

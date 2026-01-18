@@ -97,17 +97,12 @@
     text-align: center;
 }
 
-.staff-attendance__table th:first-child,
-.staff-attendance__table td:first-child {
-    width: 140px;
-    padding-left: 60px;
-    text-align: left;
-    font-variant-numeric: tabular-nums;
-}
-
 /* 名前 */
 .staff-attendance__table th:first-child,
 .staff-attendance__table td:first-child {
+    padding-left: 60px;
+    text-align: left;
+    font-variant-numeric: tabular-nums;
     width: 22%;
 }
 
