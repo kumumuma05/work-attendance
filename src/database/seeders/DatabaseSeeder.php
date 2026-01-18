@@ -28,13 +28,9 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'email_verified_at' => null,
         ]);
-        $testUser->notify(new VerifyEmail());
 
         // ランダム一般ユーザー
         $randomUsers = User::factory(5)->unverified()->create();
-        $randomUsers->each(function ($user) {
-            $user->notify(new VerifyEmail());
-        });
 
         $users = $randomUsers->prepend($testUser);
 
