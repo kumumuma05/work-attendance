@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'テスト太郎',
             'email' => 'user@test.com',
             'password' => Hash::make('password'),
-            'email_verified_at' => now(),
+            'email_verified_at' => null,
         ]);
 
         // ランダム一般ユーザー

@@ -15,7 +15,6 @@ use App\Http\Controllers\AdminStaffAttendanceListController;
 use App\Http\Controllers\AdminStaffListController;
 use App\Http\Controllers\StampCorrectionRequestDispatchController;
 
-
 // 一般ログイン認証用
 Route::get('/login', function() {
     return view('auth.login');
