@@ -14,9 +14,13 @@ class Attendance extends Model
      */
     protected $fillable = [
         'user_id',
-        'date',
         'clock_in',
         'clock_out',
+    ];
+
+    protected $casts = [
+        'clock_in' => 'datetime',
+        'clock_out' => 'datetime',
     ];
 
     /**
@@ -24,14 +28,13 @@ class Attendance extends Model
      */
     public function getWeekdayAttribute()
     {
-        $weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-        return $weekdays[$this->date->dayOfWeek];
-    }
+        if (!$this->clock_in) {
+            return '';
+        }
 
-    protected $casts = [
-        'clock_in' => 'datetime',
-        'clock_out' => 'datetime',
-    ];
+        $weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+        return $weekdays[$this->clock_in->dayOfWeek];
+    }
 
     // 合計休憩時間を計算するアクセサ
     public function getBreakMinutesAttribute()
@@ -48,7 +51,6 @@ class Attendance extends Model
 
             return $break->break_out->diffInMinutes($break->break_in);
         });
-
     }
 
     /**
@@ -59,7 +61,7 @@ class Attendance extends Model
         $totalMinutes = $this->break_minutes;
 
         if ($totalMinutes === 0) {
-            return "";
+            return '';
         }
 
         $hours = intdiv($totalMinutes, 60);
@@ -71,7 +73,8 @@ class Attendance extends Model
     /**
      * 合計勤務時間を計算するアクセサ
      */
-    public function getTotalHoursAttribute() {
+    public function getTotalHoursAttribute()
+    {
         if (!$this->clock_in || !$this->clock_out) {
             return null;
         }
@@ -98,7 +101,8 @@ class Attendance extends Model
     }
 
     /**
-     * この勤怠記録に紐づく休憩記録一覧を取得     * - attendances.id -> breaks.attendance_id
+     * この勤怠記録に紐づく休憩記録一覧を取得
+     * - attendances.id -> breaks.attendance_id
      */
     public function breaks()
     {

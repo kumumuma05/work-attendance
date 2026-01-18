@@ -31,6 +31,7 @@ class AttendanceRequest extends Model
         'requested_clock_in' => 'datetime',
         'requested_clock_out' => 'datetime',
         'requested_breaks' => 'array',
+        'approved_by' => 'integer',
         'approved_at' => 'datetime',
     ];
 
@@ -45,11 +46,20 @@ class AttendanceRequest extends Model
 
     /**
      * この修正申請が属するユーザー情報を取得
-     * -attendance_requests.user_id -> users.id
+     * - attendance_requests.user_id -> users.id
      */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * この修正申請が属する管理者情報を取得
+     * - attendance_requests.approved_by -> admins.id
+     */
+    public function approver()
+    {
+        return $this->belongsTo(Admin::class, 'approved_by');
     }
 }
 
