@@ -32,7 +32,7 @@ class BreakFunctionTest extends TestCase
         $response = $this->get('/attendance');
         $response->assertStatus(200);
         $response->assertSee('出勤中');
-        $response->assertSee('休憩入</button>', false);
+        $response->assertSeeInOrder(['休憩入', '</button>'], false);
 
         // 休憩入の処理を行う
         $response = $this->post('/attendance/break_in');
@@ -69,7 +69,7 @@ class BreakFunctionTest extends TestCase
 
         // 画面に「休憩入」ボタンが表示されていることを確認
         $response = $this->followRedirects($response);
-        $response->assertSee('休憩入</button>', false);
+        $response->assertSeeInOrder(['休憩入', '</button>'], false);
 
         carbon::setTestNow();
     }

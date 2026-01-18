@@ -33,12 +33,6 @@
             @endif
         </p>
 
-        @if($hasStaleOpenAttendance)
-            <p class="attendance__warning">
-                未退勤の勤怠が過去日に残っています。管理者に連絡してください。
-            </p>
-        @endif
-
         <!-- 日時表示 -->
         @php($now = now())
         <div class="attendance__date">{{ $now->isoFormat('Y年M月D日(ddd)') }}</div>
@@ -54,14 +48,25 @@
                 </form>
             <!-- 勤務中 -->
             @elseif($status === 'working')
+
+                @if($hasStaleOpenAttendance)
+                    <p class="attendance__warning">
+                        前日が未退勤のままです。管理者に連絡してください。
+                    </p>
+                @endif
+
                 <form action="/attendance/clock_out" method="post">
                     @csrf
-                    <button class="attendance__button attendance__button--main">退勤</button>
+                    <button class="attendance__button attendance__button--main" @if($hasStaleOpenAttendance) disabled @endif>
+                        退勤
+                    </button>
                 </form>
 
                 <form action="/attendance/break_in" method="post">
                     @csrf
-                    <button class="attendance__button attendance__button--sub">休憩入</button>
+                    <button class="attendance__button attendance__button--sub" @if($hasStaleOpenAttendance) disabled @endif>
+                        休憩入
+                    </button>
                 </form>
             <!-- 休憩中 -->
             @elseif($status === 'on_break')

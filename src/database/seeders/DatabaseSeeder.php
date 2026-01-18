@@ -32,6 +32,9 @@ class DatabaseSeeder extends Seeder
 
         // ランダム一般ユーザー
         $randomUsers = User::factory(5)->unverified()->create();
+        $randomUsers->each(function ($user) {
+            $user->notify(new VerifyEmail());
+        });
 
         $users = $randomUsers->prepend($testUser);
 

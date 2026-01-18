@@ -31,7 +31,7 @@ class ClockOutFunctionTest extends TestCase
         // 画面に退勤ボタンが表示されていることを確認
         $response = $this->get('/attendance');
         $response->assertStatus(200);
-        $response->assertSee('退勤</button', false);
+        $response->assertSeeInOrder(['退勤', '</button'], false);
 
         // 退勤処理を行うと画面に退勤済が表示される
         Carbon::setTestNow(Carbon::create(2026, 1, 5, 18, 0));

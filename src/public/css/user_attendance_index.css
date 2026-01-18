@@ -63,6 +63,11 @@
     color: #000;
 }
 
+.attendance__button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .attendance__done {
     font-size: 26px;
     font-weight: 700;
