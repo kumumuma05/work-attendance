@@ -6,10 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceListController;
 use App\Http\Controllers\AttendanceDetailController;
-use App\Http\Requests\AttendanceDetailRequest;
 use App\Http\Controllers\AdminAttendanceListController;
 use App\Http\Controllers\AdminAttendanceDetailController;
-use App\Http\Controllers\CorrectionRequestController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\AdminCorrectionRequestController;
 use App\Http\Controllers\AdminCorrectionApproveController;
@@ -22,7 +20,7 @@ use App\Http\Controllers\StampCorrectionRequestDispatchController;
 Route::get('/login', function() {
     return view('auth.login');
 })->middleware('guest:web')->name('login');
-Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth:web')->name('verification.notice');
@@ -81,9 +79,9 @@ Route::middleware('auth:admin')->group(function () {
     Route::post('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminCorrectionApproveController::class, 'approve']);
     // スタッフ別勤怠一覧画面表示
     Route::get('/admin/attendance/staff/{id}', [AdminStaffAttendanceListController::class, 'index']);
-    // スッタフ別勤怠一覧CSV出力
+    // スタッフ別勤怠一覧CSV出力
     Route::get('/admin/attendance/staff/{id}/csv',[AdminStaffAttendanceListController::class, 'exportCsv']);
-    // スッタフ一覧画面表示
+    // スタッフ一覧画面表示
     Route::get('/admin/staff/list', [AdminStaffListController::class, 'index']);
 });
 
