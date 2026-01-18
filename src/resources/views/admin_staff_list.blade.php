@@ -8,10 +8,13 @@
     <link rel="stylesheet" href="{{ asset('css/admin_staff_list.css') }}">
 @endsection
 
+<!-- ヘッダー -->
+@section('header')
+    @include('header.admin')
+@endsection
+
 <!-- 本体 -->
 @section('content')
-    @include('header.admin')
-
     <div class="staff-list">
         <!-- タイトル -->
         <h1 class="staff-list__title">
@@ -35,7 +38,7 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>
-                                <a  class="staff-list__detail-link" href="/admin/attendance/staff/{{ $user->id }}">詳細</a>
+                                <a class="staff-list__detail-link" href="/admin/attendance/staff/{{ $user->id }}">詳細</a>
                             </td>
                         </tr>
                     @endforeach

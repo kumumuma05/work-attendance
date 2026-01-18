@@ -54,15 +54,9 @@
 }
 
 .staff-list__table td:nth-child(2) {
-    text-align: left;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.staff-list__table th:last-child,
-.staff-list__table td:last-child {
-    width: auto;
 }
 
 .staff-list__detail-link {
@@ -73,10 +67,6 @@
 
 @media screen and (min-width: 768px) and (max-width: 850px) {
     .staff-list__title {
-        width: 650px;
-    }
-
-    .staff-list__date-nav {
         width: 650px;
     }
 
