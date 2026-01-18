@@ -25,7 +25,7 @@
     justify-content: center;
 }
 
-.verify-email__link a {
+.verify-email__link-button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,9 +35,6 @@
     background: #D9D9D9;
     border: 1px solid #000;
     border-radius: 10px;
-}
-
-.verify-email__link-button {
     text-decoration: none;
     color: #000;
     font-size: 24px;
@@ -64,14 +61,5 @@
     .verify-email {
         width: 600px;
         margin: 250px auto;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .verify-email {
-        width: 100%;
-        max-width: 600px;
-        margin: 200px auto;
-        padding: 0 16px;
     }
 }

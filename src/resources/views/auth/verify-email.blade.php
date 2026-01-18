@@ -21,7 +21,7 @@
 
     <div class="verify-email">
 
-        <p class="verify-email__text">登録していただいたメールアドレスに承認メールを送付しました。</p>
+        <p class="verify-email__text">登録していただいたメールアドレスに認証メールを送付しました。</p>
         <p class="verify-email__text">メール認証を完了してください。</p>
 
         <div class="verify-email__link">
