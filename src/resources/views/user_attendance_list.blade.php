@@ -8,10 +8,13 @@
     <link rel="stylesheet" href="{{ asset('css/user_attendance_list.css') }}">
 @endsection
 
+<!-- ヘッダー -->
+@section('header')
+    @include('header.user_working')
+@endsection
+
 <!-- 本体 -->
 @section('content')
-    @include('header.user_working')
-
     <div class="attendance-list">
         <!-- タイトル -->
         <h1 class="attendance-list__title">
@@ -25,7 +28,7 @@
                 前月
             </a>
             <div class="attendance-list__current-date">
-                <img class="attendance-list__calendar-img" src="{{ asset('images/カレンダ.png') }}"alt="">
+                <img class="attendance-list__calendar-img" src="{{ asset('images/カレンダ.png') }}"alt="カレンダー">
                 <span>{{ $currentMonth->format('Y/m') }}</span>
             </div>
             <a class="attendance-list__date-button" href="{{ url('/attendance/list?date=' . $nextMonth) }}">
@@ -53,7 +56,7 @@
                         <tr>
                             <td>{{ $day['date']->isoFormat('MM/DD(ddd)') }}</td>
                             <td>{{ $day['attendance'] ? $day['attendance']->clock_in?->format('H:i') : ''}}</td>
-                            <td>{{ $day['attendance'] ?  $day['attendance']->clock_out?->format('H:i') : ''}}</td>
+                            <td>{{ $day['attendance'] ? $day['attendance']->clock_out?->format('H:i') : ''}}</td>
                             <td>{{ $day['attendance']->break_duration ?? ''}}</td>
                             <td>{{ $day['attendance']->total_hours ?? '' }}</td>
                             <td>

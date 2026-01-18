@@ -8,16 +8,17 @@
     <link rel="stylesheet" href="{{ asset('css/user_attendance_index.css') }}">
 @endsection
 
-<!-- 本体 -->
-@section('content')
-
-    <!-- ヘッダー -->
+<!-- ヘッダー -->
+@section('header')
     @if($status === 'after_work')
         @include('header.user_off')
     @else
         @include('header.user_working')
     @endif
+@endsection
 
+<!-- 本体 -->
+@section('content')
     <div class="attendance">
         <!-- 勤務の状態 -->
         <p class="attendance__status">
@@ -39,12 +40,10 @@
         @endif
 
         <!-- 日時表示 -->
-        <div class="attendance__date">
-            {{ now()->isoFormat('Y年M月D日(ddd)') }}
-        </div>
-        <div class="attendance__time">
-            {{ now()->format('H:i') }}
-        </div>
+        @php($now = now())
+        <div class="attendance__date">{{ $now->isoFormat('Y年M月D日(ddd)') }}</div>
+        <div class="attendance__time">{{ $now->format('H:i') }}</div>
+
         <!-- 打刻ボタン -->
         <div class="attendance__action">
             <!-- 勤務外 -->

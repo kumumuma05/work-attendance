@@ -75,3 +75,9 @@
     font-size: 14px;
     font-weight: bold;
 }
+
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .attendance__action {
+        gap: 60px;
+    }
+}
