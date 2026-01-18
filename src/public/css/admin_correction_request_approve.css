@@ -73,33 +73,10 @@
     padding-right: 135px;
 }
 
-.correction-approve__time-input {
-    width: 100px;
-    height: 30px;
-    border: 1px solid #E1E1E1;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-}
-
 .correction-approve__time-text {
     display: flex;
     width: 105px;
     justify-content: center;
-}
-
-/* 備考入力 */
-.correction-approve__remark-text {
-    width: 316px;
-    height: 70px;
-    border: 1px solid #D9D9D9;
-    border-radius: 4px;
-    padding: 10px;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 2px;
 }
 
 /* 修正ボタン */
@@ -144,11 +121,11 @@
 /* レスポンシブデザイン */
 @media screen and (min-width: 768px) and (max-width: 850px) {
     .correction-approve__title {
-        width: 600px;
+        width: 650px;
     }
 
     .correction-approve__card {
-        width: 600px;
+        width: 650px;
     }
 
     .correction-approve__row {
@@ -180,6 +157,6 @@
     }
 
     .correction-approve__button {
-        width: 600px;
+        width: 650px;
     }
 }

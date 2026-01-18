@@ -20,7 +20,7 @@
         <!-- 勤務詳細 -->
         <form class="correction-approve__form" action="/stamp_correction_request/approve/{{ $attendanceRequest->id }}" method="post" novalidate>
             @csrf
-            <div class="correction-approve__card">
+            <dl class="correction-approve__card">
                 <!-- 名前 -->
                 <div class="correction-approve__row">
                     <dt class="correction-approve__term">名前</dt>
@@ -46,7 +46,7 @@
                         <div class="correction-approve__data-row">
                             <span class="correction-approve__time-text">
                                 {{ $displayClockIn }}
-                            </span >
+                            </span>
                             <span>～</span>
                             <span class="correction-approve__time-text">
                                 {{ $displayClockOut }}
@@ -82,7 +82,7 @@
                         </p>
                     </dd>
                 </div>
-            </div>
+            </dl>
             <!-- 承認ボタン -->
             <div class="correction-approve__button">
                 @if (!$isApproved)
