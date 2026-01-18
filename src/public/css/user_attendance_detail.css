@@ -60,8 +60,7 @@
     letter-spacing: 2.4px;
 }
 
-.attendance-detail__row:nth-of-type(-n+2)
-.attendance-detail__data {
+.attendance-detail__row:nth-of-type(-n+2) .attendance-detail__data {
     margin-left: 25px;
 }
 
@@ -166,8 +165,7 @@
         width: 170px;
     }
 
-    .attendance-detail__row:nth-of-type(-n+2)
-    .attendance-detail__data {
+    .attendance-detail__row:nth-of-type(-n+2) .attendance-detail__data {
         margin-left: 18px;
     }
 
