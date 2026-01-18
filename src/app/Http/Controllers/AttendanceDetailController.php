@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
 use App\Http\Requests\AttendanceCorrectionRequest;
@@ -20,7 +19,6 @@ class AttendanceDetailController extends Controller
         $attendance = Attendance::where('user_id', auth()->id())
             ->where('id', $id)
             ->firstOrFail();
-        $breaks = $attendance->breaks;
 
         // 修正申請待ちかどうかを判別
         $pendingRequest = AttendanceRequest::where('attendance_id', $attendance->id)
@@ -103,7 +101,9 @@ class AttendanceDetailController extends Controller
     public function store(AttendanceCorrectionRequest $request, $id)
     {
         // レコードの抜き出し
-        $attendance = Attendance::findOrFail($id);
+        $attendance = Attendance::where('user_id', auth()->id())
+            ->where('id', $id)
+            ->firstOrFail();
         // 基準日設定
         $baseDate = $attendance->clock_in->format('Y-m-d');
 
@@ -138,7 +138,7 @@ class AttendanceDetailController extends Controller
         // 休憩修正リクエストだけdatetimeに変換
         $updateBreaks = [];
         $createBreaks = [];
-        foreach(($request->requested_breaks ?? []) as $break) {
+        foreach (($request->requested_breaks ?? []) as $break) {
             $breakId = $break['break_id'] ?? null;
             $in = $break['break_in'] ?? null;
             $out = $break['break_out'] ?? null;
@@ -168,7 +168,7 @@ class AttendanceDetailController extends Controller
                 // 新規作成用
                 $createBreaks[] = [
                     'break_in' => $breakIn,
-                    'break_out' =>$breakOut,
+                    'break_out' => $breakOut,
                 ];
             }
         }
