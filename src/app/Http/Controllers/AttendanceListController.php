@@ -30,7 +30,7 @@ class AttendanceListController extends Controller
             ->whereBetween('clock_in', [$start, $end])
             ->orderBy('clock_in', 'asc')
             ->get()
-            ->keyBy(function($attendance) {
+            ->keyBy(function ($attendance) {
                 return $attendance->clock_in->toDateString();
             });
 
