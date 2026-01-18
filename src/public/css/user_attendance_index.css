@@ -68,3 +68,10 @@
     font-weight: 700;
     letter-spacing: 4px;
 }
+
+.attendance__warning {
+    margin-top: 8px;
+    color: #d93025;
+    font-size: 14px;
+    font-weight: bold;
+}

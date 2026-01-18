@@ -31,6 +31,13 @@
                 退勤済
             @endif
         </p>
+
+        @if($hasStaleOpenAttendance)
+            <p class="attendance__warning">
+                未退勤の勤怠が過去日に残っています。管理者に連絡してください。
+            </p>
+        @endif
+
         <!-- 日時表示 -->
         <div class="attendance__date">
             {{ now()->isoFormat('Y年M月D日(ddd)') }}
