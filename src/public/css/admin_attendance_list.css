@@ -87,7 +87,7 @@
 }
 
 .admin-list__table th {
-    padding: 8px;
+    padding: 10px;
     border-bottom: 3px solid #E1E1E1;
 }
 
@@ -97,18 +97,13 @@
     text-align: center;
 }
 
-.admin-list__table th:first-child,
-.admin-list__table td:first-child {
-    width: 140px;
-    padding-left: 60px;
-    text-align: left;
-    font-variant-numeric: tabular-nums;
-}
-
 /* 名前 */
 .admin-list__table th:first-child,
 .admin-list__table td:first-child {
     width: 22%;
+    padding-right: 30px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
 }
 
 /* 出勤〜合計（4列） */
@@ -153,7 +148,7 @@
     .admin-list__table th:first-child,
     .admin-list__table td:first-child {
         width: 25%;
-        padding-left: 25px;
+        padding-right: 10px;
     }
 
     .admin-list__table th:last-child,

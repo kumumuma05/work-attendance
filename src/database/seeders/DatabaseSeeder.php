@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use App\Models\User;
 use App\Models\Attendance;
 use Carbon\Carbon;
@@ -27,11 +28,12 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'email_verified_at' => null,
         ]);
+        $testUser->notify(new VerifyEmail());
 
         // ランダム一般ユーザー
         $randomUsers = User::factory(5)->unverified()->create();
 
-        $users = $randomUsers->push($testUser);
+        $users = $randomUsers->prepend($testUser);
 
         $this->seedAttendances($users, [-1, 0, 1], 24);
     }

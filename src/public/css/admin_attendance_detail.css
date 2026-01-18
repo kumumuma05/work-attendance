@@ -130,7 +130,7 @@
     margin-top: 10px;
     text-align: end;
     font-size: 22px;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: 2.7px;
     color: #FF000080;
 }
@@ -189,5 +189,10 @@
 
     .admin-detail__button {
         width: 600px;
+    }
+
+    .admin-detail__form-success {
+        width: 600px;
+        font-size: 18px;
     }
 }
