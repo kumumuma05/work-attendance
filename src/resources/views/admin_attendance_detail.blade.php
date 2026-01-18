@@ -24,7 +24,7 @@
         <!-- 勤務詳細 -->
         <form class="admin-detail__form" action="/admin/attendance/{{ $attendance->id }}" method="post" novalidate>
             @csrf
-            <div class="admin-detail__card">
+            <dl class="admin-detail__card">
                 <!-- 名前 -->
                 <div class="admin-detail__row">
                     <dt class="admin-detail__term">名前</dt>
@@ -124,9 +124,7 @@
                     <dd class="admin-detail__data">
                         <div class="admin-detail__data-wrap">
                             @if (!$hasPendingRequest)
-                                <textarea class="admin-detail__remark-text" name="remarks">
-                                    {{ old('remarks', $attendance->remarks ?? '') }}
-                                </textarea>
+                                <textarea class="admin-detail__remark-text" name="remarks">{{ old('remarks', $attendance->remarks ?? '') }}</textarea>
                             @else
                                 <div class="admin-detail__remark">
                                         {{ $pendingRequest->remarks }}
@@ -140,7 +138,7 @@
                         </div>
                     </dd>
                 </div>
-            </div>
+            </dl>
 
             @if (session('status'))
                 <p class="admin-detail__form-success">

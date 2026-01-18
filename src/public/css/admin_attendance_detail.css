@@ -59,8 +59,7 @@
     letter-spacing: 2.4px;
 }
 
-.admin-detail__row:nth-of-type(-n+2)
-.admin-detail__data {
+.admin-detail__row:nth-of-type(-n+2) .admin-detail__data {
     margin-left: 25px;
 }
 
@@ -176,8 +175,7 @@
         width: 170px;
     }
 
-    .admin-detail__row:nth-of-type(-n+2)
-    .admin-detail__data {
+    .admin-detail__row:nth-of-type(-n+2) .admin-detail__data {
         margin-left: 18px;
     }
 
