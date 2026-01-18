@@ -57,7 +57,7 @@
                             <td>{{ $attendance->break_duration ? $attendance->break_duration : ''}}</td>
                             <td>{{ $attendance->total_hours }}</td>
                             <td>
-                                <a class="admin-list__detail-link" href="{{ $attendance->id }}">詳細</a>
+                                <a class="admin-list__detail-link" href="/admin/attendance/{{ $attendance->id }}">詳細</a>
                             </td>
                         </tr>
                     @endforeach

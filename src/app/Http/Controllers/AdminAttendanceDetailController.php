@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
-use App\Http\Requests\AttendanceCorrectionRequest;
+use App\Http\Requests\AdminAttendanceCorrectionRequest;
 use Carbon\Carbon;
 
 class AdminAttendanceDetailController extends Controller
@@ -99,7 +99,7 @@ class AdminAttendanceDetailController extends Controller
     /**
      * 勤怠・休憩テーブル修正
      */
-    public function update(AttendanceCorrectionRequest $request, $id)
+    public function update(AdminAttendanceCorrectionRequest $request, $id)
     {
         // レコードの抜き出し
         $attendance = Attendance::with('breaks')->findOrFail($id);
