@@ -51,16 +51,17 @@
     height: 15px;
     opacity: 0.3;
     margin-right: 0;
-    transform: scalex(-1);
+    transform: scaleX(-1);
 }
 
 .admin-list__current-date {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
     font-size: 20px;
     font-weight: 700;
-    position: absolute;
-    left: 42%;
 }
 
 .admin-list__calendar-img {
@@ -104,11 +105,25 @@
     font-variant-numeric: tabular-nums;
 }
 
-.admin-list__table th:not(:first-child),
-.admin-list__table td:not(:first-child) {
-    width: calc((100% - 40%) / 4);
+/* 名前 */
+.admin-list__table th:first-child,
+.admin-list__table td:first-child {
+    width: 22%;
 }
 
+/* 出勤〜合計（4列） */
+.admin-list__table th:nth-child(2),
+.admin-list__table td:nth-child(2),
+.admin-list__table th:nth-child(3),
+.admin-list__table td:nth-child(3),
+.admin-list__table th:nth-child(4),
+.admin-list__table td:nth-child(4),
+.admin-list__table th:nth-child(5),
+.admin-list__table td:nth-child(5) {
+    width: 15%;
+}
+
+/* 詳細 */
 .admin-list__table th:last-child,
 .admin-list__table td:last-child {
     width: 18%;
@@ -124,15 +139,15 @@
 
 @media screen and (min-width: 768px) and (max-width: 850px) {
     .admin-list__title {
-        width: 600px;
+        width: 650px;
     }
 
     .admin-list__date-nav {
-        width: 600px;
+        width: 650px;
     }
 
     .admin-list__table-inner {
-        width: 600px;
+        width: 650px;
     }
 
     .admin-list__table th:first-child,

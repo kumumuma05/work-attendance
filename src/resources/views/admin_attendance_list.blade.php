@@ -8,14 +8,17 @@
     <link rel="stylesheet" href="{{ asset('css/admin_attendance_list.css') }}">
 @endsection
 
+<!-- ヘッダー -->
+@section('header')
+    @include('header.admin')
+@endsection
+
 <!-- 本体 -->
 @section('content')
-    @include('header.admin')
-
     <div class="admin-list">
         <!-- タイトル -->
         <h1 class="admin-list__title">
-            {{ $currentDay->isoformat('YYYY年M月D日') }}の勤怠
+            {{ $currentDay->isoFormat('YYYY年M月D日') }}の勤怠
         </h1>
 
         <!-- 日付の切り替え -->
@@ -25,7 +28,7 @@
                 前日
             </a>
             <div class="admin-list__current-date">
-                <img class="admin-list__calendar-img" src="{{ asset('images/カレンダ.png') }}"alt="">
+                <img class="admin-list__calendar-img" src="{{ asset('images/カレンダ.png') }}"alt="カレンダー">
                 <span>{{ $currentDay->format('Y/m/d') }}</span>
             </div>
             <a class="admin-list__date-button" href="{{ url('/admin/attendance/list?date=' . $nextDay) }}">
