@@ -8,10 +8,13 @@
     <link rel="stylesheet" href="{{ asset('css/admin_staff_attendance_list.css') }}">
 @endsection
 
+<!-- ヘッダー -->
+@section('header')
+    @include('header.admin')
+@endsection
+
 <!-- 本体 -->
 @section('content')
-    @include('header.admin')
-
     <div class="staff-attendance">
         <!-- タイトル -->
         <h1 class="staff-attendance__title">
@@ -25,7 +28,7 @@
                 前月
             </a>
             <div class="staff-attendance__current-date">
-                <img class="staff-attendance__calendar-img" src="{{ asset('images/カレンダ.png') }}"alt="">
+                <img class="staff-attendance__calendar-img" src="{{ asset('images/カレンダ.png') }}" alt="カレンダー">
                 <span>{{ $currentMonth->format('Y/m') }}</span>
             </div>
             <a class="staff-attendance__date-button" href="{{ url('/admin/attendance/staff/' . $user->id . '?date=' . $nextMonth) }}">
@@ -54,11 +57,11 @@
                             <td>{{ $day['date']->isoFormat('MM/DD(ddd)') }}</td>
                             <td>{{ $day['attendance'] ? $day['attendance']->clock_in?->format('H:i') : '' }}</td>
                             <td>{{ $day['attendance'] ? $day['attendance']->clock_out?->format('H:i') : '' }}</td>
-                            <td>{{ $day['attendance']->break_duration ?? '' }}</td>
-                            <td>{{ $day['attendance']->total_hours ?? '' }}</td>
+                            <td>{{ $day['attendance'] ? $day['attendance']->break_duration : '' }}</td>
+                            <td>{{ $day['attendance'] ? $day['attendance']->total_hours : '' }}</td>
                             <td>
                                 @if ($day['attendance'])
-                                    <a  class="staff-attendance__detail-link" href="/admin/attendance/{{$day['attendance']->id }}">詳細</a>
+                                    <a class="staff-attendance__detail-link" href="/admin/attendance/{{$day['attendance']->id }}">詳細</a>
                                 @else
                                     <span class="staff-attendance__detail-text">詳細</span>
                                 @endif
