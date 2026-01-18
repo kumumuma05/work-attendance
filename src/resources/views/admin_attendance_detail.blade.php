@@ -8,9 +8,13 @@
     <link rel="stylesheet" href="{{ asset('css/admin_attendance_detail.css') }}">
 @endsection
 
+<!-- ヘッダー -->
+@section('header')
+    @include('header.admin')
+@endsection
+
 <!-- 本体 -->
 @section('content')
-    @include('header.admin')
     <div class="admin-detail">
         <!-- タイトル -->
         <h1 class="admin-detail__title">

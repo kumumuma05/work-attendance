@@ -13,10 +13,9 @@
 </head>
 
 <body>
-    @yield('header')
-
-    <div class="content">
-        @yield('content')
+    <div class="container">
+        @yield('header')
+        <div class="content">@yield('content')</div>
     </div>
 </body>
 
